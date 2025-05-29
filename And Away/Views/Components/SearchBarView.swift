@@ -3,7 +3,7 @@ import SwiftUI
 struct SearchBarView: View {
     @Binding var text: String // The text in the search bar, shared with the parent view
     var placeholder: String = "Search..." // Customizable placeholder text
-    var verticalPadding: CGFloat = 18 // Overall vertical padding for the component
+    var verticalPadding: CGFloat = Spacing.m // Overall vertical padding for the component
 
     var body: some View {
         HStack { // This HStack will now be the styled input field
