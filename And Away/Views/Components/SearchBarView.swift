@@ -4,13 +4,16 @@ struct SearchBarView: View {
     @Binding var text: String // The text in the search bar, shared with the parent view
     var placeholder: String = "Search..." // Customizable placeholder text
     var verticalPadding: CGFloat = Spacing.m // Overall vertical padding for the component
+    @Binding var isEditing: Bool // <--- New binding to report editing state
 
     var body: some View {
         HStack { // This HStack will now be the styled input field
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.gray)
 
-            TextField(placeholder, text: $text)
+            TextField(placeholder, text: $text, onEditingChanged: { editing in // <--- Add onEditingChanged
+                self.isEditing = editing // <--- Update the binding
+            })
                 .textFieldStyle(PlainTextFieldStyle()) // Keep it plain
                 // Removed specific padding, background, and cornerRadius from TextField
 
@@ -38,8 +41,9 @@ struct SearchBarView: View {
     // In a real scenario, the @State variable would be in the parent view
     struct PreviewWrapper: View {
         @State private var searchText = "Sample search"
+        @State private var searchIsEditing = false // <--- State for the preview
         var body: some View {
-            SearchBarView(text: $searchText) // Default padding
+            SearchBarView(text: $searchText, isEditing: $searchIsEditing) // <--- Pass the binding
         }
     }
     return PreviewWrapper()

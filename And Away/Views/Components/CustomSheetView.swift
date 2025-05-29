@@ -2,20 +2,28 @@ import SwiftUI
 
 struct CustomSheetView: View {
     @State private var searchText = ""
-    var showSearchBar: Bool = false // Default to false
+    @State private var isSearchActive = false // 1. State to track search bar focus
+    var showSearchBar: Bool = false
 
     var body: some View {
         VStack {
             if showSearchBar {
-                SearchBarView(text: $searchText)
+                // 2. Pass the isSearchActive state to the SearchBarView
+                SearchBarView(text: $searchText, isEditing: $isSearchActive)
             }
-            Text("Sheet Content")
+
+            // 3. Conditionally display ContentAView or ContentBView
+            if isSearchActive {
+                ContentBView() // Show B when search is active
+            } else {
+                ContentAView() // Show A when search is not active (initial state)
+            }
+            // Text("Sheet Content") // I'm commenting this out, assuming A/B replaces it. Let me know if it should stay.
             Spacer()
         }
     }
 }
 
 #Preview {
-    // Example of how to show the search bar in the preview
     CustomSheetView(showSearchBar: true)
 } 
