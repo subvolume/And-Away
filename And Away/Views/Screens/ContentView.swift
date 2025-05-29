@@ -8,9 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var showSheet = true
     var body: some View {
         MapKitView()
             .ignoresSafeArea()
+            .sheet(isPresented: $showSheet) {
+                CustomSheetView()
+                .presentationDetents([.medium, .large, .height(100)])
+                .presentationBackgroundInteraction(.enabled)
+            }
     }
 }
 
