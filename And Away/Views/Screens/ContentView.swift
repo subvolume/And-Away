@@ -13,7 +13,7 @@ struct ContentView: View {
         MapKitView()
             .ignoresSafeArea()
             .sheet(isPresented: $showSheet) {
-                CustomSheetView()
+                CustomSheetView(showSearchBar: true)
                 .presentationDetents([.medium, .large, .height(100)])
                 .presentationBackgroundInteraction(.enabled)
             }
