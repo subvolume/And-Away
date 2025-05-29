@@ -1,31 +1,41 @@
 import SwiftUI
 
 struct ListItem: View {
+    let iconWidth: CGFloat = 40
+    let iconTextSpacing: CGFloat = 12
+    
     var body: some View {
-        HStack {
-            Rectangle() // Placeholder for the icon
-                .frame(width: 40, height: 40) // Adjust size as needed
-                .foregroundColor(.black) // Placeholder color
-
-            VStack(alignment: .leading) {
-                Text("Text1")
-                    .font(.headline) // Makes text bold and slightly larger
-
-                HStack(spacing: 4) { // Spacing between Text2, bullet, and Text3
-                    Text("Text2")
-                    Text("•")
-                    Text("Text3")
+        VStack(spacing: 0) {
+            HStack(alignment: .top, spacing: iconTextSpacing) {
+                Rectangle()
+                    .frame(width: iconWidth, height: iconWidth)
+                    .foregroundColor(.black)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Text1")
+                        .font(.headline)
+                    HStack(spacing: 4) {
+                        Text("Text2")
+                        Text("•")
+                        Text("Text3")
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
                 }
-                .font(.subheadline) // Makes text slightly smaller
-                .foregroundColor(.gray) // Sets the text color to gray
+                Spacer()
             }
+            .padding(.vertical, 12)
+            .padding(.horizontal, Spacing.m)
+            Divider()
+                .padding(.leading, Spacing.m + iconWidth + iconTextSpacing)
         }
-        .padding(.vertical) // Adds default top/bottom padding
-        .padding(.horizontal, Spacing.m) // Adds horizontal padding using Spacing.m
-        .frame(maxWidth: .infinity, alignment: .leading) // Makes the HStack take full available width, content aligned left
     }
 }
 
 #Preview {
-    ListItem()
+    VStack(spacing: 0) {
+        ListItem()
+        ListItem()
+        ListItem()
+        ListItem()
+    }
 } 
