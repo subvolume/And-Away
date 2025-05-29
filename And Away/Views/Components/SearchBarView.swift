@@ -3,19 +3,17 @@ import SwiftUI
 struct SearchBarView: View {
     @Binding var text: String // The text in the search bar, shared with the parent view
     var placeholder: String = "Search..." // Customizable placeholder text
+    var verticalPadding: CGFloat = 18 // Overall vertical padding for the component
 
     var body: some View {
-        HStack {
+        HStack { // This HStack will now be the styled input field
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.gray)
+
             TextField(placeholder, text: $text)
-                .textFieldStyle(PlainTextFieldStyle()) // Basic styling
-                .padding(.vertical, 8) // Adjust vertical padding for size
-                .padding(.horizontal, 10)
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
-            
-            // Optional: Add a clear button if text is not empty
+                .textFieldStyle(PlainTextFieldStyle()) // Keep it plain
+                // Removed specific padding, background, and cornerRadius from TextField
+
             if !text.isEmpty {
                 Button(action: {
                     self.text = "" // Clear the text
@@ -23,11 +21,15 @@ struct SearchBarView: View {
                     Image(systemName: "multiply.circle.fill")
                         .foregroundColor(.gray)
                 }
-                .padding(.trailing, 6)
+                // Removed .padding(.trailing, 6) from button, will be handled by HStack's padding
             }
         }
-        .padding(.horizontal) // Add some padding around the HStack
-        .frame(height: 44) // Example height, you can customize this
+        .padding(.vertical, 8) // Inner vertical padding for the HStack (was on TextField)
+        .padding(.horizontal, 10) // Inner horizontal padding for the HStack (was on TextField)
+        .background(Color(.systemGray6))
+        .cornerRadius(10)
+        .padding(.horizontal) // Outer horizontal padding for the whole component
+        .padding(.vertical, verticalPadding) // Outer vertical padding for the whole component
     }
 }
 
@@ -37,7 +39,7 @@ struct SearchBarView: View {
     struct PreviewWrapper: View {
         @State private var searchText = "Sample search"
         var body: some View {
-            SearchBarView(text: $searchText)
+            SearchBarView(text: $searchText) // Default padding
         }
     }
     return PreviewWrapper()
