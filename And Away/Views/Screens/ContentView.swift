@@ -9,13 +9,16 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var showSheet = true
+    @State private var selectedDetent: PresentationDetent = .medium
+
     var body: some View {
         MapKitView()
             .ignoresSafeArea()
             .sheet(isPresented: $showSheet) {
                 CustomSheetView(showSearchBar: true)
-                .presentationDetents([.medium, .large, .height(100)])
-                .presentationBackgroundInteraction(.enabled)
+                    .presentationDetents([.height(100), .medium, .large], selection: $selectedDetent)
+                    .presentationBackgroundInteraction(.enabled)
+                    .interactiveDismissDisabled()
             }
     }
 }
