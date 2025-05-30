@@ -2,28 +2,62 @@
 import SwiftUI
 
 extension Color {
-    // Primary color - #1A1C1E in light mode, White in dark mode
+    // MARK: - Semantic Colors
+    
+    // Primary color - Black in light mode, White in dark mode
     static let primary = Color(
-        light: Color(red: 26/255, green: 28/255, blue: 30/255), // #1A1C1E
-        dark: Color(red: 1.0, green: 1.0, blue: 1.0)           // White
+        light: Color.black100,     // #1A1C1E
+        dark: Color.white100       // White
     )
     
-    // Secondary color - #77818C
+    // Secondary color - Grey
     static let secondary = Color(
-        light: Color(red: 119/255, green: 129/255, blue: 140/255), // #77818C
-        dark: Color(red: 170/255, green: 180/255, blue: 190/255)   // Lighter for dark mode
+        light: Color.grey100,      // #77818C
+        dark: Color.smoke100       // Lighter for dark mode
     )
     
-    // Tertiary color - #A5ACB6
+    // Tertiary color - Smoke
     static let tertiary = Color(
-        light: Color(red: 165/255, green: 172/255, blue: 182/255), // #A5ACB6
-        dark: Color(red: 119/255, green: 129/255, blue: 140/255)   // Darker for dark mode
+        light: Color.smoke100,     // #A5ACB6
+        dark: Color.grey100        // Darker for dark mode
     )
     
-    // Invert color - #FFFFFF in light mode, Black in dark mode
+    // Invert color - White in light mode, Black in dark mode
     static let invert = Color(
-        light: Color(red: 1.0, green: 1.0, blue: 1.0),         // #FFFFFF
-        dark: Color(red: 26/255, green: 28/255, blue: 30/255)  // #1A1C1E
+        light: Color.white100,     // #FFFFFF
+        dark: Color.black100       // #1A1C1E
+    )
+    
+    // MARK: - Background Colors
+    
+    // Primary background - White in light mode, Dark in dark mode
+    static let backgroundPrimary = Color(
+        light: Color.white100,                                    // #FFFFFF
+        dark: Color(red: 18/255, green: 18/255, blue: 18/255)   // #121212
+    )
+    
+    // Secondary background - Grey 15% opacity
+    static let backgroundSecondary = Color(
+        light: Color.grey15,       // #77818C 15%
+        dark: Color.smoke15        // Lighter gray 15%
+    )
+    
+    // Tertiary background - Smoke 15% opacity
+    static let backgroundTertiary = Color(
+        light: Color.smoke15,      // #A5ACB6 15%
+        dark: Color.grey15         // Darker gray 15%
+    )
+    
+    // Invert background - White/Black 15% opacity
+    static let backgroundInvert = Color(
+        light: Color.white15,      // White 15%
+        dark: Color.black15        // Black 15%
+    )
+    
+    // Selected background - Azure
+    static let backgroundSelected = Color(
+        light: Color.azure100,     // #128DFF
+        dark: Color.azure100       // Same blue for dark mode
     )
 }
 

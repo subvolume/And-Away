@@ -15,7 +15,7 @@ struct CustomSheetView: View {
             ScrollView {
                 // 3. Conditionally display ContentAView or ContentBView - scrolls underneath
                 if isSearchActive {
-                    ContentBView() // Show B when search is active
+                    ColorExampleView() // Show B when search is active
                 } else {
                     ContentAView() // Show A when search is not active (initial state)
                 }
