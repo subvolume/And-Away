@@ -68,26 +68,26 @@ struct ArtworkExampleView: View {
                 
                 // Large icon examples
                 ListItem(
-                    artwork: .largeIcon(backgroundColor: .red100, icon: Image(systemName: "house.fill")),
+                    artwork: .largeIcon(color: .red100, icon: Image(systemName: "house.fill")),
                     title: "Home Base",
                     subtitle: "Large Icon • 80x80 frame"
                 )
                 
                 ListItem(
-                    artwork: .largeIcon(backgroundColor: .green100, icon: Image(systemName: "leaf.fill")),
+                    artwork: .largeIcon(color: .green100, icon: Image(systemName: "leaf.fill")),
                     title: "Nature Spot",
                     subtitle: "Large Icon • 80x80 frame"
                 )
                 
                 // Circle icon examples
                 ListItem(
-                    artwork: .circleIcon(backgroundColor: .azure100, icon: Image(systemName: "star.fill")),
+                    artwork: .circleIcon(color: .azure100, icon: Image(systemName: "star.fill")),
                     title: "Favorite Place",
                     subtitle: "Circle Icon • 32x32"
                 )
                 
                 ListItem(
-                    artwork: .circleIcon(backgroundColor: .purple100, icon: Image(systemName: "heart.fill")),
+                    artwork: .circleIcon(color: .purple100, icon: Image(systemName: "heart.fill")),
                     title: "Loved Location",
                     subtitle: "Circle Icon • 32x32"
                 )

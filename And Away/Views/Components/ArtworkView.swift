@@ -4,14 +4,33 @@ import SwiftUI
 enum ArtworkType {
     case large(Image)
     case thumbnail(Image)
-    case largeIcon(backgroundColor: Color, icon: Image)
-    case circleIcon(backgroundColor: Color, icon: Image)
+    case largeIcon(color: Color, icon: Image)
+    case circleIcon(color: Color, icon: Image)
     case icon(Image)
 }
 
 // MARK: - Artwork View
 struct ArtworkView: View {
     let artwork: ArtworkType
+    
+    // Helper function to get background color (15% opacity)
+    private func backgroundColorFor(_ color: Color) -> Color {
+        switch color {
+        case .red100: return .red15
+        case .orange100: return .orange15
+        case .yellow100: return .yellow15
+        case .green100: return .green15
+        case .teal100: return .teal15
+        case .aqua100: return .aqua15
+        case .sky100: return .sky15
+        case .azure100: return .azure15
+        case .blue100: return .blue15
+        case .purple100: return .purple15
+        case .lilac100: return .lilac15
+        case .lavender100: return .lavender15
+        default: return color.opacity(0.15)
+        }
+    }
     
     var body: some View {
         switch artwork {
@@ -31,28 +50,30 @@ struct ArtworkView: View {
                 .clipped()
                 .cornerRadius(10)
             
-        case .largeIcon(let backgroundColor, let icon):
+        case .largeIcon(let color, let icon):
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(backgroundColor)
+                    .fill(backgroundColorFor(color))
                     .frame(width: 80, height: 80)
                 
                 icon
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 40, height: 40)
+                    .foregroundColor(color)
             }
             
-        case .circleIcon(let backgroundColor, let icon):
+        case .circleIcon(let color, let icon):
             ZStack {
                 Circle()
-                    .fill(backgroundColor)
+                    .fill(backgroundColorFor(color))
                     .frame(width: 32, height: 32)
                 
                 icon
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 22, height: 22)
+                    .foregroundColor(color)
             }
             
         case .icon(let icon):
@@ -85,10 +106,10 @@ struct ArtworkView: View {
         ArtworkView(artwork: .thumbnail(loadImage("cat02")))
         
         // Large icon - house with background
-        ArtworkView(artwork: .largeIcon(backgroundColor: .red100, icon: Image(systemName: "house.fill")))
+        ArtworkView(artwork: .largeIcon(color: .red100, icon: Image(systemName: "house.fill")))
         
         // Circle icon - star with background
-        ArtworkView(artwork: .circleIcon(backgroundColor: .azure100, icon: Image(systemName: "star.fill")))
+        ArtworkView(artwork: .circleIcon(color: .azure100, icon: Image(systemName: "star.fill")))
         
         // Simple icon - folder
         ArtworkView(artwork: .icon(Image(systemName: "folder.fill")))

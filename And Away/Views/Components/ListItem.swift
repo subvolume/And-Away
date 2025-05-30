@@ -8,6 +8,20 @@ struct ListItem: View {
     let subtitle: String
     let thirdText: String?
     
+    // Computed property to get the actual artwork width
+    private var actualArtworkWidth: CGFloat {
+        guard let artwork = artwork else { return iconWidth }
+        
+        switch artwork {
+        case .large(_):
+            return 100
+        case .thumbnail(_), .largeIcon(_, _):
+            return 80
+        case .circleIcon(_, _), .icon(_):
+            return 32
+        }
+    }
+    
     init(color: Color = .primary, title: String = "Text1", subtitle: String = "Text2", thirdText: String? = "Text3") {
         self.color = color
         self.artwork = nil
@@ -60,7 +74,7 @@ struct ListItem: View {
             .padding(.vertical, 12)
             .padding(.horizontal, Spacing.m)
             Divider()
-                .padding(.leading, Spacing.m + iconWidth + Spacing.m)
+                .padding(.leading, Spacing.m + actualArtworkWidth + Spacing.m)
         }
     }
 }
@@ -69,8 +83,8 @@ struct ListItem: View {
     VStack(spacing: 0) {
         ListItem()
         ListItem(color: .azure100, title: "Azure", subtitle: "#128DFF", thirdText: nil)
-        ListItem(artwork: .largeIcon(backgroundColor: .red100, icon: Image(systemName: "house")), title: "Home", subtitle: "Large Icon")
-        ListItem(artwork: .circleIcon(backgroundColor: .green100, icon: Image(systemName: "star")), title: "Favorite", subtitle: "Circle Icon")
+        ListItem(artwork: .largeIcon(color: .red100, icon: Image(systemName: "house.fill")), title: "Home", subtitle: "Large Icon")
+        ListItem(artwork: .circleIcon(color: .green100, icon: Image(systemName: "star.fill")), title: "Favorite", subtitle: "Circle Icon")
         ListItem(artwork: .icon(Image(systemName: "folder")), title: "Files", subtitle: "Simple Icon")
     }
 } 
