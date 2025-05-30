@@ -67,12 +67,31 @@ struct ArtworkView: View {
 
 // MARK: - Preview
 #Preview {
-    VStack(spacing: 20) {
-        ArtworkView(artwork: .large(Image(systemName: "photo")))
-        ArtworkView(artwork: .thumbnail(Image(systemName: "photo")))
-        ArtworkView(artwork: .largeIcon(backgroundColor: .red100, icon: Image(systemName: "house")))
-        ArtworkView(artwork: .circleIcon(backgroundColor: .azure100, icon: Image(systemName: "star")))
-        ArtworkView(artwork: .icon(Image(systemName: "folder")))
+    // Helper function to load images in preview
+    func loadImage(_ name: String) -> Image {
+        if let path = Bundle.main.path(forResource: name, ofType: "png"),
+           let uiImage = UIImage(contentsOfFile: path) {
+            return Image(uiImage: uiImage)
+        } else {
+            return Image(systemName: "photo.fill") // Fallback
+        }
+    }
+    
+    return VStack(spacing: 20) {
+        // Large image - cat photo
+        ArtworkView(artwork: .large(loadImage("cat01")))
+        
+        // Thumbnail - cat photo
+        ArtworkView(artwork: .thumbnail(loadImage("cat02")))
+        
+        // Large icon - house with background
+        ArtworkView(artwork: .largeIcon(backgroundColor: .red100, icon: Image(systemName: "house.fill")))
+        
+        // Circle icon - star with background
+        ArtworkView(artwork: .circleIcon(backgroundColor: .azure100, icon: Image(systemName: "star.fill")))
+        
+        // Simple icon - folder
+        ArtworkView(artwork: .icon(Image(systemName: "folder.fill")))
     }
     .padding()
 } 
