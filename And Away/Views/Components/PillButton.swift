@@ -91,16 +91,59 @@ struct PillButton: View {
         self.action = action
     }
     
+    /// Creates a rotating icon button that transitions from + to x with 90° rotation
+    init(
+        defaultTextColor: Color = .secondary,
+        defaultBackgroundColor: Color = .backgroundTertiary,
+        selectedTextColor: Color = .invert,
+        selectedBackgroundColor: Color = .backgroundSelected,
+        verticalPadding: CGFloat = Spacing.xs,
+        isSelected: Bool = false,
+        action: @escaping () -> Void
+    ) {
+        self.text = nil
+        self.icon = "plus" // Will be overridden in body based on state
+        self.defaultTextColor = defaultTextColor
+        self.defaultBackgroundColor = defaultBackgroundColor
+        self.selectedTextColor = selectedTextColor
+        self.selectedBackgroundColor = selectedBackgroundColor
+        self.verticalPadding = verticalPadding
+        self.isSelected = isSelected
+        self.action = action
+    }
+    
+    // MARK: - Properties for rotation behavior
+    private var isRotatingButton: Bool {
+        // Detect if this is the rotating + to x button by checking if icon is "plus"
+        return icon == "plus"
+    }
+    
+    private var currentIcon: String {
+        if isRotatingButton {
+            return "xmark"
+        }
+        return icon ?? "questionmark"
+    }
+    
+    private var rotationAngle: Double {
+        if isRotatingButton {
+            return isSelected ? -45 : 0
+        }
+        return 0
+    }
+    
     // MARK: - Body
     var body: some View {
-        let currentTextColor = isSelected ? selectedTextColor : defaultTextColor
-        let currentBackgroundColor = isSelected ? selectedBackgroundColor : defaultBackgroundColor
+        let currentTextColor = isRotatingButton ? defaultTextColor : (isSelected ? selectedTextColor : defaultTextColor)
+        let currentBackgroundColor = isRotatingButton ? defaultBackgroundColor : (isSelected ? selectedBackgroundColor : defaultBackgroundColor)
         
         let labelContent = HStack(spacing: Spacing.xs) {
-            if let icon = icon {
-                Image(systemName: icon)
+            if icon != nil {
+                Image(systemName: currentIcon)
                     .font(FontStyle.button)
                     .foregroundColor(currentTextColor)
+                    .rotationEffect(.degrees(rotationAngle))
+                    .animation(.easeInOut(duration: 0.3), value: isSelected)
             }
             if let text = text {
                 Text(text)
@@ -175,6 +218,17 @@ private struct InteractivePillButtonPreviewWrapper: View {
                 isSelected: isSelectedState,
                 action: buttonAction
             )
+        } else if title.contains("Rotating") {
+            // Use the rotating button initializer
+            PillButton(
+                defaultTextColor: .secondary,
+                defaultBackgroundColor: .backgroundTertiary,
+                selectedTextColor: .invert,
+                selectedBackgroundColor: .backgroundSelected,
+                verticalPadding: verticalPadding,
+                isSelected: isSelectedState,
+                action: buttonAction
+            )
         } else {
             // No icon, so use the initializer for text-only
             PillButton(
@@ -203,6 +257,12 @@ struct PillButton_Previews: PreviewProvider {
                 selectedIcon: "checkmark.circle.fill",
                 initiallySelected: false,
                 changesContent: true
+            )
+            
+            // Rotating + to x button (new!)
+            InteractivePillButtonPreviewWrapper(
+                title: "Rotating +/× (Tap Me)",
+                initiallySelected: false
             )
             
             // Default state (now interactive)
