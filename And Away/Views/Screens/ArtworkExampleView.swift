@@ -22,41 +22,7 @@ struct ArtworkExampleView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                // Debug section - test multiple approaches
-                ListItem(
-                    color: .azure100,
-                    title: "✅ Working Solution Found!",
-                    subtitle: "Using UIImage approach"
-                )
-                
-                // Test 3: UIImage approach (working)
-                HStack {
-                    if let path = Bundle.main.path(forResource: "cat01", ofType: "png"),
-                       let uiImage = UIImage(contentsOfFile: path) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 50, height: 50)
-                            .clipped()
-                            .background(Color.blue100)
-                    } else {
-                        Rectangle()
-                            .fill(Color.orange100)
-                            .frame(width: 50, height: 50)
-                            .overlay(Text("NOT\nFOUND").font(.caption).foregroundColor(.black100))
-                    }
-                    
-                    VStack(alignment: .leading) {
-                        Text("✅ Direct test with proper aspect ratio")
-                            .listTitle()
-                        Text("aspectRatio + fill + clipped")
-                            .listSubtitle()
-                    }
-                    Spacer()
-                }
-                .padding()
-                
-                // Large image examples - now working!
+                // Large image examples
                 ListItem(
                     artwork: .large(loadImage("cat01")),
                     title: "White Cat Portrait",
@@ -75,7 +41,7 @@ struct ArtworkExampleView: View {
                     subtitle: "Large Image • 100x100"
                 )
                 
-                // Thumbnail examples - now working!
+                // Thumbnail examples
                 ListItem(
                     artwork: .thumbnail(loadImage("cat04")),
                     title: "Cat on Stairs",

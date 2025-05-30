@@ -15,9 +15,9 @@ struct CustomSheetView: View {
             ScrollView {
                 // 3. Conditionally display ContentAView or ContentBView - scrolls underneath
                 if isSearchActive {
-                    ColorExampleView() // Show B when search is active
+                    ColorExampleView() // Show this file when active
                 } else {
-                    ContentAView() // Show A when search is not active (initial state)
+                    ArtworkExampleView() // Show this when search is not active (initial state)
                 }
                 // Text("Sheet Content") // I'm commenting this out, assuming A/B replaces it. Let me know if it should stay.
             }
