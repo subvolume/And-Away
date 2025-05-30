@@ -8,7 +8,7 @@ struct ListItem: View {
             HStack(alignment: .center, spacing: Spacing.m) {
                 Rectangle()
                     .frame(width: iconWidth, height: iconWidth)
-                    .foregroundColor(.black)
+                    .foregroundColor(.primary)
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Text1")
                         .listTitle()
@@ -20,7 +20,7 @@ struct ListItem: View {
                         Text("Text3")
                             .listSubtitle()
                     }
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
                 }
                 Spacer()
             }
