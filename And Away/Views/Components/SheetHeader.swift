@@ -49,7 +49,7 @@ struct SheetHeader: View {
             }
         }
         .padding(.horizontal, Spacing.m)
-        .padding(.top, Spacing.xs)
+        .padding(.top, Spacing.m)
         .padding(.bottom, Spacing.s)
     }
 }

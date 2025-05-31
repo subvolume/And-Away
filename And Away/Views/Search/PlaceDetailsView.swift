@@ -7,17 +7,12 @@ struct PlaceDetailsView: View {
         VStack(spacing: 0) {
             // Use existing SheetHeader component instead of custom back button
             SheetHeader(title: "Place Details", onClose: onBackTapped)
+            PlaceDetailsActions()
+
             
             ScrollView {
-                VStack(spacing: 20) {
-                    Spacer()
-                    
-                    // Main content
-                    Text("Place details")
-                        .pageTitle()
-                        .foregroundColor(.primary)
-                    
-                    Spacer()
+                VStack(spacing: Spacing.xs) {
+                    ImageCarouselView()
                 }
             }
         }

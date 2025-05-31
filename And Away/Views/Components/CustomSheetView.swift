@@ -13,13 +13,19 @@ struct CustomSheetView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            // Fixed headers that stay at the top
             if showSearchBar && sheetState == .search {
-                // 2. Pass the isSearchActive state to the SearchBarView - stays at top
                 SearchBarView(text: $searchText, isEditing: $isSearchActive)
             }
             
+            if sheetState == .placeDetails {
+                SheetHeader(title: "Place Details", onClose: {
+                    sheetState = .search
+                })
+            }
+            
+            // Scrollable content
             ScrollView {
-                // 3. Show different content based on sheet state
                 switch sheetState {
                 case .search:
                     if isSearchActive {
@@ -27,14 +33,15 @@ struct CustomSheetView: View {
                             sheetState = .placeDetails
                         })
                     } else {
-                        ArtworkExampleView() // Show this when search is not active (initial state)
+                        ArtworkExampleView()
                     }
                 case .placeDetails:
-                    PlaceDetailsView(onBackTapped: {
-                        sheetState = .search
-                    })
+                    // Only the scrollable content of place details, not the header
+                    VStack(spacing: Spacing.xs) {
+                        PlaceDetailsActions()
+                        ImageCarouselView()
+                    }
                 }
-                // Text("Sheet Content") // I'm commenting this out, assuming A/B replaces it. Let me know if it should stay.
             }
         }
     }
