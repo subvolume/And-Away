@@ -9,6 +9,7 @@ struct CustomSheetView: View {
     @State private var searchText = ""
     @State private var isSearchActive = false // 1. State to track search bar focus
     @State private var sheetState: SheetState = .search // 2. State to manage sheet content
+    @State private var selectedPlace: PlaceSearchResult? = nil // Track selected place
     var showSearchBar: Bool = false
 
     var body: some View {
@@ -19,8 +20,9 @@ struct CustomSheetView: View {
             }
             
             if sheetState == .placeDetails {
-                SheetHeader(title: "Place Details", onClose: {
+                SheetHeader(title: selectedPlace?.name ?? "Place Details", onClose: {
                     sheetState = .search
+                    selectedPlace = nil
                 })
             }
             
@@ -29,7 +31,8 @@ struct CustomSheetView: View {
                 switch sheetState {
                 case .search:
                     if isSearchActive {
-                        SearchStateView(searchText: $searchText, onPlaceTapped: {
+                        SearchStateView(searchText: $searchText, onPlaceTapped: { place in
+                            selectedPlace = place
                             sheetState = .placeDetails
                         })
                     } else {
