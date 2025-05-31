@@ -47,6 +47,8 @@ struct ArtworkExampleView: View {
                     title: "Cat on Stairs",
                     subtitle: "Thumbnail • 80x80"
                 )
+                ImageCarouselView()
+                .padding(.vertical, Spacing.m)
                 
                 ListItem(
                     artwork: .thumbnail(loadImage("cat05")),
