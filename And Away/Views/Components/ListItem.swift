@@ -7,6 +7,7 @@ struct ListItem: View {
     let title: String
     let subtitle: String
     let thirdText: String?
+    let onTap: (() -> Void)?
     
     // Computed property to get the actual artwork width
     private var actualArtworkWidth: CGFloat {
@@ -22,20 +23,22 @@ struct ListItem: View {
         }
     }
     
-    init(color: Color = .primary, title: String = "Text1", subtitle: String = "Text2", thirdText: String? = "Text3") {
+    init(color: Color = .primary, title: String = "Text1", subtitle: String = "Text2", thirdText: String? = "Text3", onTap: (() -> Void)? = nil) {
         self.color = color
         self.artwork = nil
         self.title = title
         self.subtitle = subtitle
         self.thirdText = thirdText
+        self.onTap = onTap
     }
     
-    init(artwork: ArtworkType, title: String, subtitle: String, thirdText: String? = nil) {
+    init(artwork: ArtworkType, title: String, subtitle: String, thirdText: String? = nil, onTap: (() -> Void)? = nil) {
         self.color = nil
         self.artwork = artwork
         self.title = title
         self.subtitle = subtitle
         self.thirdText = thirdText
+        self.onTap = onTap
     }
     
     var body: some View {
@@ -76,25 +79,31 @@ struct ListItem: View {
             Divider()
                 .padding(.leading, Spacing.m + actualArtworkWidth + Spacing.m)
         }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onTap?()
+        }
     }
     
     // MARK: - Templates
     
     /// Saved place template with thumbnail image
-    static func savedPlace(title: String, type: String, distance: String, location: String, image: Image) -> ListItem {
+    static func savedPlace(title: String, type: String, distance: String, location: String, image: Image, onTap: (() -> Void)? = nil) -> ListItem {
         return ListItem(
             artwork: .thumbnail(image),
             title: title,
-            subtitle: "\(type) • \(distance) • \(location)"
+            subtitle: "\(type) • \(distance) • \(location)",
+            onTap: onTap
         )
     }
     
     /// Search result template with circular icon
-    static func searchResult(title: String, distance: String, location: String, icon: Image, iconColor: Color = .red100) -> ListItem {
+    static func searchResult(title: String, distance: String, location: String, icon: Image, iconColor: Color = .red100, onTap: (() -> Void)? = nil) -> ListItem {
         return ListItem(
             artwork: .circleIcon(color: iconColor, icon: icon),
             title: title,
-            subtitle: "\(distance) • \(location)"
+            subtitle: "\(distance) • \(location)",
+            onTap: onTap
         )
     }
 }
@@ -117,14 +126,16 @@ struct ListItem: View {
             type: "Park",
             distance: "15km",
             location: "Barcelona",
-            image: loadImage("cat01") // Now using the helper function
+            image: loadImage("cat01"), // Now using the helper function
+            onTap: nil
         )
         ListItem.searchResult(
             title: "Name of the place",
             distance: "15km",
             location: "Barcelona",
-            icon: Image(systemName: "building.columns")
+            icon: Image(systemName: "building.columns"),
+            onTap: nil
         )
-        ListItem(color: .azure100, title: "Azure", subtitle: "#128DFF", thirdText: nil)
+        ListItem(color: .azure100, title: "Azure", subtitle: "#128DFF", thirdText: nil, onTap: nil)
     }
 } 
