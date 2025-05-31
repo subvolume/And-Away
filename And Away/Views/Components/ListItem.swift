@@ -77,14 +77,54 @@ struct ListItem: View {
                 .padding(.leading, Spacing.m + actualArtworkWidth + Spacing.m)
         }
     }
+    
+    // MARK: - Templates
+    
+    /// Saved place template with thumbnail image
+    static func savedPlace(title: String, type: String, distance: String, location: String, image: Image) -> ListItem {
+        return ListItem(
+            artwork: .thumbnail(image),
+            title: title,
+            subtitle: "\(type) • \(distance) • \(location)"
+        )
+    }
+    
+    /// Search result template with circular icon
+    static func searchResult(title: String, distance: String, location: String, icon: Image, iconColor: Color = .red100) -> ListItem {
+        return ListItem(
+            artwork: .circleIcon(color: iconColor, icon: icon),
+            title: title,
+            subtitle: "\(distance) • \(location)"
+        )
+    }
 }
 
 #Preview {
-    VStack(spacing: 0) {
+    // Helper function to load images in preview
+    func loadImage(_ name: String) -> Image {
+        if let path = Bundle.main.path(forResource: name, ofType: "png"),
+           let uiImage = UIImage(contentsOfFile: path) {
+            return Image(uiImage: uiImage)
+        } else {
+            return Image(systemName: "photo.fill") // Fallback
+        }
+    }
+    
+    return VStack(spacing: 0) {
         ListItem()
+        ListItem.savedPlace(
+            title: "Name of the place",
+            type: "Park",
+            distance: "15km",
+            location: "Barcelona",
+            image: loadImage("cat01") // Now using the helper function
+        )
+        ListItem.searchResult(
+            title: "Name of the place",
+            distance: "15km",
+            location: "Barcelona",
+            icon: Image(systemName: "building.columns")
+        )
         ListItem(color: .azure100, title: "Azure", subtitle: "#128DFF", thirdText: nil)
-        ListItem(artwork: .largeIcon(color: .red100, icon: Image(systemName: "house.fill")), title: "Home", subtitle: "Large Icon")
-        ListItem(artwork: .circleIcon(color: .green100, icon: Image(systemName: "star.fill")), title: "Favorite", subtitle: "Circle Icon")
-        ListItem(artwork: .icon(Image(systemName: "folder")), title: "Files", subtitle: "Simple Icon")
     }
 } 
