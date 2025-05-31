@@ -13,9 +13,9 @@ struct CustomSheetView: View {
             }
             
             ScrollView {
-                // 3. Conditionally display ContentAView or ContentBView - scrolls underneath
+                // 3. Show search content when active, artwork examples when inactive
                 if isSearchActive {
-                    ColorExampleView() // Show this file when active
+                    SearchStateView(searchText: $searchText) // Show search states when active
                 } else {
                     ArtworkExampleView() // Show this when search is not active (initial state)
                 }
