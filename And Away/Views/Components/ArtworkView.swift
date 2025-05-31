@@ -72,7 +72,7 @@ struct ArtworkView: View {
                 icon
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 22, height: 22)
+                    .frame(width: 20, height: 20)
                     .foregroundColor(color)
             }
             
@@ -110,6 +110,15 @@ struct ArtworkView: View {
         
         // Circle icon - star with background
         ArtworkView(artwork: .circleIcon(color: .azure100, icon: Image(systemName: "star.fill")))
+        
+        // Circle icons in HStack
+        HStack(spacing: 12) {
+            ArtworkView(artwork: .circleIcon(color: .red100, icon: Image(systemName: "heart.fill")))
+            ArtworkView(artwork: .circleIcon(color: .green100, icon: Image(systemName: "leaf.fill")))
+            ArtworkView(artwork: .circleIcon(color: .blue100, icon: Image(systemName: "drop.fill")))
+            ArtworkView(artwork: .circleIcon(color: .purple100, icon: Image(systemName: "star.fill")))
+            ArtworkView(artwork: .circleIcon(color: .orange100, icon: Image(systemName: "flame.fill")))
+        }
         
         // Simple icon - folder
         ArtworkView(artwork: .icon(Image(systemName: "folder.fill")))
