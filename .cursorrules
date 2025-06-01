@@ -17,6 +17,7 @@
 - **Wait for user to specify the next requirement after each step**
 - **Be less aggressive with changes - collaborate, don't assume**
 - **If given a straightforward order, it's OK to just make the change requested**
+- **Check existing styles and components and reuse these unless instructed otherwise**
 - **Update this .cursorrules file as we discover new preferences**
 
 ## Communication Style
