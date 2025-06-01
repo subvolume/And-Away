@@ -19,6 +19,8 @@ struct PlaceDetailsView: View {
                 }
             }
         }
+        .presentationDetents([.medium, .large])
+        .interactiveDismissDisabled()
     }
 }
 

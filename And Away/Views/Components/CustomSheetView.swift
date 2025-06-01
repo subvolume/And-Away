@@ -2,14 +2,14 @@ import SwiftUI
 
 enum SheetState {
     case search
-    case placeDetails
 }
 
 struct CustomSheetView: View {
     @State private var searchText = ""
     @State private var isSearchActive = false // 1. State to track search bar focus
     @State private var sheetState: SheetState = .search // 2. State to manage sheet content
-    @State private var selectedPlace: PlaceSearchResult? = nil // Track selected place
+    @State private var selectedPlace: PlaceSearchResult? = nil // Track selected place for sheet presentation
+    @State private var showPlaceDetails = false // State to control PlaceDetailsView sheet
     var showSearchBar: Bool = false
 
     var body: some View {
@@ -19,13 +19,6 @@ struct CustomSheetView: View {
                 SearchBarView(text: $searchText, isEditing: $isSearchActive)
             }
             
-            if sheetState == .placeDetails {
-                SheetHeader(title: selectedPlace?.name ?? "Place Details", onClose: {
-                    sheetState = .search
-                    selectedPlace = nil
-                })
-            }
-            
             // Scrollable content
             ScrollView {
                 switch sheetState {
@@ -33,19 +26,18 @@ struct CustomSheetView: View {
                     if isSearchActive {
                         SearchStateView(searchText: $searchText, onPlaceTapped: { place in
                             selectedPlace = place
-                            sheetState = .placeDetails
+                            showPlaceDetails = true
                         })
                     } else {
                         ArtworkExampleView()
                     }
-                case .placeDetails:
-                    // Only the scrollable content of place details, not the header
-                    VStack(spacing: Spacing.xs) {
-                        PlaceDetailsActions()
-                        ImageCarouselView()
-                    }
                 }
             }
+        }
+        .sheet(isPresented: $showPlaceDetails) {
+            PlaceDetailsView(onBackTapped: {
+                showPlaceDetails = false
+            })
         }
     }
 }
