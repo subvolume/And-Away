@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainMapView.swift
 //  And Away
 //
 //  Created by Oliver Lukman on 29/05/2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct MainMapView: View {
     @State private var showSheet = true
     @State private var selectedDetent: PresentationDetent = .medium
 
@@ -15,7 +15,7 @@ struct ContentView: View {
         MapKitView()
             .ignoresSafeArea()
             .sheet(isPresented: $showSheet) {
-                CustomSheetView(showSearchBar: true)
+                InitialSheetView()
                     .presentationDetents([.height(100), .medium, .large], selection: $selectedDetent)
                     .presentationBackgroundInteraction(.enabled)
                     .interactiveDismissDisabled()
@@ -24,5 +24,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
-}
+    MainMapView()
+} 
