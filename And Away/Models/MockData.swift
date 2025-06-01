@@ -51,7 +51,7 @@ struct MockData {
         results: [
             PlaceSearchResult(
                 placeId: "ChIJL-ROikVu5kcRzWBvNS3lnM0",
-                name: "Le Comptoir du 7ème",
+                name: "Le Comptoir du Crème",
                 vicinity: "8 Avenue Bosquet, Paris",
                 rating: 4.5,
                 priceLevel: 2,
