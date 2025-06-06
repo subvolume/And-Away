@@ -16,7 +16,7 @@ struct MainMapView: View {
             .ignoresSafeArea()
             .sheet(isPresented: $showSheet) {
                 InitialSheetView()
-                    .presentationDetents([.height(100), .medium, .large], selection: $selectedDetent)
+                    .presentationDetents([.height(100), .medium, .fraction(0.99)], selection: $selectedDetent)
                     .presentationBackgroundInteraction(.enabled)
                     .interactiveDismissDisabled()
             }

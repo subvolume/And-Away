@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PlaceDetailsView: View {
     let onBackTapped: () -> Void
+    @State private var selectedDetent: PresentationDetent = .medium
     
     // Using mock data from MockData.swift
     private let placeDetails = MockData.samplePlaceDetails.result
@@ -19,7 +20,7 @@ struct PlaceDetailsView: View {
                 }
             }
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.height(100), .medium, .fraction(0.99)], selection: $selectedDetent)
         .interactiveDismissDisabled()
     }
 }
