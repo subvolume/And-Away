@@ -11,8 +11,8 @@ import SwiftUI
 struct And_AwayApp: App {
     var body: some Scene {
         WindowGroup {
-            // MainMapView() // Temporarily replaced with SandboxView
-            SandboxView()
+            MainMapView()
+            //SandboxView()
         }
     }
 }
