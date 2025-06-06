@@ -21,6 +21,7 @@ struct PlaceDetailsView: View {
             }
         }
         .presentationDetents([.height(100), .medium, .fraction(0.99)], selection: $selectedDetent)
+        .presentationBackgroundInteraction(.enabled)
         .interactiveDismissDisabled()
     }
 }

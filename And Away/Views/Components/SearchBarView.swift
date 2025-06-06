@@ -5,6 +5,7 @@ struct SearchBarView: View {
     var placeholder: String = "Search..." // Customizable placeholder text
     var verticalPadding: CGFloat = Spacing.m // Overall vertical padding for the component
     @Binding var isEditing: Bool // <--- New binding to report editing state
+    @FocusState private var isFocused: Bool // Internal focus state
 
     var body: some View {
         HStack { // This HStack will now be the styled input field
@@ -15,6 +16,7 @@ struct SearchBarView: View {
                 self.isEditing = editing // <--- Update the binding
             })
                 .textFieldStyle(PlainTextFieldStyle()) // Keep it plain
+                .focused($isFocused)
                 // Removed specific padding, background, and cornerRadius from TextField
 
             if !text.isEmpty {
@@ -33,6 +35,9 @@ struct SearchBarView: View {
         .cornerRadius(10)
         .padding(.horizontal) // Outer horizontal padding for the whole component
         .padding(.vertical, verticalPadding) // Outer vertical padding for the whole component
+        .onChange(of: isEditing) { editing in
+            isFocused = editing
+        }
     }
 }
 
