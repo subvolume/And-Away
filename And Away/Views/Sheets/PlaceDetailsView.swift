@@ -15,7 +15,7 @@ struct PlaceDetailsView: View {
             
             ScrollView {
                 VStack(spacing: Spacing.xs) {
-                   // ImageCarouselView()
+                    ImageCarouselView()
                 }
             }
         }

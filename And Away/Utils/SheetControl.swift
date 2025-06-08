@@ -83,6 +83,16 @@ class SheetController: ObservableObject {
             set: { self.sheetDetents[level.index] = $0 }
         )
     }
+    
+    func setKeyboardVisible(_ isVisible: Bool, for level: SheetLevel) {
+        if isVisible {
+            // When keyboard appears, change to large detent to prevent animation issues
+            sheetDetents[level.index] = .large
+        } else {
+            // When keyboard disappears, return to medium detent
+            sheetDetents[level.index] = .medium
+        }
+    }
 }
 
 extension View {

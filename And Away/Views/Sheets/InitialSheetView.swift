@@ -26,6 +26,9 @@ struct InitialSheetView: View {
                 }
             }
         }
+        .onChange(of: isSearchActive) { oldValue, newValue in
+            sheetController.setKeyboardVisible(newValue, for: .list)
+        }
         .sheet(isPresented: $showPlaceDetails) {
             PlaceDetailsView(onBackTapped: {
                 showPlaceDetails = false
