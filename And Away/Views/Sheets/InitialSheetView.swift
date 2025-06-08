@@ -29,12 +29,15 @@ struct InitialSheetView: View {
             sheetController.setKeyboardVisible(newValue, for: .list)
         }
         .sheet(isPresented: $showPlaceDetails) {
-            PlaceDetailsView(onBackTapped: {
-                showPlaceDetails = false
-                isSearchActive = true  // Restore search focus when returning
-                // Dismiss the details sheet level using SheetController
-                sheetController.dismissSheet(.details)
-            })
+            PlaceDetailsView(
+                placeId: selectedPlace?.placeId ?? "ChIJL-ROikVu5kcRzWBvNS3lnM0",
+                onBackTapped: {
+                    showPlaceDetails = false
+                    isSearchActive = true  // Restore search focus when returning
+                    // Dismiss the details sheet level using SheetController
+                    sheetController.dismissSheet(.details)
+                }
+            )
             .managedSheetDetents(controller: sheetController, level: .details)
         }
     }

@@ -1,15 +1,18 @@
 import SwiftUI
 
 struct PlaceDetailsView: View {
+    let placeId: String
     let onBackTapped: () -> Void
     
-    // Using mock data from MockData.swift
-    private let placeDetails = MockData.samplePlaceDetails.result
+    // Look up place details from MockData using the placeId, with fallback to sample data
+    private var placeDetails: PlaceDetails {
+        return MockData.allPlaceDetails[placeId] ?? MockData.samplePlaceDetails.result
+    }
     
     var body: some View {
         GeometryReader { geometry in
             VStack {
-                // Use existing SheetHeader component with place name from mock data
+                // Use existing SheetHeader component with place name from selected place
                 SheetHeader(title: placeDetails.name, onClose: onBackTapped)
                 
                 ScrollView {
@@ -25,7 +28,7 @@ struct PlaceDetailsView: View {
 }
 
 #Preview {
-    PlaceDetailsView(onBackTapped: {
+    PlaceDetailsView(placeId: "ChIJL-ROikVu5kcRzWBvNS3lnM0", onBackTapped: {
         print("Back tapped")
     })
 } 
