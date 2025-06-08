@@ -7,17 +7,19 @@ struct PlaceDetailsView: View {
     private let placeDetails = MockData.samplePlaceDetails.result
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Use existing SheetHeader component with place name from mock data
-            SheetHeader(title: placeDetails.name, onClose: onBackTapped)
-            PlaceDetailsActions()
-
-            
-            ScrollView {
-                VStack(spacing: Spacing.xs) {
-                    ImageCarouselView()
+        GeometryReader { geometry in
+            VStack {
+                // Use existing SheetHeader component with place name from mock data
+                SheetHeader(title: placeDetails.name, onClose: onBackTapped)
+                
+                ScrollView {
+                    VStack(spacing: Spacing.xs) {
+                        PlaceDetailsActions()
+                        ImageCarouselView()
+                    }
                 }
             }
+            .frame(width: geometry.size.width)
         }
     }
 }
