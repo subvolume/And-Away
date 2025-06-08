@@ -4,8 +4,7 @@ struct SearchResultsView: View {
     let searchText: String
     let onPlaceTapped: (PlaceSearchResult) -> Void
     
-    // Using mock data from MockData.swift
-    private let searchResults = MockData.sampleSearchResponse.results
+    @StateObject private var searchViewModel = SearchViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
@@ -15,8 +14,28 @@ struct SearchResultsView: View {
                 showViewAllButton: false
             )
             
-            // Use the searchResult template from ListItem with mock data
-            ForEach(searchResults, id: \.placeId) { place in
+            // Show loading indicator
+            if searchViewModel.isLoading {
+                HStack {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                    Text("Searching...")
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                }
+                .padding()
+            }
+            
+            // Show error if any
+            if let errorMessage = searchViewModel.errorMessage {
+                Text(errorMessage)
+                    .font(.body)
+                    .foregroundColor(.red)
+                    .padding()
+            }
+            
+            // Show search results from Google
+            ForEach(searchViewModel.searchResults, id: \.placeId) { place in
                 ListItem.searchResult(
                     title: place.name,
                     distance: "\(Int.random(in: 1...20))km", // Mock distance for now
@@ -30,6 +49,16 @@ struct SearchResultsView: View {
             }
             
             Spacer()
+        }
+        .onAppear {
+            // Trigger search when view appears
+            searchViewModel.searchText = searchText
+            searchViewModel.searchPlaces()
+        }
+        .onChange(of: searchText) { newValue in
+            // Update search when text changes
+            searchViewModel.searchText = newValue
+            searchViewModel.searchPlaces()
         }
     }
     

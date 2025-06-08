@@ -2,6 +2,9 @@ import SwiftUI
 
 struct SheetHeader: View {
     let title: String
+    let placeType: String?
+    let openStatus: String?
+    let isOpen: Bool?
     let onClose: () -> Void
     
     var body: some View {
@@ -23,26 +26,30 @@ struct SheetHeader: View {
             
             // Bottom row with type and status
             HStack(spacing: Spacing.m) {
-                // Type indicator (Restaurant)
-                HStack(spacing: Spacing.xxs) {
-                    Image(systemName: "fork.knife")
-                        .font(.caption)
-                        .foregroundColor(.tertiary)
-                    
-                    Text("Restaurant")
-                        .pageSubtitle()
-                        .foregroundColor(.tertiary)
+                // Type indicator
+                if let placeType = placeType {
+                    HStack(spacing: Spacing.xxs) {
+                        Image(systemName: iconForPlaceType(placeType))
+                            .font(.caption)
+                            .foregroundColor(.tertiary)
+                        
+                        Text(placeType)
+                            .pageSubtitle()
+                            .foregroundColor(.tertiary)
+                    }
                 }
                 
-                // Status indicator (Open)
-                HStack(spacing: Spacing.xxs) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.caption)
-                        .foregroundColor(.green)
-                    
-                    Text("Open")
-                        .pageSubtitle()
-                        .foregroundColor(.tertiary)
+                // Status indicator
+                if let openStatus = openStatus {
+                    HStack(spacing: Spacing.xxs) {
+                        Image(systemName: isOpen == true ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .font(.caption)
+                            .foregroundColor(isOpen == true ? .green : .red)
+                        
+                        Text(openStatus)
+                            .pageSubtitle()
+                            .foregroundColor(.tertiary)
+                    }
                 }
                 
                 //Spacer()
@@ -52,17 +59,35 @@ struct SheetHeader: View {
         .padding(.top, Spacing.m)
        // .padding(.bottom, Spacing.s)
     }
+    
+    // Helper function to get appropriate icon based on place type
+    private func iconForPlaceType(_ type: String) -> String {
+        let lowercaseType = type.lowercased()
+        if lowercaseType.contains("restaurant") || lowercaseType.contains("food") {
+            return "fork.knife"
+        } else if lowercaseType.contains("cafe") || lowercaseType.contains("coffee") {
+            return "cup.and.saucer"
+        } else if lowercaseType.contains("tourist") || lowercaseType.contains("attraction") {
+            return "camera"
+        } else if lowercaseType.contains("museum") {
+            return "building.columns"
+        } else if lowercaseType.contains("store") || lowercaseType.contains("shop") {
+            return "bag"
+        } else {
+            return "mappin.circle"
+        }
+    }
 }
 
 // Preview
 #Preview {
     VStack(alignment: .leading, spacing: Spacing.xl) {
         // Normal title
-        SheetHeader(title: "Point of Interest", onClose: { })
+        SheetHeader(title: "Point of Interest", placeType: "Restaurant", openStatus: "Open", isOpen: true, onClose: { })
             .background(Color(.systemBackground))
         
         // Long title that wraps to 2 lines
-        SheetHeader(title: "The Grand Central Market & Food Hall Experience", onClose: { })
+        SheetHeader(title: "The Grand Central Market & Food Hall Experience", placeType: "Food Court", openStatus: "Closed", isOpen: false, onClose: { })
             .background(Color(.systemBackground))
     }
     .padding()
