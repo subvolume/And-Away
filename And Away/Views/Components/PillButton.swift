@@ -63,15 +63,14 @@ struct PillButton: View {
         // Icon-only buttons are circular, others are capsule-shaped
         if text == nil && icon != nil {
             content
-                .frame(width: 15, height: 15, alignment: .center)
-                .padding(verticalPadding)
+                .frame(width: 32, height: 32, alignment: .center)
                 .background(currentBackgroundColor)
                 .clipShape(Circle())
                 .onTapGesture { action() }
         } else {
             content
-                .padding(.vertical, verticalPadding)
                 .padding(.horizontal, Spacing.s)
+                .frame(height: 32, alignment: .center)
                 .background(currentBackgroundColor)
                 .clipShape(Capsule())
                 .onTapGesture { action() }
