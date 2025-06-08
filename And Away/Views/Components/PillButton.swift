@@ -142,8 +142,9 @@ struct PillButton: View {
                 Image(systemName: currentIcon)
                     .font(FontStyle.button)
                     .foregroundColor(currentTextColor)
+                    .animation(.none, value: isSelected) // Disable color animation
                     .rotationEffect(.degrees(rotationAngle))
-                    .animation(.easeInOut(duration: 0.3), value: isSelected)
+                    .animation(.easeInOut(duration: 0.3), value: rotationAngle) // Only animate rotation
             }
             if let text = text {
                 Text(text)
@@ -152,22 +153,26 @@ struct PillButton: View {
             }
         }
 
-        Button(action: action) {
-            if text == nil && icon != nil { // Icon-only button: Make it a circle
-                labelContent
-                    .frame(width: 15, height: 15, alignment: .center)
-                    .padding(verticalPadding)
-                    .background(currentBackgroundColor)
-                    .clipShape(Circle())
-            } else { // Button with text
-                labelContent
-                    .padding(.vertical, verticalPadding)
-                    .padding(.horizontal, Spacing.s)
-                    .background(currentBackgroundColor)
-                    .clipShape(Capsule())
-            }
+        // Use onTapGesture instead of Button to eliminate built-in button overlay effects
+        if text == nil && icon != nil { // Icon-only button: Make it a circle
+            labelContent
+                .frame(width: 15, height: 15, alignment: .center)
+                .padding(verticalPadding)
+                .background(currentBackgroundColor)
+                .clipShape(Circle())
+                .onTapGesture {
+                    action()
+                }
+        } else { // Button with text
+            labelContent
+                .padding(.vertical, verticalPadding)
+                .padding(.horizontal, Spacing.s)
+                .background(currentBackgroundColor)
+                .clipShape(Capsule())
+                .onTapGesture {
+                    action()
+                }
         }
-        .buttonStyle(PlainButtonStyle())
     }
 }
 
