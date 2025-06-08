@@ -16,7 +16,7 @@ struct PlaceDetailsView: View {
                 SheetHeader(title: placeDetails.name, onClose: onBackTapped)
                 
                 ScrollView {
-                    VStack(spacing: Spacing.xs) {
+                    VStack(spacing: Spacing.l) {
                         PlaceDetailsActions()
                         ImageCarouselView()
                     }

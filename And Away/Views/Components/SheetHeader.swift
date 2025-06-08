@@ -45,12 +45,12 @@ struct SheetHeader: View {
                         .foregroundColor(.tertiary)
                 }
                 
-                Spacer()
+                //Spacer()
             }
         }
         .padding(.horizontal, Spacing.m)
         .padding(.top, Spacing.m)
-        .padding(.bottom, Spacing.s)
+       // .padding(.bottom, Spacing.s)
     }
 }
 

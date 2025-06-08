@@ -11,7 +11,7 @@ struct PlaceDetailsActions: View {
             
             Spacer()
         }
-        .padding()
+        .padding(.horizontal)
     }
 }
 
