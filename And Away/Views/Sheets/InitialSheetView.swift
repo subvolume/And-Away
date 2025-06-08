@@ -11,6 +11,8 @@ struct InitialSheetView: View {
     @State private var selectedPlace: PlaceSearchResult? = nil // Track selected place for sheet presentation
     @State private var showPlaceDetails = false // State to control PlaceDetailsView sheet
     var showSearchBar: Bool = true
+    
+    @EnvironmentObject var sheetController: SheetController
 
     var body: some View {
         VStack(spacing: 0) {
@@ -29,6 +31,8 @@ struct InitialSheetView: View {
                             showPlaceDetails = true
                             // Dismiss keyboard when showing place details
                             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            // Present the details sheet level
+                            sheetController.presentSheet(.details)
                         })
                     } else {
                         ArtworkExampleView()
@@ -41,11 +45,15 @@ struct InitialSheetView: View {
                 showPlaceDetails = false
                 // Restore search focus to bring back keyboard
                 isSearchActive = true
+                // Dismiss the details sheet level
+                sheetController.dismissSheet(.details)
             })
+            .managedSheetDetents(controller: sheetController, level: .details)
         }
     }
 }
 
 #Preview {
     InitialSheetView(showSearchBar: true)
+        .environmentObject(SheetController())
 } 
