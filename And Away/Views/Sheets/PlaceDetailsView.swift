@@ -68,7 +68,7 @@ struct PlaceDetailsView: View {
                     ScrollView {
                         VStack(spacing: Spacing.l) {
                             PlaceDetailsActions()
-                            ImageCarouselView()
+                            ImageCarouselView(imageURLs: getPhotoURLs(from: place.photos))
                         }
                     }
                 }
@@ -120,6 +120,15 @@ struct PlaceDetailsView: View {
             return nil
         }
         return isOpen ? "Open" : "Closed"
+    }
+    
+    private func getPhotoURLs(from photos: [PlacePhoto]?) -> [URL] {
+        guard let photos = photos else { return [] }
+        
+        // Get up to 8 photos
+        return photos.prefix(8).compactMap { photo in
+            googleAPI.getPhotoURL(photoReference: photo.photoReference, maxWidth: 400)
+        }
     }
 }
 

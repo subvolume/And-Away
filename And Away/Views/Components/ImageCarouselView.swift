@@ -15,21 +15,35 @@ import SwiftUI
  */
 
 struct ImageCarouselView: View {
-    let topImages = ["cat01", "cat02", "cat03", "cat04"]
-    let bottomImages = ["cat05", "cat06", "cat07", "cat08"]
+    let imageURLs: [URL]
     
-    // Helper function to load images using UIImage with proper aspect ratio
-    func loadImage(_ name: String) -> Image {
-        if let path = Bundle.main.path(forResource: name, ofType: "png"),
-           let uiImage = UIImage(contentsOfFile: path) {
-            return Image(uiImage: uiImage)
-        } else {
-            return Image(systemName: "photo.fill") // Fallback
+    // Split images into top and bottom rows (up to 8 total)
+    private var topImages: [URL] {
+        Array(imageURLs.prefix(4))
+    }
+    
+    private var bottomImages: [URL] {
+        Array(imageURLs.dropFirst(4).prefix(4))
+    }
+    
+    // Component for loading images from URLs (matching original design)
+    func asyncImageView(url: URL) -> some View {
+        AsyncImage(url: url) { image in
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        } placeholder: {
+            Rectangle()
+                .fill(Color.gray.opacity(0.3))
+                .overlay(
+                    ProgressView()
+                        .scaleEffect(0.8)
+                )
         }
     }
     
     // Reusable carousel component
-    func carouselRow(images: [String]) -> some View {
+    func carouselRow(images: [URL]) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: Spacing.xxs) {
                 // Left frame
@@ -37,10 +51,8 @@ struct ImageCarouselView: View {
                     .fill(Color.backgroundTertiary)
                     .frame(width: 100, height: 130)
                 
-                ForEach(images, id: \.self) { imageName in
-                    loadImage(imageName)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
+                ForEach(images, id: \.self) { imageURL in
+                    asyncImageView(url: imageURL)
                 }
                 
                 // Right frame
@@ -65,5 +77,10 @@ struct ImageCarouselView: View {
 }
 
 #Preview {
-    ImageCarouselView()
+    ImageCarouselView(imageURLs: [
+        URL(string: "https://picsum.photos/300/300?random=1")!,
+        URL(string: "https://picsum.photos/300/300?random=2")!,
+        URL(string: "https://picsum.photos/300/300?random=3")!,
+        URL(string: "https://picsum.photos/300/300?random=4")!
+    ])
 } 

@@ -47,7 +47,16 @@ struct ArtworkExampleView: View {
                     title: "Cat on Stairs",
                     subtitle: "Thumbnail • 80x80"
                 )
-                ImageCarouselView()
+                ImageCarouselView(imageURLs: [
+                    URL(string: "https://picsum.photos/300/300?random=1")!,
+                    URL(string: "https://picsum.photos/300/300?random=2")!,
+                    URL(string: "https://picsum.photos/300/300?random=3")!,
+                    URL(string: "https://picsum.photos/300/300?random=4")!,
+                    URL(string: "https://picsum.photos/300/300?random=5")!,
+                    URL(string: "https://picsum.photos/300/300?random=6")!,
+                    URL(string: "https://picsum.photos/300/300?random=7")!,
+                    URL(string: "https://picsum.photos/300/300?random=8")!
+                ])
                 .padding(.vertical, Spacing.m)
                 
                 ListItem(
