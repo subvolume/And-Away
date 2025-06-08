@@ -23,7 +23,7 @@ struct SearchResultsView: View {
                     location: place.vicinity ?? "Unknown location",
                     icon: iconForPlaceType(place.types),
                     iconColor: colorForPlaceType(place.types),
-                    onTap: {
+                    onOpenPlaceDetails: {
                         onPlaceTapped(place)
                     }
                 )

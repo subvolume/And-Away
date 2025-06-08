@@ -87,23 +87,23 @@ struct ListItem: View {
     
     // MARK: - Templates
     
-    /// Saved place template with thumbnail image
-    static func savedPlace(title: String, type: String, distance: String, location: String, image: Image, onTap: (() -> Void)? = nil) -> ListItem {
+    /// Saved place template with thumbnail image - always opens place details
+    static func savedPlace(title: String, type: String, distance: String, location: String, image: Image, onOpenPlaceDetails: @escaping () -> Void) -> ListItem {
         return ListItem(
             artwork: .thumbnail(image),
             title: title,
             subtitle: "\(type) • \(distance) • \(location)",
-            onTap: onTap
+            onTap: onOpenPlaceDetails
         )
     }
     
-    /// Search result template with circular icon
-    static func searchResult(title: String, distance: String, location: String, icon: Image, iconColor: Color = .red100, onTap: (() -> Void)? = nil) -> ListItem {
+    /// Search result template with circular icon - always opens place details
+    static func searchResult(title: String, distance: String, location: String, icon: Image, iconColor: Color = .red100, onOpenPlaceDetails: @escaping () -> Void) -> ListItem {
         return ListItem(
             artwork: .circleIcon(color: iconColor, icon: icon),
             title: title,
             subtitle: "\(distance) • \(location)",
-            onTap: onTap
+            onTap: onOpenPlaceDetails
         )
     }
 }
@@ -127,14 +127,14 @@ struct ListItem: View {
             distance: "15km",
             location: "Barcelona",
             image: loadImage("cat01"), // Now using the helper function
-            onTap: nil
+            onOpenPlaceDetails: {}
         )
         ListItem.searchResult(
             title: "Name of the place",
             distance: "15km",
             location: "Barcelona",
             icon: Image(systemName: "building.columns"),
-            onTap: nil
+            onOpenPlaceDetails: {}
         )
         ListItem(color: .azure100, title: "Azure", subtitle: "#128DFF", thirdText: nil, onTap: nil)
     }
