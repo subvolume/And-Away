@@ -5,7 +5,7 @@ struct SearchResultsView: View {
     let searchText: String
     let onPlaceTapped: (PlaceSearchResult) -> Void
     
-    @StateObject private var searchViewModel = SearchViewModel()
+    @EnvironmentObject private var searchViewModel: SearchViewModel
     @EnvironmentObject private var locationService: LocationService
     
     var body: some View {
@@ -137,4 +137,5 @@ struct SearchResultsView: View {
 #Preview {
     SearchResultsView(searchText: "test search", onPlaceTapped: { _ in })
         .environmentObject(LocationService.shared)
+        .environmentObject(SearchViewModel())
 } 

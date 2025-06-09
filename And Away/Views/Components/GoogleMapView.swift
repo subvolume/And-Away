@@ -6,6 +6,10 @@ struct GoogleMapView: UIViewRepresentable {
     @EnvironmentObject private var locationService: LocationService
     @State private var hasInitiallycentered = false
     
+    // New properties for POI display
+    let searchResults: [PlaceSearchResult]
+    let onPOITapped: ((PlaceSearchResult) -> Void)?
+    
     func makeUIView(context: Context) -> GMSMapView {
         // Create Google Map with similar settings to the original MapKit version
         let mapView = GMSMapView()
@@ -61,9 +65,74 @@ struct GoogleMapView: UIViewRepresentable {
             uiView.camera = camera
             hasInitiallycentered = true
         }
+        
+        // Clear existing POI markers
+        uiView.clear()
+        
+        // Add POI markers for search results
+        for place in searchResults {
+            let marker = GMSMarker()
+            marker.position = CLLocationCoordinate2D(
+                latitude: place.geometry.location.lat,
+                longitude: place.geometry.location.lng
+            )
+            marker.title = place.name
+            marker.snippet = place.displayAddress
+            
+            // Create custom marker view using our MapPOI component
+            let hostingController = UIHostingController(
+                rootView: MapPOI(place: place, onTap: {
+                    onPOITapped?(place)
+                })
+            )
+            hostingController.view.backgroundColor = UIColor.clear
+            hostingController.view.clipsToBounds = false
+            // POI is 22x22, but shadow (radius 2, y offset 2) and stroke (inset -1, width 2) extend beyond
+            // Need extra space: stroke extends ~3pts, shadow extends ~4pts vertically, ~2pts horizontally
+            hostingController.view.frame = CGRect(x: 0, y: 0, width: 30, height: 32)
+            
+            // Ensure proper layout and prevent any parent clipping
+            hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+            hostingController.view.layer.masksToBounds = false
+            hostingController.view.superview?.clipsToBounds = false
+            
+            marker.iconView = hostingController.view
+            marker.map = uiView
+            
+            // Store place data for tap handling
+            marker.userData = place
+        }
+        
+        // Set up marker tap handler
+        uiView.delegate = context.coordinator
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, GMSMapViewDelegate {
+        var parent: GoogleMapView
+        
+        init(_ parent: GoogleMapView) {
+            self.parent = parent
+        }
+        
+        func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+            if let place = marker.userData as? PlaceSearchResult {
+                parent.onPOITapped?(place)
+            }
+            return true
+        }
     }
 }
 
 #Preview {
-    GoogleMapView()
+    GoogleMapView(
+        searchResults: [],
+        onPOITapped: { place in
+            print("Tapped POI: \(place.name)")
+        }
+    )
+    .environmentObject(LocationService.shared)
 } 
