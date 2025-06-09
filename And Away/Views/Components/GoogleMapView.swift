@@ -81,7 +81,7 @@ struct GoogleMapView: UIViewRepresentable {
             
             // Create custom marker view using our MapPOI component
             let hostingController = UIHostingController(
-                rootView: MapPOI(place: place, onTap: {
+                rootView: MapPOI(types: place.types, onTap: {
                     onPOITapped?(place)
                 })
             )

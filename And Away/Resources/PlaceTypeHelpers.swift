@@ -42,23 +42,31 @@ struct PlaceTypeHelpers {
 }
 
 #Preview {
-    VStack(spacing: 16) {
+    // Helper function to create place type artwork
+    func placeArtwork(for types: [String]) -> ArtworkView {
+        ArtworkView(artwork: .circleIcon(
+            color: PlaceTypeHelpers.colorForPlaceType(types),
+            icon: PlaceTypeHelpers.iconForPlaceType(types)
+        ))
+    }
+    
+    return VStack(spacing: 16) {
         // ArtworkView components (as used in search results)
         HStack(spacing: 12) {
-            ArtworkView(artwork: .circleIcon(color: PlaceTypeHelpers.colorForPlaceType(["restaurant"]), icon: PlaceTypeHelpers.iconForPlaceType(["restaurant"])))
-            ArtworkView(artwork: .circleIcon(color: PlaceTypeHelpers.colorForPlaceType(["cafe"]), icon: PlaceTypeHelpers.iconForPlaceType(["cafe"])))
-            ArtworkView(artwork: .circleIcon(color: PlaceTypeHelpers.colorForPlaceType(["tourist_attraction"]), icon: PlaceTypeHelpers.iconForPlaceType(["tourist_attraction"])))
-            ArtworkView(artwork: .circleIcon(color: PlaceTypeHelpers.colorForPlaceType(["museum"]), icon: PlaceTypeHelpers.iconForPlaceType(["museum"])))
-            ArtworkView(artwork: .circleIcon(color: PlaceTypeHelpers.colorForPlaceType(["store"]), icon: PlaceTypeHelpers.iconForPlaceType(["store"])))
+            placeArtwork(for: ["restaurant"])
+            placeArtwork(for: ["cafe"])
+            placeArtwork(for: ["tourist_attraction"])
+            placeArtwork(for: ["museum"])
+            placeArtwork(for: ["store"])
         }
         
         // MapPOI components (as used on map)
         HStack(spacing: 12) {
-            MapPOI(place: PlaceSearchResult(placeId: "1", name: "Restaurant", vicinity: nil, formattedAddress: nil, addressComponents: nil, rating: nil, priceLevel: nil, photos: nil, geometry: PlaceGeometry(location: PlaceLocation(lat: 0.0, lng: 0.0), viewport: nil), types: ["restaurant"], userRatingsTotal: nil, businessStatus: nil), onTap: {})
-            MapPOI(place: PlaceSearchResult(placeId: "2", name: "Cafe", vicinity: nil, formattedAddress: nil, addressComponents: nil, rating: nil, priceLevel: nil, photos: nil, geometry: PlaceGeometry(location: PlaceLocation(lat: 0.0, lng: 0.0), viewport: nil), types: ["cafe"], userRatingsTotal: nil, businessStatus: nil), onTap: {})
-            MapPOI(place: PlaceSearchResult(placeId: "3", name: "Attraction", vicinity: nil, formattedAddress: nil, addressComponents: nil, rating: nil, priceLevel: nil, photos: nil, geometry: PlaceGeometry(location: PlaceLocation(lat: 0.0, lng: 0.0), viewport: nil), types: ["tourist_attraction"], userRatingsTotal: nil, businessStatus: nil), onTap: {})
-            MapPOI(place: PlaceSearchResult(placeId: "4", name: "Museum", vicinity: nil, formattedAddress: nil, addressComponents: nil, rating: nil, priceLevel: nil, photos: nil, geometry: PlaceGeometry(location: PlaceLocation(lat: 0.0, lng: 0.0), viewport: nil), types: ["museum"], userRatingsTotal: nil, businessStatus: nil), onTap: {})
-            MapPOI(place: PlaceSearchResult(placeId: "5", name: "Store", vicinity: nil, formattedAddress: nil, addressComponents: nil, rating: nil, priceLevel: nil, photos: nil, geometry: PlaceGeometry(location: PlaceLocation(lat: 0.0, lng: 0.0), viewport: nil), types: ["store"], userRatingsTotal: nil, businessStatus: nil), onTap: {})
+            MapPOI(types: ["restaurant"], onTap: {})
+            MapPOI(types: ["cafe"], onTap: {})
+            MapPOI(types: ["tourist_attraction"], onTap: {})
+            MapPOI(types: ["museum"], onTap: {})
+            MapPOI(types: ["store"], onTap: {})
         }
     }
     .padding()
