@@ -25,7 +25,7 @@ struct InitialSheetView: View {
                         sheetController.presentSheet(.details)
                     })
                 } else {
-                    DummyView()
+                    InitialSavedView()
                 }
             }
         }

@@ -198,7 +198,7 @@ class BookmarkManager: ObservableObject {
         }
     }
     
-    private func loadSavedPlaces() {
+    func loadSavedPlaces() {
         isLoading = true
         
         guard let data = userDefaults.data(forKey: savedPlacesKey) else {

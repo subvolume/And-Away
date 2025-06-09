@@ -4,6 +4,7 @@ import SwiftUI
 enum ArtworkType {
     case large(Image)
     case thumbnail(Image)
+    case asyncThumbnail(photoReference: String?, category: PlaceCategory)
     case largeIcon(color: Color, icon: Image)
     case circleIcon(color: Color, icon: Image)
     case icon(Image)
@@ -12,6 +13,7 @@ enum ArtworkType {
 // MARK: - Artwork View
 struct ArtworkView: View {
     let artwork: ArtworkType
+    private let googleAPI = GoogleAPIService.shared
     
     // Helper function to get background color (15% opacity)
     private func backgroundColorFor(_ color: Color) -> Color {
@@ -49,6 +51,45 @@ struct ArtworkView: View {
                 .frame(width: 80, height: 80)
                 .clipped()
                 .cornerRadius(10)
+            
+        case .asyncThumbnail(let photoReference, let category):
+            Group {
+                if let photoReference = photoReference, 
+                   !photoReference.isEmpty,
+                   let photoURL = googleAPI.getPhotoURL(photoReference: photoReference, maxWidth: 400) {
+                    // Load actual photo from Google Places API
+                    AsyncImage(url: photoURL) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 80, height: 80)
+                            .clipped()
+                    } placeholder: {
+                        // Show category icon while loading
+                        ZStack {
+                            PlaceVisuals.color(for: category)
+                            PlaceVisuals.icon(for: category)
+                                .foregroundColor(.white)
+                                .font(.title2)
+                        }
+                        .frame(width: 80, height: 80)
+                    }
+                } else {
+                    // No photo available, show category icon
+                    ZStack {
+                        PlaceVisuals.color(for: category)
+                        PlaceVisuals.icon(for: category)
+                            .foregroundColor(.white)
+                            .font(.title2)
+                    }
+                    .frame(width: 80, height: 80)
+                }
+            }
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.tertiary.opacity(0.3), lineWidth: 1)
+            )
             
         case .largeIcon(let color, let icon):
             ZStack {
@@ -104,6 +145,10 @@ struct ArtworkView: View {
         
         // Thumbnail - cat photo
         ArtworkView(artwork: .thumbnail(loadImage("cat02")))
+        
+        // Async thumbnail examples
+        ArtworkView(artwork: .asyncThumbnail(photoReference: "sample_ref", category: .restaurant))
+        ArtworkView(artwork: .asyncThumbnail(photoReference: nil, category: .cafe))
         
         // Large icon - house with background
         ArtworkView(artwork: .largeIcon(color: .red100, icon: Image(systemName: "house.fill")))

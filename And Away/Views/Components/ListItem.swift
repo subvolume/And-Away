@@ -17,7 +17,7 @@ struct ListItem: View {
         switch artwork {
         case .large(_):
             return 100
-        case .thumbnail(_), .largeIcon(_, _):
+        case .thumbnail(_), .asyncThumbnail(_, _), .largeIcon(_, _):
             return 80
         case .circleIcon(_, _), .icon(_):
             return 32
@@ -108,11 +108,9 @@ struct ListItem: View {
         )
     }
     
-    /// Saved place template using SavedPlace model - automatically handles categorization
+    /// Saved place template using SavedPlace model - uses thumbnail images
     static func savedPlace(from savedPlace: SavedPlace, userLocation: CLLocation?, onOpenPlaceDetails: @escaping () -> Void) -> ListItem {
         let distanceString = userLocation != nil ? savedPlace.distanceStringFrom(userLocation!) : ""
-        let categoryIcon = PlaceVisuals.icon(for: savedPlace.category)
-        let categoryColor = PlaceVisuals.color(for: savedPlace.category)
         
         let subtitle = [
             savedPlace.category.displayName,
@@ -121,7 +119,10 @@ struct ListItem: View {
         ].filter { !$0.isEmpty }.joined(separator: " • ")
         
         return ListItem(
-            artwork: .circleIcon(color: categoryColor, icon: categoryIcon),
+            artwork: .asyncThumbnail(
+                photoReference: savedPlace.photoReference,
+                category: savedPlace.category
+            ),
             title: savedPlace.name,
             subtitle: subtitle,
             onTap: onOpenPlaceDetails

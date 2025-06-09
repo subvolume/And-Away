@@ -11,7 +11,7 @@ struct PlaceVisuals {
     /// Get color for place category
     static func color(for category: PlaceCategory) -> Color {
         switch category {
-        case .restaurant: return .sky100
+        case .restaurant: return .orange100
         case .cafe: return .teal100
         case .attraction: return .azure100
         case .shopping: return .red100
@@ -27,11 +27,11 @@ struct PlaceVisuals {
     /// Get system icon name for place category
     static func iconName(for category: PlaceCategory) -> String {
         switch category {
-        case .restaurant: return "shippingbox.fill"
+        case .restaurant: return "fork.knife"
         case .cafe: return "cup.and.saucer.fill"
         case .attraction: return "camera.fill"
         case .shopping: return "bag.fill"
-        case .accommodation: return "bed.double"
+        case .accommodation: return "bed.double.fill"
         case .transport: return "car.fill"
         case .health: return "cross.fill"
         case .entertainment: return "gamecontroller.fill"
