@@ -1,10 +1,12 @@
 import SwiftUI
+import CoreLocation
 
 struct SearchResultsView: View {
     let searchText: String
     let onPlaceTapped: (PlaceSearchResult) -> Void
     
     @StateObject private var searchViewModel = SearchViewModel()
+    @EnvironmentObject private var locationService: LocationService
     
     var body: some View {
         VStack(spacing: 0) {
@@ -38,8 +40,8 @@ struct SearchResultsView: View {
             ForEach(searchViewModel.searchResults, id: \.placeId) { place in
                 ListItem.searchResult(
                     title: place.name,
-                    distance: "\(Int.random(in: 1...20))km", // Mock distance for now
-                    location: place.vicinity ?? "Unknown location",
+                    distance: calculateDistance(to: place),
+                    location: place.simpleLocationName,
                     icon: iconForPlaceType(place.types),
                     iconColor: colorForPlaceType(place.types),
                     onOpenPlaceDetails: {
@@ -51,6 +53,9 @@ struct SearchResultsView: View {
             Spacer()
         }
         .onAppear {
+            // Set user location for better search results
+            searchViewModel.userLocation = locationService.currentLocation
+            
             // Trigger search when view appears
             searchViewModel.searchText = searchText
             searchViewModel.searchPlaces()
@@ -59,6 +64,14 @@ struct SearchResultsView: View {
             // Update search when text changes
             searchViewModel.searchText = newValue
             searchViewModel.searchPlaces()
+        }
+        .onChange(of: locationService.currentLocation) { newLocation in
+            // Update search results when location changes
+            searchViewModel.userLocation = newLocation
+            if !searchViewModel.searchResults.isEmpty {
+                // Refresh search with new location bias
+                searchViewModel.searchPlaces()
+            }
         }
     }
     
@@ -91,8 +104,37 @@ struct SearchResultsView: View {
             return .green100
         }
     }
+    
+
+    
+    // Helper function to calculate real distance
+    private func calculateDistance(to place: PlaceSearchResult) -> String {
+        guard let userLocation = locationService.currentLocation else {
+            return "N/A"
+        }
+        
+        let placeLocation = CLLocation(
+            latitude: place.geometry.location.lat,
+            longitude: place.geometry.location.lng
+        )
+        
+        let distance = userLocation.distance(from: placeLocation) // in meters
+        
+        // Format distance appropriately
+        if distance < 1000 {
+            return "\(Int(distance))m"
+        } else {
+            let kilometers = distance / 1000
+            if kilometers < 10 {
+                return String(format: "%.1fkm", kilometers)
+            } else {
+                return "\(Int(kilometers))km"
+            }
+        }
+    }
 }
 
 #Preview {
     SearchResultsView(searchText: "test search", onPlaceTapped: { _ in })
+        .environmentObject(LocationService.shared)
 } 

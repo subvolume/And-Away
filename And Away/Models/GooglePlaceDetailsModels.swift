@@ -12,6 +12,7 @@ struct PlaceDetails: Codable, Identifiable {
     let placeId: String
     let name: String
     let formattedAddress: String?
+    let addressComponents: [AddressComponent]?
     let formattedPhoneNumber: String?
     let internationalPhoneNumber: String?
     let website: String?
@@ -30,6 +31,7 @@ struct PlaceDetails: Codable, Identifiable {
         case placeId = "place_id"
         case name
         case formattedAddress = "formatted_address"
+        case addressComponents = "address_components"
         case formattedPhoneNumber = "formatted_phone_number"
         case internationalPhoneNumber = "international_phone_number"
         case website
@@ -43,6 +45,51 @@ struct PlaceDetails: Codable, Identifiable {
         case types
         case businessStatus = "business_status"
         case utcOffset = "utc_offset"
+    }
+    
+    // MARK: - Computed Properties
+    /// Get a clean location name from address components
+    var simpleLocationName: String {
+        guard let addressComponents = addressComponents else {
+            // Fallback to formatted address
+            return formattedAddress ?? "Unknown location"
+        }
+        
+        // Try to find neighborhood first
+        if let neighborhood = addressComponents.first(where: { $0.types.contains("neighborhood") }) {
+            return neighborhood.longName
+        }
+        
+        // Then try sublocality
+        if let sublocality = addressComponents.first(where: { $0.types.contains("sublocality") }) {
+            return sublocality.longName
+        }
+        
+        // Then try locality (city)
+        if let locality = addressComponents.first(where: { $0.types.contains("locality") }) {
+            return locality.longName
+        }
+        
+        // Fallback to administrative area
+        if let adminArea = addressComponents.first(where: { $0.types.contains("administrative_area_level_1") }) {
+            return adminArea.longName
+        }
+        
+        // Final fallback to formatted address
+        return formattedAddress ?? "Unknown location"
+    }
+}
+
+// MARK: - Address Component
+struct AddressComponent: Codable {
+    let longName: String
+    let shortName: String
+    let types: [String]
+    
+    enum CodingKeys: String, CodingKey {
+        case longName = "long_name"
+        case shortName = "short_name"
+        case types
     }
 }
 

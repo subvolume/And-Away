@@ -40,6 +40,25 @@ class GoogleAPITester {
         }
     }
     
+    // MARK: - Test Text Search
+    func testTextSearch() {
+        Task {
+            do {
+                print("🔍 Testing Google Places Text Search...")
+                let response = try await googleAPI.searchPlacesByText(query: "restaurants in Paris")
+                
+                print("✅ Success! Found \(response.results.count) places:")
+                for place in response.results.prefix(3) {
+                    print("   • \(place.name) - \(place.vicinity ?? "Unknown location")")
+                    print("     Rating: \(place.rating ?? 0)/5 (\(place.userRatingsTotal ?? 0) reviews)")
+                }
+                
+            } catch {
+                print("❌ Text search failed: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     // MARK: - Test Directions
     func testDirections() {
         Task {
@@ -70,7 +89,10 @@ class GoogleAPITester {
         // Test 1: Autocomplete
         testAutocomplete()
         
-        // Test 2: Directions
+        // Test 2: Text Search
+        testTextSearch()
+        
+        // Test 3: Directions
         testDirections()
         
         // Note: Place details test requires a place ID from autocomplete

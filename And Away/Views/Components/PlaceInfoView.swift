@@ -167,6 +167,7 @@ struct InfoRow: View {
         placeId: "test",
         name: "Test Restaurant",
         formattedAddress: "123 Main St, New York, NY",
+        addressComponents: nil,
         formattedPhoneNumber: "(555) 123-4567",
         internationalPhoneNumber: "+1 555-123-4567",
         website: "https://example.com",

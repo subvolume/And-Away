@@ -178,7 +178,28 @@ struct PlaceDetailsTravel: View {
 struct PlaceDetailsTravel_Previews: PreviewProvider {
     static var previews: some View {
         PlaceDetailsTravel(
-            place: MockData.samplePlaceDetails.result,
+            place: PlaceDetails(
+                placeId: "test",
+                name: "Test Restaurant",
+                formattedAddress: "123 Main St, Paris, France",
+                addressComponents: nil,
+                formattedPhoneNumber: nil,
+                internationalPhoneNumber: nil,
+                website: nil,
+                rating: 4.5,
+                userRatingsTotal: 120,
+                priceLevel: 2,
+                photos: nil,
+                reviews: nil,
+                openingHours: nil,
+                geometry: PlaceGeometry(
+                    location: PlaceLocation(lat: 48.8566, lng: 2.3522),
+                    viewport: nil
+                ),
+                types: ["restaurant"],
+                businessStatus: nil,
+                utcOffset: nil
+            ),
             userLocation: "48.8606,2.3376"
         )
         .environmentObject(LocationService.shared)

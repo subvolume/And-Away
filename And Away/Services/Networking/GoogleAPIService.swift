@@ -43,7 +43,7 @@ class GoogleAPIService {
         
         components.queryItems = [
             URLQueryItem(name: "place_id", value: placeId),
-            URLQueryItem(name: "fields", value: "place_id,name,formatted_address,formatted_phone_number,international_phone_number,website,rating,user_ratings_total,price_level,photos,reviews,opening_hours,geometry,types,business_status,utc_offset"),
+            URLQueryItem(name: "fields", value: "place_id,name,formatted_address,address_components,formatted_phone_number,international_phone_number,website,rating,user_ratings_total,price_level,photos,reviews,opening_hours,geometry,types,business_status,utc_offset"),
             URLQueryItem(name: "key", value: apiKey)
         ]
         
@@ -75,6 +75,43 @@ class GoogleAPIService {
         
         if let type = type {
             queryItems.append(URLQueryItem(name: "type", value: type))
+        }
+        
+        components.queryItems = queryItems
+        
+        guard let url = components.url else {
+            throw NetworkError.invalidURL
+        }
+        
+        return try await networkService.request(
+            url: url,
+            responseType: GooglePlacesSearchResponse.self
+        )
+    }
+    
+    // MARK: - Places Text Search
+    func searchPlacesByText(
+        query: String,
+        location: String? = nil,
+        radius: Int? = nil
+    ) async throws -> GooglePlacesSearchResponse {
+        
+        let urlString = "\(baseURL)/place/textsearch/json"
+        var components = URLComponents(string: urlString)!
+        
+        var queryItems = [
+            URLQueryItem(name: "query", value: query),
+            URLQueryItem(name: "key", value: apiKey)
+        ]
+        
+        // Add optional location bias
+        if let location = location {
+            queryItems.append(URLQueryItem(name: "location", value: location))
+        }
+        
+        // Add optional radius
+        if let radius = radius {
+            queryItems.append(URLQueryItem(name: "radius", value: String(radius)))
         }
         
         components.queryItems = queryItems
