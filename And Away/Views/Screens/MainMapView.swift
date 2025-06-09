@@ -12,7 +12,7 @@ struct MainMapView: View {
     @StateObject private var sheetController = SheetController()
 
     var body: some View {
-        MapKitView()
+        GoogleMapView()
             .ignoresSafeArea()
             .sheet(isPresented: $showSheet) {
                 InitialSheetView()
