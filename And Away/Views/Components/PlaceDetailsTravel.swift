@@ -22,6 +22,15 @@ struct PlaceDetailsTravel: View {
     @EnvironmentObject private var locationService: LocationService
     private let googleAPI = GoogleAPIService.shared
     
+    // MARK: - Duration Formatter
+    private static let durationFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute]
+        formatter.unitsStyle = .abbreviated
+        formatter.maximumUnitCount = 2
+        return formatter
+    }()
+    
     // MARK: - Initializer
     init(place: PlaceDetails, userLocation: String = "Current Location") {
         self.place = place
@@ -56,6 +65,13 @@ struct PlaceDetailsTravel: View {
         .onChange(of: locationService.currentLocation) { _ in
             fetchAllDirections()
         }
+    }
+    
+    // MARK: - Helper Functions
+    private func formatDuration(seconds: Int) -> String {
+        // Convert seconds to TimeInterval and format using DateComponentsFormatter
+        let timeInterval = TimeInterval(seconds)
+        return Self.durationFormatter.string(from: timeInterval) ?? "N/A"
     }
     
     // MARK: - Fetch All Directions
@@ -127,27 +143,27 @@ struct PlaceDetailsTravel: View {
             distance = "N/A"
         }
         
-        // Update walking time
+        // Update walking time - use duration.value for proper formatting
         if let walkingRoute = walking?.routes.first?.legs.first {
-            walkingTime = walkingRoute.duration.text
+            walkingTime = formatDuration(seconds: walkingRoute.duration.value)
         } else {
             walkingTime = "N/A"
         }
         
-        // Update driving time (use duration in traffic if available)
+        // Update driving time (use duration in traffic if available) - use duration.value
         if let drivingRoute = driving?.routes.first?.legs.first {
             if let trafficDuration = drivingRoute.durationInTraffic {
-                drivingTime = trafficDuration.text
+                drivingTime = formatDuration(seconds: trafficDuration.value)
             } else {
-                drivingTime = drivingRoute.duration.text
+                drivingTime = formatDuration(seconds: drivingRoute.duration.value)
             }
         } else {
             drivingTime = "N/A"
         }
         
-        // Update transit time
+        // Update transit time - use duration.value for proper formatting
         if let transitRoute = transit?.routes.first?.legs.first {
-            transitTime = transitRoute.duration.text
+            transitTime = formatDuration(seconds: transitRoute.duration.value)
         } else {
             transitTime = "N/A"
         }
