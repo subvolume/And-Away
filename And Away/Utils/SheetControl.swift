@@ -103,5 +103,7 @@ extension View {
         )
         .interactiveDismissDisabled()
         .presentationBackgroundInteraction(.enabled)
+        .presentationBackground(.regularMaterial)
+        .presentationCornerRadius(24)
     }
 }

@@ -13,31 +13,29 @@ struct InitialSavedView: View {
     @State private var selectedPlace: SavedPlace?
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                // Saved places list with section header
-                ScrollView {
-                    LazyVStack(spacing: 0) {
-                        SectionHeaderView(title: "Saved Places", showViewAllButton: false)
-                        
-                        ForEach(bookmarkManager.savedPlaces) { savedPlace in
-                            ListItem.savedPlace(
-                                from: savedPlace,
-                                userLocation: locationService.currentLocation,
-                                onOpenPlaceDetails: {
-                                    selectedPlace = savedPlace
-                                    sheetController.presentSheet(.details)
-                                }
-                            )
-                        }
+        VStack(spacing: 0) {
+            // Saved places list with section header
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    SectionHeaderView(title: "Saved Places", showViewAllButton: false)
+                    
+                    ForEach(bookmarkManager.savedPlaces) { savedPlace in
+                        ListItem.savedPlace(
+                            from: savedPlace,
+                            userLocation: locationService.currentLocation,
+                            onOpenPlaceDetails: {
+                                selectedPlace = savedPlace
+                                sheetController.presentSheet(.details)
+                            }
+                        )
                     }
-                    .padding(.top, Spacing.s)
                 }
+                .padding(.top, Spacing.s)
             }
-            .refreshable {
-                // Refresh saved places (if needed for cloud sync later)
-                bookmarkManager.loadSavedPlaces()
-            }
+        }
+        .refreshable {
+            // Refresh saved places (if needed for cloud sync later)
+            bookmarkManager.loadSavedPlaces()
         }
         .sheet(isPresented: .constant(sheetController.activeSheets.contains(.details))) {
             if let place = selectedPlace {
