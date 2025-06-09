@@ -57,7 +57,7 @@ struct SheetHeader: View {
         }
         .padding(.horizontal, Spacing.m)
         .padding(.top, Spacing.m)
-       // .padding(.bottom, Spacing.s)
+        .padding(.bottom, Spacing.s)
     }
     
     // Helper function to get appropriate icon based on place type
@@ -90,5 +90,5 @@ struct SheetHeader: View {
         SheetHeader(title: "The Grand Central Market & Food Hall Experience", placeType: "Food Court", openStatus: "Closed", isOpen: false, onClose: { })
             .background(Color(.systemBackground))
     }
-    .padding()
-} 
+    //.padding()
+}

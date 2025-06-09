@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+// MARK: - Layout Style
+enum PillButtonLayoutStyle {
+    case horizontal
+    case vertical
+}
+
 struct PillButton: View {
     // MARK: - Properties
     let text: String?
@@ -16,6 +22,7 @@ struct PillButton: View {
     let selectedTextColor: Color
     let selectedBackgroundColor: Color
     let verticalPadding: CGFloat
+    let layoutStyle: PillButtonLayoutStyle
     let isSelected: Bool
     let action: () -> Void
     
@@ -28,6 +35,7 @@ struct PillButton: View {
         selectedTextColor: Color = .invert,
         selectedBackgroundColor: Color = .backgroundSelected,
         verticalPadding: CGFloat = Spacing.xs,
+        layoutStyle: PillButtonLayoutStyle = .horizontal,
         isSelected: Bool = false,
         action: @escaping () -> Void
     ) {
@@ -38,6 +46,7 @@ struct PillButton: View {
         self.selectedTextColor = selectedTextColor
         self.selectedBackgroundColor = selectedBackgroundColor
         self.verticalPadding = verticalPadding
+        self.layoutStyle = layoutStyle
         self.isSelected = isSelected
         self.action = action
     }
@@ -47,25 +56,52 @@ struct PillButton: View {
         let currentTextColor = isSelected ? selectedTextColor : defaultTextColor
         let currentBackgroundColor = isSelected ? selectedBackgroundColor : defaultBackgroundColor
         
-        let content = HStack(spacing: Spacing.xs) {
-            if let icon = icon {
-                Image(systemName: icon)
-                    .font(FontStyle.button)
-                    .foregroundColor(currentTextColor)
-            }
-            if let text = text {
-                Text(text)
-                    .button()
-                    .foregroundColor(currentTextColor)
+        let content = Group {
+            if layoutStyle == .vertical {
+                VStack(alignment: .leading, spacing: Spacing.xs) {
+                    if let icon = icon {
+                        Image(systemName: icon)
+                            .font(FontStyle.button)
+                            .foregroundColor(currentTextColor)
+                    }
+                    if let text = text {
+                        Text(text)
+                            .button()
+                            .foregroundColor(currentTextColor)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                    }
+                }
+            } else {
+                HStack(spacing: Spacing.xs) {
+                    if let icon = icon {
+                        Image(systemName: icon)
+                            .font(FontStyle.button)
+                            .foregroundColor(currentTextColor)
+                    }
+                    if let text = text {
+                        Text(text)
+                            .button()
+                            .foregroundColor(currentTextColor)
+                    }
+                }
             }
         }
         
         // Icon-only buttons are circular, others are capsule-shaped
-        if text == nil && icon != nil {
+        if text == nil && icon != nil && layoutStyle == .horizontal {
             content
                 .frame(width: 32, height: 32, alignment: .center)
                 .background(currentBackgroundColor)
                 .clipShape(Circle())
+                .onTapGesture { action() }
+        } else if layoutStyle == .vertical {
+            content
+                .frame(maxWidth: .infinity, minHeight: 56, alignment: .leading)
+                .padding(.horizontal, Spacing.s)
+                .padding(.vertical, Spacing.xs)
+                .background(currentBackgroundColor)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
                 .onTapGesture { action() }
         } else {
             content
@@ -98,7 +134,7 @@ extension PillButton {
         PillButton(icon: icon, isSelected: isSelected, action: action)
     }
     
-    /// Text + Icon button
+    /// Text + Icon button (horizontal layout)
     static func textIcon(
         text: String,
         icon: String,
@@ -106,6 +142,16 @@ extension PillButton {
         action: @escaping () -> Void
     ) -> PillButton {
         PillButton(text: text, icon: icon, isSelected: isSelected, action: action)
+    }
+    
+    /// Icon above text button (vertical layout)
+    static func iconAboveText(
+        text: String,
+        icon: String,
+        isSelected: Bool = false,
+        action: @escaping () -> Void
+    ) -> PillButton {
+        PillButton(text: text, icon: icon, layoutStyle: .vertical, isSelected: isSelected, action: action)
     }
 }
 
@@ -123,6 +169,7 @@ private struct InteractivePillButtonPreview: View {
     @State private var textSelected = false
     @State private var iconSelected = false
     @State private var textIconSelected = false
+    @State private var iconAboveTextSelected = false
     
     var body: some View {
         VStack(spacing: Spacing.m) {
@@ -138,10 +185,16 @@ private struct InteractivePillButtonPreview: View {
                 print("Heart tapped - selected: \(iconSelected)")
             }
             
-            // Text + Icon
+            // Text + Icon (horizontal)
             PillButton.textIcon(text: "Favorite", icon: "star.fill", isSelected: textIconSelected) {
                 textIconSelected.toggle()
                 print("Favorite tapped - selected: \(textIconSelected)")
+            }
+            
+            // Icon above text (vertical)
+            PillButton.iconAboveText(text: "Share", icon: "square.and.arrow.up", isSelected: iconAboveTextSelected) {
+                iconAboveTextSelected.toggle()
+                print("Share tapped - selected: \(iconAboveTextSelected)")
             }
         }
     }

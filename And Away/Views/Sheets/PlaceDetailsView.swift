@@ -69,6 +69,10 @@ struct PlaceDetailsView: View {
                         VStack(spacing: Spacing.l) {
                             PlaceDetailsActions()
                             ImageCarouselView(imageURLs: getPhotoURLs(from: place.photos))
+                            PlaceDetailsTravel(
+                                place: place,
+                                userLocation: "Current Location"
+                            )
                         }
                     }
                 }
