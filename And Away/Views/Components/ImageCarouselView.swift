@@ -26,20 +26,9 @@ struct ImageCarouselView: View {
         Array(imageURLs.dropFirst(4).prefix(4))
     }
     
-    // Component for loading images from URLs (matching original design)
+    // Component for loading images from URLs with fade animation
     func asyncImageView(url: URL) -> some View {
-        AsyncImage(url: url) { image in
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-        } placeholder: {
-            Rectangle()
-                .fill(Color.gray.opacity(0.3))
-                .overlay(
-                    ProgressView()
-                        .scaleEffect(0.8)
-                )
-        }
+        AsyncImageWithFade(url: url)
     }
     
     // Reusable carousel component
@@ -73,6 +62,38 @@ struct ImageCarouselView: View {
         .frame(height: 260)
         .cornerRadius(20)
         .padding(.horizontal, Spacing.m)
+    }
+}
+
+struct AsyncImageWithFade: View {
+    let url: URL
+    @State private var isLoaded = false
+    
+    var body: some View {
+        AsyncImage(url: url) { phase in
+            switch phase {
+            case .success(let image):
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 130)
+                    .opacity(isLoaded ? 1 : 0)
+                    .scaleEffect(isLoaded ? 1 : 0.98)
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 0.4)) {
+                            isLoaded = true
+                        }
+                    }
+            case .failure(_):
+                // Show nothing on failure - no space taken
+                EmptyView()
+            case .empty:
+                // Show nothing while loading - no space taken
+                EmptyView()
+            @unknown default:
+                EmptyView()
+            }
+        }
     }
 }
 
