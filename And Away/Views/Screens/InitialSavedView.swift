@@ -15,47 +15,25 @@ struct InitialSavedView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                if bookmarkManager.savedPlaces.isEmpty {
-                    // Empty state
-                    VStack(spacing: Spacing.l) {
-                        Spacer()
+                // Saved places list with section header
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        SectionHeaderView(title: "Saved Places", showViewAllButton: false)
                         
-                        Image(systemName: "bookmark")
-                            .font(.system(size: 48))
-                            .foregroundColor(.secondary)
-                        
-                        Text("No Saved Places")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                        
-                        Text("Start exploring and bookmark places you want to remember")
-                            .font(.body)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, Spacing.xl)
-                        
-                        Spacer()
-                    }
-                } else {
-                    // Saved places list
-                    ScrollView {
-                        LazyVStack(spacing: 0) {
-                            ForEach(bookmarkManager.savedPlaces) { savedPlace in
-                                ListItem.savedPlace(
-                                    from: savedPlace,
-                                    userLocation: locationService.currentLocation,
-                                    onOpenPlaceDetails: {
-                                        selectedPlace = savedPlace
-                                        sheetController.presentSheet(.details)
-                                    }
-                                )
-                            }
+                        ForEach(bookmarkManager.savedPlaces) { savedPlace in
+                            ListItem.savedPlace(
+                                from: savedPlace,
+                                userLocation: locationService.currentLocation,
+                                onOpenPlaceDetails: {
+                                    selectedPlace = savedPlace
+                                    sheetController.presentSheet(.details)
+                                }
+                            )
                         }
-                        .padding(.top, Spacing.s)
                     }
+                    .padding(.top, Spacing.s)
                 }
             }
-            .navigationTitle("Saved Places")
             .refreshable {
                 // Refresh saved places (if needed for cloud sync later)
                 bookmarkManager.loadSavedPlaces()

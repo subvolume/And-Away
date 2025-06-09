@@ -32,7 +32,7 @@ struct PlaceDetailsActions: View {
         HStack {
             // Bookmark Button - now with real functionality
             PillButton(
-                icon: isBookmarked ? "bookmark.fill" : "bookmark", 
+                icon: "bookmark.fill", 
                 isSelected: isBookmarked
             ) {
                 toggleBookmark()
