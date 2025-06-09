@@ -51,7 +51,7 @@ struct GoogleMapView: UIViewRepresentable {
         if let userLocation = locationService.currentLocation, !hasInitiallycentered {
             // Offset to position user location at 25% from top of screen
             // This shifts the map center down so user appears higher on screen
-            let latitudeOffset = 0.003 // Adjust this value to fine-tune positioning
+            let latitudeOffset = 0.006 // Increased to move location higher up
             
             let camera = GMSCameraPosition.camera(
                 withLatitude: userLocation.coordinate.latitude - latitudeOffset,
