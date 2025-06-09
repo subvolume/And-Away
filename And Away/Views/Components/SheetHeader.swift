@@ -29,7 +29,7 @@ struct SheetHeader: View {
                 // Type indicator
                 if let placeType = placeType {
                     HStack(spacing: Spacing.xxs) {
-                        Image(systemName: iconForPlaceType(placeType))
+                        PlaceTypeHelpers.iconForPlaceType([placeType])
                             .font(.caption)
                             .foregroundColor(.tertiary)
                         
@@ -60,23 +60,7 @@ struct SheetHeader: View {
         .padding(.bottom, Spacing.s)
     }
     
-    // Helper function to get appropriate icon based on place type
-    private func iconForPlaceType(_ type: String) -> String {
-        let lowercaseType = type.lowercased()
-        if lowercaseType.contains("restaurant") || lowercaseType.contains("food") {
-            return "fork.knife"
-        } else if lowercaseType.contains("cafe") || lowercaseType.contains("coffee") {
-            return "cup.and.saucer"
-        } else if lowercaseType.contains("tourist") || lowercaseType.contains("attraction") {
-            return "camera"
-        } else if lowercaseType.contains("museum") {
-            return "building.columns"
-        } else if lowercaseType.contains("store") || lowercaseType.contains("shop") {
-            return "bag"
-        } else {
-            return "mappin.circle"
-        }
-    }
+
 }
 
 // Preview

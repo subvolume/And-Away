@@ -4,11 +4,11 @@ import CoreLocation
 
 struct GoogleMapView: UIViewRepresentable {
     @EnvironmentObject private var locationService: LocationService
-    @State private var hasInitiallycentered = false
     
     // New properties for POI display
     let searchResults: [PlaceSearchResult]
     let onPOITapped: ((PlaceSearchResult) -> Void)?
+    let selectedPlace: PlaceSearchResult?
     
     func makeUIView(context: Context) -> GMSMapView {
         // Create Google Map with similar settings to the original MapKit version
@@ -51,8 +51,8 @@ struct GoogleMapView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: GMSMapView, context: Context) {
-        // Center on user location when it becomes available
-        if let userLocation = locationService.currentLocation, !hasInitiallycentered {
+        // Center on user location when it becomes available (but only if no place is selected)
+        if let userLocation = locationService.currentLocation, !context.coordinator.hasInitiallycentered, selectedPlace == nil {
             // Offset to position user location at 25% from top of screen
             // This shifts the map center down so user appears higher on screen
             let latitudeOffset = 0.006 // Increased to move location higher up
@@ -63,7 +63,7 @@ struct GoogleMapView: UIViewRepresentable {
                 zoom: 15.0
             )
             uiView.camera = camera
-            hasInitiallycentered = true
+            context.coordinator.hasInitiallycentered = true
         }
         
         // Clear existing POI markers
@@ -105,6 +105,25 @@ struct GoogleMapView: UIViewRepresentable {
         
         // Set up marker tap handler
         uiView.delegate = context.coordinator
+        
+        // Center on selected place if available
+        if let selectedPlace = selectedPlace {
+            let selectedLocation = CLLocationCoordinate2D(
+                latitude: selectedPlace.geometry.location.lat,
+                longitude: selectedPlace.geometry.location.lng
+            )
+            
+            // Animate to center on the selected place
+            // Offset slightly up to account for the details sheet
+            let latitudeOffset = 0.003 // Move the place higher on screen when sheet is open
+            let camera = GMSCameraPosition.camera(
+                withLatitude: selectedLocation.latitude - latitudeOffset,
+                longitude: selectedLocation.longitude,
+                zoom: 16.0 // Slightly closer zoom when focusing on a place
+            )
+            
+            uiView.animate(to: camera)
+        }
     }
     
     func makeCoordinator() -> Coordinator {
@@ -113,6 +132,7 @@ struct GoogleMapView: UIViewRepresentable {
     
     class Coordinator: NSObject, GMSMapViewDelegate {
         var parent: GoogleMapView
+        var hasInitiallycentered = false
         
         init(_ parent: GoogleMapView) {
             self.parent = parent
@@ -132,7 +152,8 @@ struct GoogleMapView: UIViewRepresentable {
         searchResults: [],
         onPOITapped: { place in
             print("Tapped POI: \(place.name)")
-        }
+        },
+        selectedPlace: nil
     )
     .environmentObject(LocationService.shared)
 } 

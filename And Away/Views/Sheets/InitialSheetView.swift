@@ -8,6 +8,9 @@ struct InitialSheetView: View {
     
     @EnvironmentObject var sheetController: SheetController
     
+    // Callback to notify parent when place is selected
+    let onPlaceSelected: ((PlaceSearchResult) -> Void)?
+    
     var body: some View {
         VStack {
             SearchBarView(text: $searchText, isEditing: $isSearchActive)
@@ -15,6 +18,7 @@ struct InitialSheetView: View {
                 if isSearchActive || !searchText.isEmpty {
                     SearchStateView(searchText: $searchText, onPlaceTapped: { place in
                         selectedPlace = place
+                        onPlaceSelected?(place) // Notify parent about the selection
                         isSearchActive = false  // Dismiss input when viewing details
                         showPlaceDetails = true
                         // Present the details sheet level using SheetController
@@ -44,6 +48,8 @@ struct InitialSheetView: View {
 }
 
 #Preview {
-    InitialSheetView()
-        .environmentObject(SheetController())
+    InitialSheetView(onPlaceSelected: { place in
+        print("Place selected: \(place.name)")
+    })
+    .environmentObject(SheetController())
 } 

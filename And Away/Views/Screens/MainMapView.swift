@@ -21,16 +21,19 @@ struct MainMapView: View {
                 selectedPlace = place
                 showPlaceDetails = true
                 sheetController.presentSheet(.details)
-            }
+            },
+            selectedPlace: selectedPlace
         )
         .environmentObject(LocationService.shared)
         .ignoresSafeArea()
         .sheet(isPresented: $showSheet) {
-            InitialSheetView()
-                .environmentObject(sheetController)
-                .environmentObject(searchViewModel)
-                .environmentObject(LocationService.shared)
-                .managedSheetDetents(controller: sheetController, level: .list)
+            InitialSheetView(onPlaceSelected: { place in
+                selectedPlace = place
+            })
+            .environmentObject(sheetController)
+            .environmentObject(searchViewModel)
+            .environmentObject(LocationService.shared)
+            .managedSheetDetents(controller: sheetController, level: .list)
         }
         .sheet(isPresented: $showPlaceDetails) {
             if let place = selectedPlace {

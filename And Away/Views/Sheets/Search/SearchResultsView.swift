@@ -42,8 +42,8 @@ struct SearchResultsView: View {
                     title: place.name,
                     distance: calculateDistance(to: place),
                     location: place.simpleLocationName,
-                    icon: iconForPlaceType(place.types),
-                    iconColor: colorForPlaceType(place.types),
+                    icon: PlaceTypeHelpers.iconForPlaceType(place.types),
+                    iconColor: PlaceTypeHelpers.colorForPlaceType(place.types),
                     onOpenPlaceDetails: {
                         onPlaceTapped(place)
                     }
@@ -75,35 +75,6 @@ struct SearchResultsView: View {
         }
     }
     
-    // Helper function to get appropriate icon based on place type
-    private func iconForPlaceType(_ types: [String]) -> Image {
-        if types.contains("restaurant") || types.contains("food") {
-            return Image(systemName: "fork.knife")
-        } else if types.contains("cafe") {
-            return Image(systemName: "cup.and.saucer")
-        } else if types.contains("tourist_attraction") {
-            return Image(systemName: "camera")
-        } else if types.contains("museum") {
-            return Image(systemName: "building.columns")
-        } else {
-            return Image(systemName: "mappin.circle")
-        }
-    }
-    
-    // Helper function to get appropriate color based on place type
-    private func colorForPlaceType(_ types: [String]) -> Color {
-        if types.contains("restaurant") || types.contains("food") {
-            return .orange100
-        } else if types.contains("cafe") {
-            return .teal100
-        } else if types.contains("tourist_attraction") {
-            return .azure100
-        } else if types.contains("museum") {
-            return .purple100
-        } else {
-            return .green100
-        }
-    }
     
 
     
