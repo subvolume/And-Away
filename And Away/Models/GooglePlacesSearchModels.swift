@@ -59,46 +59,56 @@ struct PlaceSearchResult: Codable, Identifiable {
     /// Get a clean location name from address components
     var simpleLocationName: String {
         guard let addressComponents = addressComponents else {
-            // Fallback to parsing vicinity or formatted address
+            // Fallback to vicinity if address components are not available
             if let vicinity = vicinity, !vicinity.isEmpty {
+                // Try to extract a meaningful location from vicinity
                 let components = vicinity.components(separatedBy: ",")
-                if let firstPart = components.first?.trimmingCharacters(in: .whitespaces), !firstPart.isEmpty {
-                    return firstPart
+                // Take the last meaningful component (usually city/area name)
+                if let lastComponent = components.last?.trimmingCharacters(in: .whitespaces), !lastComponent.isEmpty {
+                    return lastComponent
                 }
             }
-            
-            if let formattedAddress = formattedAddress, !formattedAddress.isEmpty {
-                let components = formattedAddress.components(separatedBy: ",")
-                if components.count >= 2 {
-                    return components[components.count - 2].trimmingCharacters(in: .whitespaces)
-                }
-            }
-            
             return "Unknown location"
         }
         
-        // Try to find neighborhood first
-        if let neighborhood = addressComponents.first(where: { $0.types.contains("neighborhood") }) {
-            return neighborhood.longName
-        }
-        
-        // Then try sublocality
-        if let sublocality = addressComponents.first(where: { $0.types.contains("sublocality") }) {
-            return sublocality.longName
-        }
-        
-        // Then try locality (city)
+        // Priority order for worldwide compatibility:
+        // 1. Locality (standard city/town name in most countries)
         if let locality = addressComponents.first(where: { $0.types.contains("locality") }) {
             return locality.longName
         }
         
-        // Fallback to administrative area
-        if let adminArea = addressComponents.first(where: { $0.types.contains("administrative_area_level_1") }) {
-            return adminArea.longName
+        // 2. Postal town (used in UK and some other countries)
+        if let postalTown = addressComponents.first(where: { $0.types.contains("postal_town") }) {
+            return postalTown.longName
         }
         
-        // Final fallback to formatted address
-        return formattedAddress ?? "Unknown location"
+        // 3. Administrative area level 3 (district level in many countries)
+        if let adminLevel3 = addressComponents.first(where: { $0.types.contains("administrative_area_level_3") }) {
+            return adminLevel3.longName
+        }
+        
+        // 4. Sublocality level 1 (used in Asia and other regions)
+        if let sublocalityLevel1 = addressComponents.first(where: { $0.types.contains("sublocality_level_1") }) {
+            return sublocalityLevel1.longName
+        }
+        
+        // 5. Neighborhood (very specific local area)
+        if let neighborhood = addressComponents.first(where: { $0.types.contains("neighborhood") }) {
+            return neighborhood.longName
+        }
+        
+        // 6. Any sublocality as broader fallback
+        if let sublocality = addressComponents.first(where: { $0.types.contains("sublocality") }) {
+            return sublocality.longName
+        }
+        
+        // 7. Administrative area level 2 (county/state level - broader but still meaningful)
+        if let adminLevel2 = addressComponents.first(where: { $0.types.contains("administrative_area_level_2") }) {
+            return adminLevel2.longName
+        }
+        
+        // Final fallback - avoid administrative_area_level_1 (state/province) as it's too broad
+        return "Unknown location"
     }
 }
 

@@ -126,6 +126,67 @@ class GoogleAPIService {
         )
     }
     
+    // MARK: - Places Text Search with Details (Combined Method)
+    func searchPlacesWithDetails(
+        query: String,
+        location: String? = nil,
+        radius: Int? = nil,
+        maxResults: Int = 10
+    ) async throws -> [PlaceSearchResult] {
+        
+        // First, do a text search to get basic place results
+        let searchResponse = try await searchPlacesByText(
+            query: query,
+            location: location,
+            radius: radius
+        )
+        
+        // Limit results to maxResults
+        let limitedResults = Array(searchResponse.results.prefix(maxResults))
+        
+        // Fetch detailed information for each place to get address components
+        var detailedResults: [PlaceSearchResult] = []
+        
+        // Fetch place details in parallel for better performance
+        await withTaskGroup(of: PlaceSearchResult?.self) { group in
+            for place in limitedResults {
+                group.addTask {
+                    do {
+                        let detailsResponse = try await self.getPlaceDetails(placeId: place.placeId)
+                        
+                        // Create a PlaceSearchResult with detailed address components
+                        return PlaceSearchResult(
+                            placeId: place.placeId,
+                            name: place.name,
+                            vicinity: place.vicinity, // Keep original vicinity from text search
+                            formattedAddress: detailsResponse.result.formattedAddress,
+                            addressComponents: detailsResponse.result.addressComponents,
+                            rating: place.rating,
+                            priceLevel: place.priceLevel,
+                            photos: place.photos,
+                            geometry: place.geometry,
+                            types: place.types,
+                            userRatingsTotal: place.userRatingsTotal,
+                            businessStatus: place.businessStatus
+                        )
+                    } catch {
+                        // If place details fail, return the basic search result
+                        return place
+                    }
+                }
+            }
+            
+            // Collect results in order
+            for await result in group {
+                if let searchResult = result {
+                    detailedResults.append(searchResult)
+                }
+            }
+        }
+        
+        return detailedResults
+    }
+    
     // MARK: - Directions
     func getDirections(
         origin: String,

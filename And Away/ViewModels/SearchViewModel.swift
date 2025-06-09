@@ -41,24 +41,24 @@ class SearchViewModel: ObservableObject {
                     return nil
                 }()
                 
-                // Try text search first (better for search functionality)
-                let textSearchResponse = try await googleAPI.searchPlacesByText(
+                // Use the new optimized search method that automatically fetches Place Details
+                let searchResults = try await googleAPI.searchPlacesWithDetails(
                     query: searchText,
                     location: locationString,
-                    radius: locationString != nil ? 10000 : nil // 10km radius if location available
+                    radius: locationString != nil ? 10000 : nil, // 10km radius if location available
+                    maxResults: 10
                 )
                 
                 if !Task.isCancelled {
-                    // If text search returns results, use them
-                    if !textSearchResponse.results.isEmpty {
-                        self.searchResults = textSearchResponse.results
+                    if !searchResults.isEmpty {
+                        self.searchResults = searchResults
                     } else {
                         // Fallback to autocomplete + place details if text search returns no results
                         let autocompleteResponse = try await googleAPI.getPlaceAutocomplete(query: searchText)
-                        let searchResults = await fetchPlaceDetailsForPredictions(autocompleteResponse.predictions.prefix(10))
+                        let fallbackResults = await fetchPlaceDetailsForPredictions(autocompleteResponse.predictions.prefix(10))
                         
                         if !Task.isCancelled {
-                            self.searchResults = searchResults
+                            self.searchResults = fallbackResults
                         }
                     }
                 }
@@ -140,7 +140,7 @@ class SearchViewModel: ObservableObject {
         autocompleteTask?.cancel()
     }
     
-    // MARK: - Fetch Real Place Details for Search Results
+    // MARK: - Fetch Place Details for Autocomplete Results
     private func fetchPlaceDetailsForPredictions(_ predictions: ArraySlice<AutocompletePrediction>) async -> [PlaceSearchResult] {
         var results: [PlaceSearchResult] = []
         
@@ -156,7 +156,7 @@ class SearchViewModel: ObservableObject {
                     return PlaceSearchResult(
                         placeId: placeDetails.placeId,
                         name: placeDetails.name,
-                        vicinity: nil, // PlaceDetails doesn't have vicinity field
+                        vicinity: nil, // PlaceDetails doesn't have vicinity, so set to nil
                         formattedAddress: placeDetails.formattedAddress,
                         addressComponents: placeDetails.addressComponents,
                         rating: placeDetails.rating,
