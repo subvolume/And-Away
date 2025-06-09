@@ -11,15 +11,15 @@ struct PlaceTypeHelpers {
         if lowercaseTypes.contains(where: { $0.contains("restaurant") || $0.contains("food") }) {
             return Image(systemName: "fork.knife")
         } else if lowercaseTypes.contains(where: { $0.contains("cafe") || $0.contains("coffee") }) {
-            return Image(systemName: "cup.and.saucer")
+            return Image(systemName: "cup.and.saucer.fill")
         } else if lowercaseTypes.contains(where: { $0.contains("tourist") || $0.contains("attraction") }) {
-            return Image(systemName: "camera")
+            return Image(systemName: "camera.fill")
         } else if lowercaseTypes.contains(where: { $0.contains("museum") }) {
             return Image(systemName: "building.columns")
         } else if lowercaseTypes.contains(where: { $0.contains("store") || $0.contains("shop") || $0.contains("shopping") }) {
             return Image(systemName: "bag.fill")
         } else {
-            return Image(systemName: "mappin.circle")
+            return Image(systemName: "mappin")
         }
     }
     
