@@ -28,8 +28,9 @@ struct SheetHeader: View {
             HStack(spacing: Spacing.m) {
                 // Type indicator
                 if let placeType = placeType {
+                    let category = PlaceCategory.categorize(from: [placeType])
                     HStack(spacing: Spacing.xxs) {
-                        PlaceTypeHelpers.iconForPlaceType([placeType])
+                        PlaceVisuals.icon(for: category)
                             .font(.caption)
                             .foregroundColor(.tertiary)
                         

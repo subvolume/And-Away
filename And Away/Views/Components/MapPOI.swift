@@ -5,15 +5,17 @@ struct MapPOI: View {
     let onTap: (() -> Void)?
     
     var body: some View {
+        let category = PlaceCategory.categorize(from: types)
+        
         HStack(alignment: .center, spacing: 0) {
-            PlaceTypeHelpers.iconForPlaceType(types)
+            PlaceVisuals.icon(for: category)
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(Color.white100)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
         .padding(3)
         .frame(width: 22, height: 22, alignment: .center)
-        .background(PlaceTypeHelpers.colorForPlaceType(types))
+        .background(PlaceVisuals.color(for: category))
         .cornerRadius(11)
         .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 2)
         .overlay(

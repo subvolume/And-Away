@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreLocation
 
 struct ListItem: View {
     let iconWidth: CGFloat = 32
@@ -103,6 +104,26 @@ struct ListItem: View {
             artwork: .circleIcon(color: iconColor, icon: icon),
             title: title,
             subtitle: "\(distance) • \(location)",
+            onTap: onOpenPlaceDetails
+        )
+    }
+    
+    /// Saved place template using SavedPlace model - automatically handles categorization
+    static func savedPlace(from savedPlace: SavedPlace, userLocation: CLLocation?, onOpenPlaceDetails: @escaping () -> Void) -> ListItem {
+        let distanceString = userLocation != nil ? savedPlace.distanceStringFrom(userLocation!) : ""
+        let categoryIcon = PlaceVisuals.icon(for: savedPlace.category)
+        let categoryColor = PlaceVisuals.color(for: savedPlace.category)
+        
+        let subtitle = [
+            savedPlace.category.displayName,
+            distanceString,
+            savedPlace.simpleLocationName
+        ].filter { !$0.isEmpty }.joined(separator: " • ")
+        
+        return ListItem(
+            artwork: .circleIcon(color: categoryColor, icon: categoryIcon),
+            title: savedPlace.name,
+            subtitle: subtitle,
             onTap: onOpenPlaceDetails
         )
     }

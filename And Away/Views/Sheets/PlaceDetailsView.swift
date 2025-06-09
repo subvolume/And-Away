@@ -67,7 +67,7 @@ struct PlaceDetailsView: View {
                     // Success state - show simple place details
                     ScrollView {
                         VStack(spacing: Spacing.l) {
-                            PlaceDetailsActions()
+                            PlaceDetailsActions(placeDetails: place)
                             ImageCarouselView(imageURLs: getPhotoURLs(from: place.photos))
                             PlaceDetailsTravel(
                                 place: place,

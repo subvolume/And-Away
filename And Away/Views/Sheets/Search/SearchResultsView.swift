@@ -38,12 +38,13 @@ struct SearchResultsView: View {
             
             // Show search results from Google
             ForEach(searchViewModel.searchResults, id: \.placeId) { place in
+                let category = PlaceCategory.categorize(from: place.types)
                 ListItem.searchResult(
                     title: place.name,
                     distance: calculateDistance(to: place),
                     location: place.simpleLocationName,
-                    icon: PlaceTypeHelpers.iconForPlaceType(place.types),
-                    iconColor: PlaceTypeHelpers.colorForPlaceType(place.types),
+                    icon: PlaceVisuals.icon(for: category),
+                    iconColor: PlaceVisuals.color(for: category),
                     onOpenPlaceDetails: {
                         onPlaceTapped(place)
                     }
