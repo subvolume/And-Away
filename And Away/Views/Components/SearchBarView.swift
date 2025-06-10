@@ -31,8 +31,7 @@ struct SearchBarView: View {
         }
         .padding(.vertical, 8) // Inner vertical padding for the HStack (was on TextField)
         .padding(.horizontal, 10) // Inner horizontal padding for the HStack (was on TextField)
-        .background(Color(.systemGray6))
-        .cornerRadius(10)
+        .background(Capsule().fill(Color(.systemGray6)))
         .padding(.horizontal) // Outer horizontal padding for the whole component
         .padding(.vertical, verticalPadding) // Outer vertical padding for the whole component
         .onChange(of: isEditing) { editing in
