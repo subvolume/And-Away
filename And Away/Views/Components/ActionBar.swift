@@ -9,18 +9,16 @@ struct ActionBar: View {
                 icon: "heart",
                 action: {}
             )
-            
+
             Spacer()
-            
+
             // Right icon buttons
             PillButton.icon("square.and.arrow.up", action: {})
             PillButton.icon("location", action: {})
         }
         .padding(.horizontal, Spacing.m)
-        .padding(.vertical, Spacing.s)
-        .background(.thinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
+        .padding(.vertical, Spacing.m)
+        .background(.ultraThinMaterial)
     }
 }
 

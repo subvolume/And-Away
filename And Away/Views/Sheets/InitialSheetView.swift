@@ -9,22 +9,27 @@ struct InitialSheetView: View {
     @EnvironmentObject var sheetController: SheetController
     
     var body: some View {
-        VStack {
-            SearchBarView(text: $searchText, isEditing: $isSearchActive)
-            ScrollView {
-                if isSearchActive || !searchText.isEmpty {
-                    SearchStateView(searchText: $searchText, onPlaceTapped: { place in
-                        selectedPlace = place
-                        isSearchActive = false  // Dismiss input when viewing details
-                        showPlaceDetails = true
-                        // Present the details sheet level using SheetController
-                        sheetController.presentSheet(.details)
-                    })
-                } else {
-                    DummyView()
+        ZStack(alignment: .bottom) {
+            VStack {
+                SearchBarView(text: $searchText, isEditing: $isSearchActive)
+                ScrollView {
+                    if isSearchActive || !searchText.isEmpty {
+                        SearchStateView(searchText: $searchText, onPlaceTapped: { place in
+                            selectedPlace = place
+                            isSearchActive = false  // Dismiss input when viewing details
+                            showPlaceDetails = true
+                            // Present the details sheet level using SheetController
+                            sheetController.presentSheet(.details)
+                        })
+                    } else {
+                        DummyView()
+                    }
                 }
             }
+            ActionBar()
+                .frame(maxWidth: .infinity)
         }
+        .ignoresSafeArea(.container, edges: .bottom)
         .onChange(of: isSearchActive) { oldValue, newValue in
             sheetController.setKeyboardVisible(newValue, for: .list)
         }
