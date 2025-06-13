@@ -12,13 +12,13 @@ struct FontStyle {
     static let fontFamily = "Plus Jakarta Sans"
     
     // MARK: - Page Titles
-    static let pageTitle = Font.custom(fontFamily, size: 30).weight(.bold)
+    static let pageTitle = Font.custom(fontFamily, size: 28).weight(.bold)
     static let pageSubtitle = Font.custom(fontFamily, size: 17).weight(.medium)
     static let pageNote = Font.custom(fontFamily, size: 17).weight(.regular).italic()
     
     // MARK: - Card & List Text
     static let cardTitle = Font.custom(fontFamily, size: 16).weight(.medium)
-    static let cardSubtitle = Font.custom(fontFamily, size: 16).weight(.medium)
+    static let cardSubtitle = Font.custom(fontFamily, size: 15).weight(.medium)
     static let listTitle = Font.custom(fontFamily, size: 17).weight(.semibold)
     static let listSubtitle = Font.custom(fontFamily, size: 16).weight(.regular)
     static let listNote = Font.custom(fontFamily, size: 14).weight(.medium).italic()
@@ -26,7 +26,7 @@ struct FontStyle {
     static let listDone = Font.custom(fontFamily, size: 17).weight(.medium)
     
     // MARK: - Buttons
-    static let button = Font.custom(fontFamily, size: 15).weight(.semibold)
+    static let button = Font.custom(fontFamily, size: 17).weight(.semibold)
 }
 
 // MARK: - SwiftUI Font Extension

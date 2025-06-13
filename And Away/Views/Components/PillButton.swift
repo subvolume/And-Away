@@ -24,7 +24,7 @@ struct PillButton: View {
         text: String? = nil,
         icon: String? = nil,
         defaultTextColor: Color = .secondary,
-        defaultBackgroundColor: Color = .backgroundTertiary,
+        defaultBackgroundColor: Color = .backgroundPrimary.opacity(0.7),
         selectedTextColor: Color = .invert,
         selectedBackgroundColor: Color = .backgroundSelected,
         verticalPadding: CGFloat = Spacing.xs,
@@ -63,16 +63,26 @@ struct PillButton: View {
         // Icon-only buttons are circular, others are capsule-shaped
         if text == nil && icon != nil {
             content
-                .frame(width: 32, height: 32, alignment: .center)
+                .frame(width: 44, height: 44, alignment: .center)
                 .background(currentBackgroundColor)
                 .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(Color.backgroundPrimary, lineWidth: 1)
+                )
+                .shadow(color: .black.opacity(0.15), radius: 13, x: 0, y: 4)
                 .onTapGesture { action() }
         } else {
             content
                 .padding(.horizontal, Spacing.s)
-                .frame(height: 32, alignment: .center)
+                .frame(height: 44, alignment: .center)
                 .background(currentBackgroundColor)
                 .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(Color.backgroundPrimary, lineWidth: 1)
+                )
+                .shadow(color: .black.opacity(0.15), radius: 13, x: 0, y: 4)
                 .onTapGesture { action() }
         }
     }
@@ -114,7 +124,7 @@ struct PillButton_Previews: PreviewProvider {
     static var previews: some View {
         InteractivePillButtonPreview()
             .padding()
-            .background(Color.backgroundPrimary)
+            .background(Color.backgroundTertiary)
             .previewLayout(.sizeThatFits)
     }
 }
