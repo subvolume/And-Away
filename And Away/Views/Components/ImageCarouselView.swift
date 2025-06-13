@@ -15,8 +15,7 @@ import SwiftUI
  */
 
 struct ImageCarouselView: View {
-    let topImages = ["cat01", "cat02", "cat03", "cat04"]
-    let bottomImages = ["cat05", "cat06", "cat07", "cat08"]
+    let images = ["cat01", "cat02", "cat03", "cat04", "cat05", "cat06", "cat07", "cat08"]
     
     // Helper function to load images using UIImage with proper aspect ratio
     func loadImage(_ name: String) -> Image {
@@ -28,39 +27,21 @@ struct ImageCarouselView: View {
         }
     }
     
-    // Reusable carousel component
-    func carouselRow(images: [String]) -> some View {
+    var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: Spacing.xxs) {
-                // Left frame
-                Rectangle()
-                    .fill(Color.backgroundTertiary)
-                    .frame(width: 100, height: 130)
-                
+            HStack(spacing: Spacing.s) {
                 ForEach(images, id: \.self) { imageName in
                     loadImage(imageName)
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 100, height: 150)
+                        .clipped()
+                        .cornerRadius(20)
                 }
-                
-                // Right frame
-                Rectangle()
-                    .fill(Color.backgroundTertiary)
-                    .frame(width: 100, height: 130)
             }
-            .offset(x: -(100 + Spacing.xxs))
-            .padding(.trailing, -2 * (100 + Spacing.xxs))
+            .padding(.horizontal, Spacing.m)
         }
-    }
-    
-    var body: some View {
-        VStack(spacing: Spacing.xxs) {
-            carouselRow(images: topImages)
-            carouselRow(images: bottomImages)
-        }
-        .frame(height: 260)
-        .cornerRadius(20)
-        .padding(.horizontal, Spacing.m)
+        .frame(height: 150)
     }
 }
 
