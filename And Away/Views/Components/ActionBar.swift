@@ -14,11 +14,11 @@ struct ActionBar: View {
 
             // Right icon buttons
             PillButton.icon("square.and.arrow.up", action: {})
-            PillButton.icon("location", action: {})
+            PillButton.icon("magnifyingglass", action: {})
         }
         .padding(.horizontal, Spacing.m)
         .padding(.vertical, Spacing.m)
-        .background(.ultraThinMaterial)
+        //.background(.ultraThinMaterial)
     }
 }
 
