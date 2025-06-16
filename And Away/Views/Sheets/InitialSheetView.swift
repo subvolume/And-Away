@@ -11,7 +11,6 @@ struct InitialSheetView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack {
-                SearchBarView(text: $searchText, isEditing: $isSearchActive)
                 ScrollView {
                     if isSearchActive || !searchText.isEmpty {
                         SearchStateView(searchText: $searchText, onPlaceTapped: { place in
