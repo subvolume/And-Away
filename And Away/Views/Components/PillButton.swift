@@ -73,22 +73,17 @@ struct PillButton: View {
                 .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 4)
                 .onTapGesture { action() }
         } else {
-            if #available(iOS 26.0, *) {
-                content
-                    .padding(.horizontal, Spacing.m)
-                    .frame(height: 48, alignment: .center)
-                    .background(currentBackgroundColor)
-                    .clipShape(Capsule())
-                    .overlay(
-                        Capsule()
-                            .stroke(Color.backgroundPrimary, lineWidth: 1)
-                    )
-                    .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 4)
-                    .onTapGesture { action() }
-                    .glassEffect()
-            } else {
-                // Fallback on earlier versions
-            }
+            content
+                .padding(.horizontal, Spacing.m)
+                .frame(height: 48, alignment: .center)
+                .background(currentBackgroundColor)
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(Color.backgroundPrimary, lineWidth: 1)
+                )
+                .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 4)
+                .onTapGesture { action() }
         }
     }
 }
