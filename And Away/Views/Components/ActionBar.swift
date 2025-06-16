@@ -6,23 +6,20 @@ struct ActionBar: View {
     var body: some View {
         HStack {
             // Left button with icon and text
-            PillButton.textIcon(
-                text: "Save",
-                icon: "heart",
-                action: {}
-            )
+            PillButton.text("Plan today", action: {})
 
             Spacer()
 
             // Right icon buttons
-            PillButton.icon("square.and.arrow.up", action: {})
-            PillButton.icon("magnifyingglass", action: {
-                isSearchActive = true
-            })
+            HStack(spacing: Spacing.m) {
+                PillButton.icon("square.and.arrow.up", action: {})
+                PillButton.icon("magnifyingglass", action: {
+                    isSearchActive = true
+                })
+            }
         }
-        .padding(.horizontal, Spacing.m)
-        .padding(.vertical, Spacing.m)
-        //.background(.ultraThinMaterial)
+        .padding(.horizontal, Spacing.l)
+        .padding(.vertical, Spacing.l)
     }
 }
 

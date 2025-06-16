@@ -63,7 +63,7 @@ struct PillButton: View {
         // Icon-only buttons are circular, others are capsule-shaped
         if text == nil && icon != nil {
             content
-                .frame(width: 44, height: 44, alignment: .center)
+                .frame(width: 48, height: 48, alignment: .center)
                 .background(currentBackgroundColor)
                 .clipShape(Circle())
                 .overlay(
@@ -73,17 +73,22 @@ struct PillButton: View {
                 .shadow(color: .black.opacity(0.15), radius: 13, x: 0, y: 4)
                 .onTapGesture { action() }
         } else {
-            content
-                .padding(.horizontal, Spacing.s)
-                .frame(height: 44, alignment: .center)
-                .background(currentBackgroundColor)
-                .clipShape(Capsule())
-                .overlay(
-                    Capsule()
-                        .stroke(Color.backgroundPrimary, lineWidth: 1)
-                )
-                .shadow(color: .black.opacity(0.15), radius: 13, x: 0, y: 4)
-                .onTapGesture { action() }
+            if #available(iOS 26.0, *) {
+                content
+                    .padding(.horizontal, Spacing.m)
+                    .frame(height: 48, alignment: .center)
+                    .background(currentBackgroundColor)
+                    .clipShape(Capsule())
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.backgroundPrimary, lineWidth: 1)
+                    )
+                    .shadow(color: .black.opacity(0.15), radius: 13, x: 0, y: 4)
+                    .onTapGesture { action() }
+                    .glassEffect()
+            } else {
+                // Fallback on earlier versions
+            }
         }
     }
 }
