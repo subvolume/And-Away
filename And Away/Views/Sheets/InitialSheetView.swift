@@ -9,40 +9,53 @@ struct InitialSheetView: View {
     @EnvironmentObject var sheetController: SheetController
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            VStack {
-                ScrollView {
-                    if isSearchActive || !searchText.isEmpty {
-                        SearchStateView(searchText: $searchText, onPlaceTapped: { place in
-                            selectedPlace = place
-                            isSearchActive = false  // Dismiss input when viewing details
-                            showPlaceDetails = true
-                            // Present the details sheet level using SheetController
-                            sheetController.presentSheet(.details)
-                        })
-                    } else {
-                        DummyView()
+        Group {
+            if isSearchActive {
+                // NavigationStack with .searchable for active search
+                NavigationStack {
+                    ZStack(alignment: .bottom) {
+                        ScrollView {
+                            SearchStateView(searchText: $searchText, onPlaceTapped: { place in
+                                selectedPlace = place
+                                isSearchActive = false  // Dismiss search when viewing details
+                                showPlaceDetails = true
+                                // Present the details sheet level using SheetController
+                                sheetController.presentSheet(.details)
+                            })
+                        }
+                        ActionBar(isSearchActive: $isSearchActive)
+                            .frame(maxWidth: .infinity)
                     }
+                    .ignoresSafeArea(.container, edges: .bottom)
                 }
+                .searchable(text: $searchText, isPresented: $isSearchActive)
+            } else {
+                // Regular view without NavigationStack
+                ZStack(alignment: .bottom) {
+                    VStack {
+                        ScrollView {
+                            DummyView()
+                        }
+                    }
+                    ActionBar(isSearchActive: $isSearchActive)
+                        .frame(maxWidth: .infinity)
+                }
+                .ignoresSafeArea(.container, edges: .bottom)
             }
-            ActionBar()
-                .frame(maxWidth: .infinity)
-        }
-        .ignoresSafeArea(.container, edges: .bottom)
-        .onChange(of: isSearchActive) { oldValue, newValue in
-            sheetController.setKeyboardVisible(newValue, for: .list)
         }
         .sheet(isPresented: $showPlaceDetails) {
             PlaceDetailsView(
                 placeId: selectedPlace?.placeId ?? "ChIJL-ROikVu5kcRzWBvNS3lnM0",
                 onBackTapped: {
                     showPlaceDetails = false
-                    isSearchActive = true  // Restore search focus when returning
                     // Dismiss the details sheet level using SheetController
                     sheetController.dismissSheet(.details)
                 }
             )
             .managedSheetDetents(controller: sheetController, level: .details)
+        }
+        .onChange(of: isSearchActive) { oldValue, newValue in
+            sheetController.setKeyboardVisible(newValue, for: .list)
         }
     }
 }

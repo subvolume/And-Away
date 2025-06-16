@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct ActionBar: View {
+    @Binding var isSearchActive: Bool
+    
     var body: some View {
         HStack {
             // Left button with icon and text
@@ -14,7 +16,9 @@ struct ActionBar: View {
 
             // Right icon buttons
             PillButton.icon("square.and.arrow.up", action: {})
-            PillButton.icon("magnifyingglass", action: {})
+            PillButton.icon("magnifyingglass", action: {
+                isSearchActive = true
+            })
         }
         .padding(.horizontal, Spacing.m)
         .padding(.vertical, Spacing.m)
@@ -23,5 +27,5 @@ struct ActionBar: View {
 }
 
 #Preview {
-    ActionBar()
+    ActionBar(isSearchActive: .constant(false))
 } 
