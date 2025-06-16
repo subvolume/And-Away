@@ -50,7 +50,7 @@ struct PillButton: View {
         let content = HStack(spacing: Spacing.xs) {
             if let icon = icon {
                 Image(systemName: icon)
-                    .font(FontStyle.button)
+                    .font(.system(size: 22, weight: .medium))
                     .foregroundColor(currentTextColor)
             }
             if let text = text {

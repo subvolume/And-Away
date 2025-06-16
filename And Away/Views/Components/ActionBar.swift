@@ -13,8 +13,8 @@ struct ActionBar: View {
             // Right icon buttons
             HStack(spacing: Spacing.m) {
                 PillButton.icon("square.and.arrow.up", action: {})
-                PillButton.icon("magnifyingglass", action: {
-                    isSearchActive = true
+                PillButton.icon(isSearchActive ? "xmark" : "magnifyingglass", action: {
+                    isSearchActive.toggle()
                 })
             }
         }
