@@ -96,6 +96,22 @@
 
 ---
 
+#### Step 7: Clean Up Category Management
+**Goal**: Implement centralized CategoryRegistry system
+**Status**: ⏳ Future Cleanup
+
+**What we'll create**:
+- [ ] `CategoryRegistry.swift` - Centralized category definitions
+- [ ] Move category colors from SearchResultsView to registry
+- [ ] Implement provider-agnostic category mapping
+- [ ] Support for unknown/fallback categories
+
+**Why we need this**: Currently category colors and definitions are scattered across multiple files. Our API planning calls for a centralized CategoryRegistry system.
+
+**How we'll know it's done**: All category logic lives in one place, easy to add new categories
+
+---
+
 ## Next Phases (Future)
 - **Phase 2**: Google Places Integration
 - **Phase 3**: Search Intelligence & Scoring
@@ -106,6 +122,10 @@
 - Keeping each step small and focused
 - Building foundation before adding complexity
 - Using mock data to test everything first
+
+## Technical Debt to Address Later
+- **Category Management**: Colors and category logic scattered across SearchResultsView and MockPlacesData - should be centralized in CategoryRegistry (Step 7)
+- **Color Constants**: Using ColorTokens.swift correctly, but category-to-color mapping is manual
 
 ## Questions for Later
 - Color scheme preferences

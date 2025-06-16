@@ -2,10 +2,16 @@ import SwiftUI
 
 struct SearchResultsView: View {
     let searchText: String
-    let onPlaceTapped: (PlaceSearchResult) -> Void
+    let onPlaceTapped: (Place) -> Void
     
-    // Using mock data from MockData.swift
-    private let searchResults = MockData.sampleSearchResponse.results
+    // Using our new foundation mock data
+    private var searchResults: [Place] {
+        if searchText.isEmpty {
+            return MockPlacesData.samplePlaces
+        } else {
+            return MockPlacesData.searchPlaces(query: searchText)
+        }
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -15,14 +21,14 @@ struct SearchResultsView: View {
                 showViewAllButton: false
             )
             
-            // Use the searchResult template from ListItem with mock data
-            ForEach(searchResults, id: \.placeId) { place in
+            // Use the searchResult template from ListItem with our new mock data
+            ForEach(searchResults, id: \.id) { place in
                 ListItem.searchResult(
                     title: place.name,
-                    distance: "\(Int.random(in: 1...20))km", // Mock distance for now
-                    location: place.vicinity ?? "Unknown location",
-                    icon: iconForPlaceType(place.types),
-                    iconColor: colorForPlaceType(place.types),
+                    distance: place.formattedDistance ?? "Unknown distance",
+                    location: place.address,
+                    icon: Image(systemName: place.category.icon),
+                    iconColor: colorForCategory(place.category),
                     onOpenPlaceDetails: {
                         onPlaceTapped(place)
                     }
@@ -33,33 +39,23 @@ struct SearchResultsView: View {
         }
     }
     
-    // Helper function to get appropriate icon based on place type
-    private func iconForPlaceType(_ types: [String]) -> Image {
-        if types.contains("restaurant") || types.contains("food") {
-            return Image(systemName: "fork.knife")
-        } else if types.contains("cafe") {
-            return Image(systemName: "cup.and.saucer")
-        } else if types.contains("tourist_attraction") {
-            return Image(systemName: "camera")
-        } else if types.contains("museum") {
-            return Image(systemName: "building.columns")
-        } else {
-            return Image(systemName: "mappin.circle")
-        }
-    }
-    
-    // Helper function to get appropriate color based on place type
-    private func colorForPlaceType(_ types: [String]) -> Color {
-        if types.contains("restaurant") || types.contains("food") {
+    // Helper function to get appropriate color based on our new category system
+    private func colorForCategory(_ category: PlaceCategory) -> Color {
+        switch category.id {
+        case "restaurant":
             return .orange100
-        } else if types.contains("cafe") {
+        case "coffee_shop":
             return .teal100
-        } else if types.contains("tourist_attraction") {
-            return .azure100
-        } else if types.contains("museum") {
-            return .purple100
-        } else {
+        case "park":
             return .green100
+        case "museum":
+            return .purple100
+        case "shopping":
+            return .azure100
+        case "hotel":
+            return .indigo // Using indigo as fallback
+        default:
+            return .gray // Generic fallback
         }
     }
 }
