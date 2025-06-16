@@ -11,7 +11,6 @@ struct InitialSheetView: View {
     var body: some View {
         Group {
             if isSearchActive {
-                // NavigationStack with .searchable for active search
                 NavigationStack {
                     ZStack(alignment: .bottom) {
                         ScrollView {
@@ -30,7 +29,6 @@ struct InitialSheetView: View {
                 }
                 .searchable(text: $searchText, isPresented: $isSearchActive)
             } else {
-                // Regular view without NavigationStack
                 ZStack(alignment: .bottom) {
                     VStack {
                         ScrollView {

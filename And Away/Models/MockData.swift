@@ -100,6 +100,89 @@ struct MockData {
                 types: ["restaurant", "food", "meal_takeaway"],
                 userRatingsTotal: 3890,
                 businessStatus: "OPERATIONAL"
+            ),
+            PlaceSearchResult(
+                placeId: "ChIJKzA3r8Vu5kcRTWc8Y_K5abc",
+                name: "Musée d'Orsay",
+                vicinity: "1 Rue de la Légion d'Honneur, Paris",
+                rating: 4.6,
+                priceLevel: nil,
+                photos: [
+                    PlacePhoto(photoReference: "mock_photo_ref_3", height: 1080, width: 1920)
+                ],
+                geometry: PlaceGeometry(
+                    location: PlaceLocation(lat: 48.8599, lng: 2.3266),
+                    viewport: nil
+                ),
+                types: ["museum", "tourist_attraction", "establishment"],
+                userRatingsTotal: 5243,
+                businessStatus: "OPERATIONAL"
+            ),
+            PlaceSearchResult(
+                placeId: "ChIJrxN7t8Vu5kcRJGc9Y_X6def",
+                name: "Shakespeare and Company",
+                vicinity: "37 Rue de la Bûcherie, Paris",
+                rating: 4.4,
+                priceLevel: 2,
+                photos: [
+                    PlacePhoto(photoReference: "mock_photo_ref_4", height: 720, width: 1280)
+                ],
+                geometry: PlaceGeometry(
+                    location: PlaceLocation(lat: 48.8520, lng: 2.3475),
+                    viewport: nil
+                ),
+                types: ["book_store", "tourist_attraction", "establishment"],
+                userRatingsTotal: 2876,
+                businessStatus: "OPERATIONAL"
+            ),
+            PlaceSearchResult(
+                placeId: "ChIJpxA8s9Vu5kcRONb7Y_H7ghi",
+                name: "Breizh Café",
+                vicinity: "109 Rue Vieille du Temple, Paris",
+                rating: 4.1,
+                priceLevel: 2,
+                photos: nil,
+                geometry: PlaceGeometry(
+                    location: PlaceLocation(lat: 48.8605, lng: 2.3621),
+                    viewport: nil
+                ),
+                types: ["cafe", "restaurant", "food"],
+                userRatingsTotal: 1843,
+                businessStatus: "OPERATIONAL"
+            ),
+            PlaceSearchResult(
+                placeId: "ChIJmyB9u9Vu5kcRKOd8Y_W8jkl",
+                name: "Jardin du Luxembourg",
+                vicinity: "75006 Paris, France",
+                rating: 4.7,
+                priceLevel: nil,
+                photos: [
+                    PlacePhoto(photoReference: "mock_photo_ref_5", height: 1080, width: 1920)
+                ],
+                geometry: PlaceGeometry(
+                    location: PlaceLocation(lat: 48.8462, lng: 2.3371),
+                    viewport: nil
+                ),
+                types: ["park", "tourist_attraction", "establishment"],
+                userRatingsTotal: 7829,
+                businessStatus: "OPERATIONAL"
+            ),
+            PlaceSearchResult(
+                placeId: "ChIJlxC6v9Vu5kcRMPe9Y_Z9mno",
+                name: "Arc de Triomphe",
+                vicinity: "Place Charles de Gaulle, Paris",
+                rating: 4.5,
+                priceLevel: nil,
+                photos: [
+                    PlacePhoto(photoReference: "mock_photo_ref_6", height: 1080, width: 1920)
+                ],
+                geometry: PlaceGeometry(
+                    location: PlaceLocation(lat: 48.8738, lng: 2.2950),
+                    viewport: nil
+                ),
+                types: ["tourist_attraction", "establishment"],
+                userRatingsTotal: 4156,
+                businessStatus: "OPERATIONAL"
             )
         ],
         status: "OK",

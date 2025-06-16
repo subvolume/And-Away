@@ -24,7 +24,7 @@ struct PillButton: View {
         text: String? = nil,
         icon: String? = nil,
         defaultTextColor: Color = .secondary,
-        defaultBackgroundColor: Color = .backgroundPrimary.opacity(0.7),
+        defaultBackgroundColor: Color = .backgroundPrimary.opacity(0.8),
         selectedTextColor: Color = .invert,
         selectedBackgroundColor: Color = .backgroundSelected,
         verticalPadding: CGFloat = Spacing.xs,
@@ -70,7 +70,7 @@ struct PillButton: View {
                     Circle()
                         .stroke(Color.backgroundPrimary, lineWidth: 1)
                 )
-                .shadow(color: .black.opacity(0.15), radius: 13, x: 0, y: 4)
+                .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 4)
                 .onTapGesture { action() }
         } else {
             if #available(iOS 26.0, *) {
@@ -83,7 +83,7 @@ struct PillButton: View {
                         Capsule()
                             .stroke(Color.backgroundPrimary, lineWidth: 1)
                     )
-                    .shadow(color: .black.opacity(0.15), radius: 13, x: 0, y: 4)
+                    .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 4)
                     .onTapGesture { action() }
                     .glassEffect()
             } else {
