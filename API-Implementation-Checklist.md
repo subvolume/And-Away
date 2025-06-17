@@ -4,40 +4,40 @@
 ## Phase 1: API Exploration & Setup
 
 ### Step 1: Google Places API Setup
-- [ ] Create Google Cloud Platform account
-- [ ] Enable Places API in Google Cloud Console
-- [ ] Generate API key and restrict it properly
-- [ ] Set up billing account
-- [ ] Test API key with a simple curl request
+- [x] Create Google Cloud Platform account
+- [x] Enable Places API in Google Cloud Console
+- [x] Generate API key and restrict it properly
+- [x] Set up billing account
+- [x] Test API key with a simple curl request
 
 **Checkpoint 1:** ✅ Confirm API key works and returns real data
-- [ ] Can make successful API calls
-- [ ] API key restrictions are working
-- [ ] Billing is set up correctly
+- [x] Can make successful API calls
+- [x] API key restrictions are working
+- [x] Billing is set up correctly
 
 ### Step 2: Apple MapKit Setup
-- [ ] Verify iOS development environment is ready
-- [ ] Add MapKit framework to project
-- [ ] Add location permissions to Info.plist
-- [ ] Test basic MKLocalSearch in simulator
+- [x] Verify iOS development environment is ready
+- [x] Add MapKit framework to project
+- [x] Add location permissions to Info.plist
+- [x] Test basic MKLocalSearch in simulator
 
 **Checkpoint 2:** ✅ Confirm Apple APIs work in your project
-- [ ] MapKit imports successfully
-- [ ] Location permissions request properly
-- [ ] Basic search returns results
+- [x] MapKit imports successfully
+- [x] Location permissions request properly
+- [x] Basic search returns results
 
 ### Step 3: Create Sandbox Environment
-- [ ] Add a debug "API Test" tab or view to existing app
-- [ ] Create simple UI with search field and result display
-- [ ] Add buttons to test Google vs Apple APIs
-- [ ] Add text view to show raw API responses
-- [ ] Set up so it can be easily removed later
+- [x] Add a debug "API Test" tab or view to existing app
+- [x] Create simple UI with search field and result display
+- [x] Add buttons to test Google vs Apple APIs
+- [x] Add text view to show raw API responses
+- [x] Set up so it can be easily removed later
 
 **Checkpoint 3:** ✅ Sandbox environment ready for testing
-- [ ] Can input search terms
-- [ ] Can display API responses
-- [ ] Easy to test both providers side-by-side
-- [ ] Doesn't interfere with main app functionality
+- [x] Can input search terms
+- [x] Can display API responses
+- [x] Easy to test both providers side-by-side
+- [x] Doesn't interfere with main app functionality
 
 ### Step 4: API Response Documentation
 - [ ] Test Google Places Text Search with real queries
@@ -45,6 +45,8 @@
 - [ ] Test Google Autocomplete API
 - [ ] Test Apple MKLocalSearch with same queries
 - [ ] Test Apple MKLocalSearchCompleter
+- [x] **Test partial queries** (e.g. "star", "coff", "pizz") - critical for user experience
+- [x] **Compare autocomplete quality** between providers with incomplete searches
 - [ ] Document actual JSON responses for each
 
 **Checkpoint 4:** ✅ Have real API response examples saved
@@ -160,15 +162,32 @@
 - [ ] API usage is optimized (not wasting calls)
 - [ ] Can monitor API usage and costs
 
-## Phase 6: Final Validation
+## Phase 6: Enhanced Features
 
-### Step 13: User Testing
+### Step 13: Category-Based Search Implementation
+- [ ] Research Google Places API category/type filtering
+- [ ] Research Apple MapKit pointOfInterestCategory filtering  
+- [ ] Design two-step search flow: partial input → categories → places
+- [ ] Test category recognition from partial input ("co" → "Coffee")
+- [ ] Implement category selection UI
+- [ ] Test category-filtered place search
+- [ ] Compare category coverage between providers
+
+**Checkpoint 13:** ✅ Category search enhances discovery experience
+- [ ] Users can find categories from partial input
+- [ ] Category tap shows relevant places
+- [ ] Both APIs support needed place categories
+- [ ] Category search feels intuitive and fast
+
+## Phase 7: Final Validation
+
+### Step 14: User Testing
 - [ ] Test with real users doing real searches
 - [ ] Compare user satisfaction with different providers
 - [ ] Identify any remaining issues
 - [ ] Gather feedback on search quality
 
-**Checkpoint 13:** ✅ Users are satisfied with search experience
+**Checkpoint 14:** ✅ Users are satisfied with search experience
 - [ ] Users can find what they're looking for
 - [ ] Search feels fast and responsive
 - [ ] No major usability issues
@@ -193,13 +212,13 @@
 
 ## Phase 7: Cleanup & Finalization
 
-### Step 14: Replace Temporary Models
+### Step 15: Replace Temporary Models
 - [ ] Delete the restored Google model files (GoogleAutocompleteModels.swift, etc.)
 - [ ] Confirm all views use the new abstraction layer instead
 - [ ] Remove any remaining references to the old model structures
 - [ ] Update MockData.swift to use new models (if still needed for testing)
 
-**Checkpoint 14:** ✅ Clean codebase with only production models
+**Checkpoint 15:** ✅ Clean codebase with only production models
 - [ ] No duplicate or temporary model files
 - [ ] All views use the abstraction layer
 - [ ] MockData works with new structure (if kept)
