@@ -131,14 +131,15 @@
 
 **Track A: Apple MapKit Service (Fast Track)** 🍎
 - [x] Step A1: Create AppleMapKitService Shell ✅
-- [ ] Step A2: Implement Apple Text Search (MKLocalSearch)
+- [x] Step A2: Implement Apple Text Search (MKLocalSearch) ✅
 - [ ] Step A3: Implement Apple Nearby Search
 
 **Track B: Google Places Service (Rich Data)** 🌍  
-- [ ] Step B1: Google Setup & Research (API keys, pricing)
-- [ ] Step B2: Create GooglePlacesService Shell
-- [ ] Step B3: Implement Google Text Search
-- [ ] Step B4: Implement Google Nearby Search
+- [x] Step B1: Google Setup & Research (API keys, pricing) ✅
+- [x] Step B2: Create GooglePlacesService Shell ✅
+- [ ] Step B3: Add Google Places SDK to Project
+- [ ] Step B4: Implement Google Text Search
+- [ ] Step B5: Implement Google Nearby Search
 
 **Track C: Integration & Comparison** ⚖️
 - [ ] Step C1: Provider Switching System (Mock/Apple/Google toggle)
@@ -146,7 +147,13 @@
 - [ ] Step C3: Provider Analytics & Performance Metrics
 
 ### 🔮 Future Phases
-- **Phase 3**: Search Intelligence & Scoring Optimization
+
+**Phase 3: Search Intelligence & Scoring Optimization** 🎯
+- **TODO: Comprehensive Ranking System** - Fix random Apple MapKit result ordering
+  - Smart scoring algorithm combining distance, text relevance, category-specific scoring
+  - Provider-specific optimizations (Apple: distance+keywords, Google: popularity+ratings)
+  - Saved places priority, recent searches relevance, exact vs partial match scoring
+  - Performance optimization with async scoring and caching
 - **Phase 4**: Storage & Bookmarks (iCloud integration)
 - **Phase 5**: UI Polish & Advanced Features
 

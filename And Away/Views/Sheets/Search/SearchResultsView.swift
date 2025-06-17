@@ -9,8 +9,9 @@ struct SearchResultsView: View {
     @State private var isLoading: Bool = false
     @State private var searchTask: Task<Void, Never>?
     
-    // Mock service instance
-    private let placesService = MockPlacesService()
+    // TESTING: Switch to Apple MapKit service for testing
+    private let placesService = AppleMapKitService()
+    // Note: Will switch back to mock service after testing
     
     var body: some View {
         VStack(spacing: 0) {
