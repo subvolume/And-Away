@@ -7,11 +7,12 @@
 
 import Foundation
 import CoreLocation
+import SwiftUI
 
 // MARK: - Core Place Model
 
 /// Core place information that works with any map provider
-struct Place: Identifiable, Codable {
+struct Place: Identifiable {
     let id: String                          // Unique identifier
     let name: String                        // Name of place
     let latitude: Double                    // Latitude coordinate
@@ -54,11 +55,11 @@ struct PlaceImageInfo: Identifiable, Codable {
 }
 
 /// Place category with visual styling
-struct PlaceCategory: Identifiable, Codable {
+struct PlaceCategory: Identifiable {
     let id: String
     let displayName: String
     let icon: String                        // SF Symbol name
-    let color: String                       // Color identifier
+    let color: Color                        // SwiftUI Color
     let priority: Int                       // Display order
 }
 

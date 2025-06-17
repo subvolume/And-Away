@@ -112,24 +112,9 @@ struct SearchResultsView: View {
         }
     }
     
-    // Helper function to get appropriate color based on our new category system
+    // Helper function to get appropriate color from category
     private func colorForCategory(_ category: PlaceCategory) -> Color {
-        switch category.id {
-        case "restaurant":
-            return .orange100
-        case "coffee_shop":
-            return .teal100
-        case "park":
-            return .green100
-        case "museum":
-            return .purple100
-        case "shopping":
-            return .azure100
-        case "hotel":
-            return .indigo // Using indigo as fallback
-        default:
-            return .gray // Generic fallback
-        }
+        return category.color
     }
 }
 

@@ -12,52 +12,9 @@ import CoreLocation
 
 struct MockPlacesData {
     
-    // MARK: - Sample Categories
+    // MARK: - Sample Categories (using CategoryRegistry)
     
-    static let sampleCategories: [PlaceCategory] = [
-        PlaceCategory(
-            id: "restaurant",
-            displayName: "Restaurant",
-            icon: "fork.knife",
-            color: "orange",
-            priority: 1
-        ),
-        PlaceCategory(
-            id: "coffee_shop",
-            displayName: "Coffee Shop",
-            icon: "cup.and.saucer",
-            color: "brown",
-            priority: 2
-        ),
-        PlaceCategory(
-            id: "park",
-            displayName: "Park",
-            icon: "tree",
-            color: "green",
-            priority: 3
-        ),
-        PlaceCategory(
-            id: "museum",
-            displayName: "Museum",
-            icon: "building.columns",
-            color: "purple",
-            priority: 4
-        ),
-        PlaceCategory(
-            id: "shopping",
-            displayName: "Shopping",
-            icon: "bag",
-            color: "blue",
-            priority: 5
-        ),
-        PlaceCategory(
-            id: "hotel",
-            displayName: "Hotel",
-            icon: "bed.double",
-            color: "indigo",
-            priority: 6
-        )
-    ]
+    static let sampleCategories: [PlaceCategory] = CategoryRegistry.allCategories
     
     // MARK: - Sample Photos
     

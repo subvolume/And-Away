@@ -205,19 +205,8 @@ class MockPlacesService: PlacesSearchService {
             return (.partialNameMatch, score)
         }
         
-        // Check for common category keywords
-        let categoryKeywords = [
-            "coffee": ["coffee_shop"],
-            "restaurant": ["restaurant"],
-            "food": ["restaurant"],
-            "park": ["park"],
-            "museum": ["museum"],
-            "shopping": ["shopping"],
-            "hotel": ["hotel"],
-            "accommodation": ["hotel"]
-        ]
-        
-        for (keyword, categoryIds) in categoryKeywords {
+        // Check for common category keywords using CategoryRegistry
+        for (keyword, categoryIds) in CategoryRegistry.searchKeywords {
             if queryLower.contains(keyword) && categoryIds.contains(place.category.id) {
                 let baseScore = 0.70
                 let distanceBoost = (distance ?? 1000) < 500 ? 0.1 : 0.0
