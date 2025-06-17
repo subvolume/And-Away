@@ -31,3 +31,10 @@
 - Don't add extra features or files unless explicitly asked
 - Keep implementations simple and focused
 - Use clear, descriptive comments in code 
+
+## Current Project Context
+- Building location discovery iOS app "And Away"
+- Using API-first approach for location search (test real APIs first, then build models)
+- Implementing Apple MapKit + Google Places API with abstraction layer for easy provider switching
+- Following step-by-step implementation in API-Implementation-Checklist.md
+- Key files: API-Data-Planning.md and API-Implementation-Checklist.md contain all decisions and context
