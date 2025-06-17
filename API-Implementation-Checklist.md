@@ -191,6 +191,22 @@
 - [ ] Have workarounds for critical features
 - [ ] Know what functionality to delay/remove
 
+## Phase 7: Cleanup & Finalization
+
+### Step 14: Replace Temporary Models
+- [ ] Delete the restored Google model files (GoogleAutocompleteModels.swift, etc.)
+- [ ] Confirm all views use the new abstraction layer instead
+- [ ] Remove any remaining references to the old model structures
+- [ ] Update MockData.swift to use new models (if still needed for testing)
+
+**Checkpoint 14:** ✅ Clean codebase with only production models
+- [ ] No duplicate or temporary model files
+- [ ] All views use the abstraction layer
+- [ ] MockData works with new structure (if kept)
+- [ ] Code is clean and maintainable
+
+**Note:** *The current Google model files were restored temporarily to keep the app working while implementing the API-first approach. They should be removed once the real implementation is complete.*
+
 ## Final Success Criteria
 
 ✅ **App can search for places reliably**  
