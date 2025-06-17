@@ -277,7 +277,7 @@ struct SandboxView: View {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = searchText
         request.region = MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), // San Francisco
+            center: CLLocationCoordinate2D(latitude: 52.678606347967175, longitude: 4.698801550831957), // Your location
             span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         )
         
@@ -344,7 +344,7 @@ struct SandboxView: View {
         rawResponse = ""
         
         let encodedQuery = searchText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let urlString = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=\(encodedQuery)&location=37.7749,-122.4194&radius=5000&key=\(googleAPIKey)"
+        let urlString = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=\(encodedQuery)&location=52.678606347967175,4.698801550831957&radius=5000&key=\(googleAPIKey)"
         
         guard let url = URL(string: urlString) else {
             isSearching = false
@@ -427,7 +427,7 @@ struct SandboxView: View {
         rawResponse = ""
         
         let encodedQuery = searchText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=\(encodedQuery)&location=37.7749,-122.4194&radius=5000&key=\(googleAPIKey)"
+        let urlString = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=\(encodedQuery)&location=52.678606347967175,4.698801550831957&radius=5000&key=\(googleAPIKey)"
         
         guard let url = URL(string: urlString) else {
             isSearching = false
@@ -584,7 +584,7 @@ struct SandboxView: View {
         rawResponse = ""
         
         let encodedKeyword = searchText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let urlString = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=37.7749,-122.4194&radius=5000&keyword=\(encodedKeyword)&key=\(googleAPIKey)"
+        let urlString = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=52.678606347967175,4.698801550831957&radius=5000&keyword=\(encodedKeyword)&key=\(googleAPIKey)"
         
         guard let url = URL(string: urlString) else {
             isSearching = false

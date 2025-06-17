@@ -48,43 +48,54 @@
 ### Step 4: Google Places API Deep Dive
 - [x] Enhanced SandboxView with all Google Places endpoints
 - [x] Identified previous testing used Text Search API (not dedicated Autocomplete)
-- [ ] Test Google Autocomplete API vs Text Search comparison
-- [ ] Test Google Place Details API with real Place IDs
-- [ ] Test Google Nearby Search vs Text Search differences
-- [ ] Test Google Place Photos API workflow
-- [ ] Compare all endpoints for optimal UX and cost
+- [x] Test Google Autocomplete API vs Text Search comparison
+- [x] Test Google Place Details API with real Place IDs
+- [x] Test Google Nearby Search vs Text Search differences
+- [x] Test Google Place Photos API workflow
+- [x] Compare all endpoints for optimal UX and cost
+- [x] **DECISION: Hybrid approach - Autocomplete primary, Text Search for location queries**
 
-**Checkpoint 4:** 🔄 In Progress - Enhanced testing infrastructure ready
+**Checkpoint 4:** ✅ Complete - API testing and strategy decided
 - [x] Testing environment supports all Google Places endpoints
 - [x] Can compare Text Search vs dedicated Autocomplete API
 - [x] Real-time endpoint switching and testing capabilities
-- [ ] Complete comparison data for all endpoints
-- [ ] Optimal endpoint selection for each app feature
+- [x] Updated location coordinates for realistic local testing
+- [x] Complete comparison data for all endpoints
+- [x] **Hybrid approach selected: Autocomplete + Text Search for location queries**
+
+**⚠️ Note:** SandboxView is temporary testing infrastructure - must be removed in Phase 7 cleanup
 
 ### Step 5: Create Production Data Models
-- [ ] Create models based on actual Google API responses
+- [ ] Create models based on actual Google API responses (both Autocomplete and Text Search)
 - [ ] Design clean Swift interfaces for app consumption
 - [ ] Handle all Google data types and optional fields
 - [ ] Plan for future Google API updates
+- [ ] **Create decision logic flowchart for API selection**
+- [ ] **Design category recognition system ("rest" → "Restaurant" category)**
 
 **Checkpoint 5:** ✅ Production-ready data models
 - [ ] Models handle all Google API response variations
-- [ ] Clean interfaces for SwiftUI consumption
+- [ ] Clean interfaces for SwiftUI consumption  
 - [ ] Proper error handling for missing data
 - [ ] Future-proof design
+- [ ] Decision logic implemented for hybrid approach
 
 ## Phase 3: Google Places Integration
 
-### Step 6: Core Search Service
-- [ ] Create GooglePlacesService class
-- [ ] Implement text search functionality
-- [ ] Implement autocomplete functionality
+### Step 6: Core Search Service (Hybrid Implementation)
+- [ ] Create GooglePlacesService class with hybrid logic
+- [ ] Implement autocomplete functionality (primary)
+- [ ] Implement text search functionality (for location queries)
+- [ ] **Add query analysis logic (detect location vs simple queries)**
+- [ ] **Implement category recognition system**
 - [ ] Add proper error handling
 - [ ] Add request cancellation support
 
 **Checkpoint 6:** ✅ Core search functionality works
-- [ ] Text search returns reliable results
-- [ ] Autocomplete provides real-time suggestions
+- [ ] Autocomplete provides real-time suggestions (primary path)
+- [ ] Text search handles location queries properly
+- [ ] **Smart API selection works based on query type**
+- [ ] **Category detection works ("rest" → shows restaurants)**
 - [ ] Errors handled gracefully
 - [ ] No memory leaks or hanging requests
 
@@ -133,15 +144,19 @@
 
 ## Phase 5: Enhanced Features
 
-### Step 10: Category-Based Search Implementation
-- [ ] Research Google Places API type filtering
+### Step 10: Enhanced Category-Based Search Implementation  
+- [ ] **Implement category recognition from partial queries ("rest" → "Restaurant")**
+- [ ] **Design category tap behavior (show places near user location)**
+- [ ] Research Google Places API type filtering for categories
 - [ ] Design two-step search flow: partial input → categories → places
 - [ ] Test category recognition from partial input ("co" → "Coffee")
 - [ ] Implement category selection UI
-- [ ] Test category-filtered place search
+- [ ] Test category-filtered place search with location context
 - [ ] Optimize category search performance
 
 **Checkpoint 10:** ✅ Category search enhances discovery experience
+- [ ] **Users can type "rest" and get "Restaurant" category suggestion**
+- [ ] **Category tap shows restaurants near their current location**
 - [ ] Users can find categories from partial input
 - [ ] Category tap shows relevant places
 - [ ] Google Places types cover all needed categories
@@ -181,13 +196,15 @@
 
 ### Step 12: Code Cleanup
 - [ ] Delete the temporary Google model files (GoogleAutocompleteModels.swift, etc.)
-- [ ] Remove SandboxView.swift testing environment
+- [ ] **Remove SandboxView.swift testing environment** (built for Step 4 API testing)
+- [ ] Remove location coordinates hardcoding from any remaining files
 - [ ] Clean up any remaining test/debug code
 - [ ] Update MockData.swift to use production models (if still needed)
 - [ ] Final code review and documentation
 
 **Checkpoint 12:** ✅ Clean production codebase
 - [ ] No temporary or duplicate model files
+- [ ] **No SandboxView or testing infrastructure in production**
 - [ ] All views use production GooglePlacesService
 - [ ] No debug/testing code in production
 - [ ] Code is clean and maintainable
