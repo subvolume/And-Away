@@ -78,6 +78,24 @@ class GooglePlacesService {
         }
     }
     
+    // MARK: - Smart Search (Hybrid Approach)
+    func smartSearch(query: String) async throws -> [GooglePlace] {
+        if hasLocationContext(query) {
+            print("🎯 Using Text Search API for: '\(query)'")
+            return try await textSearch(query: query)
+        } else {
+            print("⚡ Using Autocomplete API for: '\(query)'")
+            return try await autocomplete(query: query)
+        }
+    }
+    
+    private func hasLocationContext(_ query: String) -> Bool {
+        let locationKeywords = ["near me", "nearby", "near", "in ", "around"]
+        return locationKeywords.contains { keyword in
+            query.lowercased().contains(keyword)
+        }
+    }
+    
     // MARK: - Place Details (for complete information)
     func placeDetails(placeId: String) async throws -> GooglePlace {
         let urlString = "https://maps.googleapis.com/maps/api/place/details/json?place_id=\(placeId)&fields=place_id,name,vicinity,types,geometry,photos,formatted_phone_number,opening_hours&key=\(apiKey)"

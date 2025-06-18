@@ -31,13 +31,8 @@ struct GooglePlacesServiceTest: View {
                 
                 Spacer()
                 
-                Button("Test Autocomplete") {
-                    testAutocomplete()
-                }
-                .disabled(isLoading)
-                
-                Button("Test Text Search") {
-                    testTextSearch()
+                Button("Search") {
+                    performManualSearch()
                 }
                 .disabled(isLoading)
             }
@@ -117,19 +112,19 @@ struct GooglePlacesServiceTest: View {
         let service = GooglePlacesService(apiKey: apiKey)
         
         do {
-            let places = try await service.autocomplete(query: searchText)
+            let places = try await service.smartSearch(query: searchText)
             results = places
             isLoading = false
-            print("✅ Search-as-you-type Success: \(places.count) results for '\(searchText)'")
+            print("✅ Smart Search Success: \(places.count) results for '\(searchText)'")
         } catch {
             errorMessage = error.localizedDescription
             results = []
             isLoading = false
-            print("❌ Search-as-you-type Error: \(error)")
+            print("❌ Smart Search Error: \(error)")
         }
     }
     
-    private func testAutocomplete() {
+    private func performManualSearch() {
         guard !searchText.isEmpty else { return }
         
         isLoading = true
@@ -140,44 +135,17 @@ struct GooglePlacesServiceTest: View {
         
         Task {
             do {
-                let places = try await service.autocomplete(query: searchText)
+                let places = try await service.smartSearch(query: searchText)
                 await MainActor.run {
                     results = places
                     isLoading = false
-                    print("✅ Manual Autocomplete Success: \(places.count) results")
+                    print("✅ Manual Smart Search Success: \(places.count) results")
                 }
             } catch {
                 await MainActor.run {
                     errorMessage = error.localizedDescription
                     isLoading = false
-                    print("❌ Manual Autocomplete Error: \(error)")
-                }
-            }
-        }
-    }
-    
-    private func testTextSearch() {
-        guard !searchText.isEmpty else { return }
-        
-        isLoading = true
-        errorMessage = ""
-        results = []
-        
-        let service = GooglePlacesService(apiKey: apiKey)
-        
-        Task {
-            do {
-                let places = try await service.textSearch(query: searchText)
-                await MainActor.run {
-                    results = places
-                    isLoading = false
-                    print("✅ Text Search Success: \(places.count) results")
-                }
-            } catch {
-                await MainActor.run {
-                    errorMessage = error.localizedDescription
-                    isLoading = false
-                    print("❌ Text Search Error: \(error)")
+                    print("❌ Manual Smart Search Error: \(error)")
                 }
             }
         }
