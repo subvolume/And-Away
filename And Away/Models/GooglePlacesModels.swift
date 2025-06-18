@@ -8,16 +8,24 @@ struct GooglePlace: Codable, Identifiable {
     let name: String
     let vicinity: String?
     let types: [String]
+    let location: PlaceLocation?
+    let photos: [PlacePhoto]?
+    let formattedPhoneNumber: String?
+    let openingHours: OpeningHours?
     
     enum CodingKeys: String, CodingKey {
         case placeId = "place_id"
         case name
         case vicinity
         case types
+        case location
+        case photos
+        case formattedPhoneNumber = "formatted_phone_number"
+        case openingHours = "opening_hours"
     }
 }
 
-// MARK: - Place Location
+// MARK: - Place Location (GPS Coordinates)
 struct PlaceLocation: Codable {
     let lat: Double
     let lng: Double
@@ -33,6 +41,17 @@ struct PlacePhoto: Codable {
         case photoReference = "photo_reference"
         case height
         case width
+    }
+}
+
+// MARK: - Opening Hours
+struct OpeningHours: Codable {
+    let openNow: Bool?
+    let weekdayText: [String]?
+    
+    enum CodingKeys: String, CodingKey {
+        case openNow = "open_now"
+        case weekdayText = "weekday_text"
     }
 }
 
@@ -79,26 +98,24 @@ struct PlaceSearchResult: Codable, Identifiable {
     let name: String
     let vicinity: String?
     let types: [String]
+    let geometry: PlaceGeometry
+    let photos: [PlacePhoto]?
     
     enum CodingKeys: String, CodingKey {
         case placeId = "place_id"
         case name
         case vicinity
         case types
+        case geometry
+        case photos
     }
 }
 
 struct PlaceGeometry: Codable {
     let location: PlaceLocation
-    let viewport: PlaceViewport?
 }
 
-struct PlaceViewport: Codable {
-    let northeast: PlaceLocation
-    let southwest: PlaceLocation
-}
-
-// MARK: - Place Details API Response
+// MARK: - Place Details API (for phone numbers and hours)
 struct GooglePlaceDetailsResponse: Codable {
     let result: PlaceDetails
     let status: String
@@ -108,34 +125,22 @@ struct PlaceDetails: Codable, Identifiable {
     let id = UUID()
     let placeId: String
     let name: String
-    let formattedAddress: String?
-    let formattedPhoneNumber: String?
-    let website: String?
-    let rating: Double?
-    let userRatingsTotal: Int?
-    let priceLevel: Int?
-    let photos: [PlacePhoto]?
-    let reviews: [PlaceReview]?
-    let openingHours: OpeningHours?
-    let geometry: PlaceGeometry
+    let vicinity: String?
     let types: [String]
-    let businessStatus: String?
+    let geometry: PlaceGeometry
+    let photos: [PlacePhoto]?
+    let formattedPhoneNumber: String?
+    let openingHours: OpeningHours?
     
     enum CodingKeys: String, CodingKey {
         case placeId = "place_id"
         case name
-        case formattedAddress = "formatted_address"
-        case formattedPhoneNumber = "formatted_phone_number"
-        case website
-        case rating
-        case userRatingsTotal = "user_ratings_total"
-        case priceLevel = "price_level"
-        case photos
-        case reviews
-        case openingHours = "opening_hours"
-        case geometry
+        case vicinity
         case types
-        case businessStatus = "business_status"
+        case geometry
+        case photos
+        case formattedPhoneNumber = "formatted_phone_number"
+        case openingHours = "opening_hours"
     }
 }
 
@@ -151,15 +156,5 @@ struct PlaceReview: Codable, Identifiable {
         case rating
         case relativeTimeDescription = "relative_time_description"
         case text
-    }
-}
-
-struct OpeningHours: Codable {
-    let openNow: Bool?
-    let weekdayText: [String]?
-    
-    enum CodingKeys: String, CodingKey {
-        case openNow = "open_now"
-        case weekdayText = "weekday_text"
     }
 } 
