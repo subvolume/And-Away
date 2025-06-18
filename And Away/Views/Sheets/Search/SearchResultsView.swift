@@ -54,7 +54,7 @@ struct SearchResultsView: View {
             
             Spacer()
         }
-        .onChange(of: searchText) { _ in
+        .onChange(of: searchText) {
             performSearch()
         }
         .onAppear {

@@ -5,6 +5,8 @@ struct GooglePlacesServiceTest: View {
     @State private var isLoading = false
     @State private var errorMessage = ""
     @State private var searchText = "coffee"
+    @State private var searchAsYouType = true
+    @State private var searchTimer: Timer?
     
     // Add your API key here
     private let apiKey = "AIzaSyDuKI9Sn6gMj6yN8WUz4_TgeO1gjEo479E"
@@ -17,8 +19,18 @@ struct GooglePlacesServiceTest: View {
             TextField("Search query", text: $searchText)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal)
+                .onChange(of: searchText) {
+                    if searchAsYouType {
+                        performSearch()
+                    }
+                }
             
             HStack {
+                Toggle("Search as you type", isOn: $searchAsYouType)
+                    .font(.caption)
+                
+                Spacer()
+                
                 Button("Test Autocomplete") {
                     testAutocomplete()
                 }
@@ -31,7 +43,7 @@ struct GooglePlacesServiceTest: View {
             }
             
             if isLoading {
-                ProgressView("Testing...")
+                ProgressView("Searching...")
             }
             
             if !errorMessage.isEmpty {
@@ -76,6 +88,47 @@ struct GooglePlacesServiceTest: View {
         .padding()
     }
     
+    private func performSearch() {
+        // Cancel previous search
+        searchTimer?.invalidate()
+        
+        // Clear results if text is empty
+        guard !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            results = []
+            isLoading = false
+            errorMessage = ""
+            return
+        }
+        
+        // Show loading immediately
+        isLoading = true
+        errorMessage = ""
+        
+        // Debounce with 0.5 second delay
+        searchTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+            Task {
+                await executeSearch()
+            }
+        }
+    }
+    
+    @MainActor
+    private func executeSearch() async {
+        let service = GooglePlacesService(apiKey: apiKey)
+        
+        do {
+            let places = try await service.autocomplete(query: searchText)
+            results = places
+            isLoading = false
+            print("✅ Search-as-you-type Success: \(places.count) results for '\(searchText)'")
+        } catch {
+            errorMessage = error.localizedDescription
+            results = []
+            isLoading = false
+            print("❌ Search-as-you-type Error: \(error)")
+        }
+    }
+    
     private func testAutocomplete() {
         guard !searchText.isEmpty else { return }
         
@@ -91,13 +144,13 @@ struct GooglePlacesServiceTest: View {
                 await MainActor.run {
                     results = places
                     isLoading = false
-                    print("✅ Autocomplete Success: \(places.count) results")
+                    print("✅ Manual Autocomplete Success: \(places.count) results")
                 }
             } catch {
                 await MainActor.run {
                     errorMessage = error.localizedDescription
                     isLoading = false
-                    print("❌ Autocomplete Error: \(error)")
+                    print("❌ Manual Autocomplete Error: \(error)")
                 }
             }
         }
