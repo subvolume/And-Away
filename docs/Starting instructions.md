@@ -1,0 +1,1 @@
+Read codebase, Read @.cursorrules , read @/docs, always use @/Components
