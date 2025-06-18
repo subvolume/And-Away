@@ -3,11 +3,11 @@ import Foundation
 class GooglePlacesService {
     private let apiKey: String
     
-    // Netherlands coordinates for location-aware search (matching HTML tester)
-    private let defaultLocation = "52.678606347967175,4.698801550831957"
-    private let defaultRadius = "5000" // 5km radius (matching HTML tester)
+    // Use Config for location settings (matching HTML tester)
+    private let defaultLocation = Config.defaultLocation
+    private let defaultRadius = Config.defaultRadius
     
-    init(apiKey: String) {
+    init(apiKey: String = Config.googlePlacesAPIKey) {
         self.apiKey = apiKey
     }
     

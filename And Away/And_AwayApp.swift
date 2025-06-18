@@ -11,9 +11,9 @@ import SwiftUI
 struct And_AwayApp: App {
     var body: some Scene {
         WindowGroup {
-            //MainMapView()
+            MainMapView()
             //SandboxView()
-            GooglePlacesServiceTest()
+            //GooglePlacesServiceTest()
         }
     }
 }

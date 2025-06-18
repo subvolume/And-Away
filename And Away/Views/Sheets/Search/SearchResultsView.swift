@@ -2,108 +2,143 @@ import SwiftUI
 
 struct SearchResultsView: View {
     let searchText: String
-    let onPlaceTapped: (PlaceSearchResult) -> Void
+    let onPlaceTapped: (GooglePlace) -> Void
     
-    @State private var searchResults: [GooglePlace] = []
-    @State private var isLoading = false
-    @State private var searchTimer: Timer?
-    
-    // Add your API key here
-    private let apiKey = "AIzaSyDuKI9Sn6gMj6yN8WUz4_TgeO1gjEo479E"
+    @StateObject private var viewModel = SearchViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
-            // Use existing SectionHeaderView component
+            // Section header
             SectionHeaderView(
                 title: "Results for \"\(searchText)\"",
                 showViewAllButton: false
             )
             
-            if isLoading {
-                ProgressView("Searching...")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-            } else if searchResults.isEmpty && !searchText.isEmpty {
-                Text("No results found")
-                    .foregroundColor(.secondary)
-                    .padding()
-            } else if !searchResults.isEmpty {
-                // Use the searchResult template from ListItem with real data
-                ForEach(searchResults) { place in
-                    ListItem.searchResult(
-                        title: place.name,
-                        distance: "0km", // Will calculate with real location later
-                        location: place.vicinity ?? "Unknown location",
-                        icon: iconForPlaceType(place.types),
-                        iconColor: colorForPlaceType(place.types),
-                        onOpenPlaceDetails: {
-                            // Convert GooglePlace to PlaceSearchResult for callback
-                            let placeResult = PlaceSearchResult(
-                                placeId: place.placeId,
-                                name: place.name,
-                                vicinity: place.vicinity,
-                                types: place.types,
-                                geometry: PlaceGeometry(location: place.location ?? PlaceLocation(lat: 0, lng: 0)),
-                                photos: place.photos
-                            )
-                            onPlaceTapped(placeResult)
+            // Main content based on search state
+            Group {
+                switch viewModel.searchState {
+                case .empty:
+                    EmptyView()
+                    
+                case .loading:
+                    LoadingView()
+                    
+                case .error(let message):
+                    ErrorView(message: message) {
+                        Task {
+                            await viewModel.searchImmediately(query: searchText)
                         }
-                    )
+                    }
+                    
+                case .noResults:
+                    NoResultsView(query: searchText)
+                    
+                case .results(let places):
+                    ResultsListView(places: places, onPlaceTapped: onPlaceTapped)
                 }
             }
             
             Spacer()
         }
-        .onChange(of: searchText) {
-            performSearch()
+        .onChange(of: searchText) { _, newValue in
+            Task {
+                await viewModel.search(query: newValue)
+            }
         }
         .onAppear {
             if !searchText.isEmpty {
-                performSearch()
+                Task {
+                    await viewModel.search(query: searchText)
+                }
             }
         }
-    }
-    
-    private func performSearch() {
-        // Cancel previous search
-        searchTimer?.invalidate()
-        
-        // Clear results if text is empty
-        guard !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            searchResults = []
-            isLoading = false
-            return
+        .onDisappear {
+            viewModel.cancelCurrentSearch()
         }
-        
-        // Show loading immediately for better UX
-        isLoading = true
-        
-        // Debounce with 0.5 second delay
-        searchTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
-            Task {
-                await executeSearch()
+    }
+}
+
+// MARK: - Loading View
+private struct LoadingView: View {
+    var body: some View {
+        ProgressView("Searching...")
+            .frame(maxWidth: .infinity)
+            .padding()
+    }
+}
+
+// MARK: - Error View  
+private struct ErrorView: View {
+    let message: String
+    let onRetry: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.system(size: 32))
+                .foregroundColor(.orange)
+            
+            Text(message)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
+            Button("Try Again") {
+                onRetry()
             }
+            .buttonStyle(.borderedProminent)
+        }
+        .padding()
+    }
+}
+
+// MARK: - No Results View
+private struct NoResultsView: View {
+    let query: String
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 32))
+                .foregroundColor(.secondary)
+            
+            Text("No results found")
+                .font(.headline)
+                .foregroundColor(.primary)
+            
+            Text("Try adjusting your search for '\(query)'")
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding()
+    }
+}
+
+// MARK: - Results List View
+private struct ResultsListView: View {
+    let places: [GooglePlace]
+    let onPlaceTapped: (GooglePlace) -> Void
+    
+    var body: some View {
+        ForEach(places) { place in
+            ListItem.searchResult(
+                title: place.name,
+                distance: "0km", // TODO: Calculate with real location later
+                location: place.vicinity ?? "Unknown location",
+                icon: iconForPlaceType(place.types),
+                iconColor: colorForPlaceType(place.types),
+                onOpenPlaceDetails: {
+                    onPlaceTapped(place)
+                }
+            )
         }
     }
     
-    @MainActor
-    private func executeSearch() async {
-        let service = GooglePlacesService(apiKey: apiKey)
-        
-        do {
-            // Use autocomplete for fast suggestions
-            let results = try await service.autocomplete(query: searchText)
-            searchResults = results
-            isLoading = false
-        } catch {
-            print("Search error: \(error)")
-            searchResults = []
-            isLoading = false
-        }
-    }
+    // MARK: - Helper Methods
     
-    // Helper function to get appropriate icon based on place type
     private func iconForPlaceType(_ types: [String]) -> Image {
+        // Use your existing icon logic or integrate with PlaceCategories
         if types.contains("restaurant") || types.contains("food") {
             return Image(systemName: "fork.knife")
         } else if types.contains("cafe") {
@@ -117,8 +152,8 @@ struct SearchResultsView: View {
         }
     }
     
-    // Helper function to get appropriate color based on place type
     private func colorForPlaceType(_ types: [String]) -> Color {
+        // Use your existing color logic or integrate with PlaceCategories
         if types.contains("restaurant") || types.contains("food") {
             return .orange100
         } else if types.contains("cafe") {
@@ -134,5 +169,10 @@ struct SearchResultsView: View {
 }
 
 #Preview {
-    SearchResultsView(searchText: "coffee", onPlaceTapped: { _ in })
+    SearchResultsView(
+        searchText: "coffee",
+        onPlaceTapped: { place in
+            print("Tapped: \(place.name)")
+        }
+    )
 } 

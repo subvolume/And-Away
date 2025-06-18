@@ -1,0 +1,31 @@
+# API Keys and Sensitive Data
+Config.plist
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+!*.xcworkspace/xcshareddata/
+
+# User settings
+xcuserdata/
+
+# Build products
+build/
+DerivedData/
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 

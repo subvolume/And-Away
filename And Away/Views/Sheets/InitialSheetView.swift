@@ -4,7 +4,7 @@ struct InitialSheetView: View {
     @State private var searchText = ""
     @State private var isSearchActive = false
     @State private var showPlaceDetails = false
-    @State private var selectedPlace: PlaceSearchResult? = nil
+    @State private var selectedPlace: GooglePlace? = nil
     
     @EnvironmentObject var sheetController: SheetController
     

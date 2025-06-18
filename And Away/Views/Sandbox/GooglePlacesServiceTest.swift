@@ -8,8 +8,8 @@ struct GooglePlacesServiceTest: View {
     @State private var searchAsYouType = true
     @State private var searchTimer: Timer?
     
-    // Add your API key here
-    private let apiKey = "AIzaSyDuKI9Sn6gMj6yN8WUz4_TgeO1gjEo479E"
+    // API key now loaded securely from Config
+    private let apiKey = Config.googlePlacesAPIKey
     
     var body: some View {
         VStack(spacing: 20) {

@@ -46,8 +46,8 @@ struct SandboxView: View {
     @State private var searchTimer: Timer?
     @State private var placeId = "" // For Place Details testing
     
-    // Add your Google Places API key here
-    private let googleAPIKey = "AIzaSyDuKI9Sn6gMj6yN8WUz4_TgeO1gjEo479E" // Replace with your actual key
+    // API key now loaded securely from Config
+    private let googleAPIKey = Config.googlePlacesAPIKey
     
     // Computed properties for dynamic UI text
     private var searchSectionTitle: String {
