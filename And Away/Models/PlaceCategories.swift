@@ -198,69 +198,69 @@ enum PlaceSubcategory: String, CaseIterable, Identifiable {
         switch self {
         // Travel
         case .flights: return "airplane"
-        case .lodgings: return "bed.double"
-        case .routes: return "map"
-        case .carRental: return "car.circle"
+        case .lodgings: return "bed.double.fill"
+        case .routes: return "map.fill"
+        case .carRental: return "car.fill"
         
         // Food & Drink
-        case .bakery: return "birthday.cake"
-        case .barAndParty: return "wineglass"
-        case .brewery: return "mug"
-        case .cafe: return "cup.and.saucer"
+        case .bakery: return "birthday.cake.fill"
+        case .barAndParty: return "wineglass.fill"
+        case .brewery: return "mug.fill"
+        case .cafe: return "cup.and.saucer.fill"
         case .restaurant: return "fork.knife"
-        case .winery: return "grapes"
+        case .winery: return "wineglass.fill"
         
         // Art & Fun
-        case .amusementPark: return "ferriswheel"
+        case .amusementPark: return "face.smiling.inverse"
         case .concert: return "music.note"
         case .event: return "calendar.badge.exclamationmark"
         case .kids: return "figure.and.child.holdinghands"
-        case .movieTheater: return "popcorn"
-        case .museum: return "building.columns"
-        case .nightlife: return "moon.stars"
-        case .theater: return "theatermasks"
-        case .tour: return "binoculars"
+        case .movieTheater: return "popcorn.fill"
+        case .museum: return "building.columns.fill"
+        case .nightlife: return "moon.stars.fill"
+        case .theater: return "theatermasks.fill"
+        case .tour: return "binoculars.fill"
         
         // Locations
-        case .location: return "mappin.circle"
+        case .location: return "mappin"
         
         // Work & Study
-        case .library: return "books.vertical"
-        case .meeting: return "person.3"
-        case .school: return "graduationcap"
-        case .university: return "building.2"
+        case .library: return "books.vertical.fill"
+        case .meeting: return "person.3.fill"
+        case .school: return "graduationcap.fill"
+        case .university: return "building.2.fill"
         
         // Outdoor
-        case .beach: return "beach.umbrella"
-        case .campground: return "tent"
-        case .nationalPark: return "mountain.2"
-        case .park: return "tree"
-        case .relax: return "leaf"
+        case .beach: return "beach.umbrella.fill"
+        case .campground: return "tent.fill"
+        case .nationalPark: return "mountain.2.fill"
+        case .park: return "tree.fill"
+        case .relax: return "leaf.fill"
         
         // Sports
-        case .fitness: return "dumbbell"
-        case .stadium: return "sportscourt"
+        case .fitness: return "dumbbell.fill"
+        case .stadium: return "sportscourt.fill"
         
         // Services
-        case .atm: return "banknote"
-        case .bank: return "building.columns.circle"
-        case .evCharger: return "ev.charger"
-        case .fireStation: return "flame"
-        case .gasStation: return "fuelpump"
-        case .laundry: return "washer"
-        case .marina: return "sailboat"
+        case .atm: return "banknote.fill"
+        case .bank: return "dollarsign.bank.building.fill"
+        case .evCharger: return "ev.charger.fill"
+        case .fireStation: return "flame.fill"
+        case .gasStation: return "fuelpump.fill"
+        case .laundry: return "washer.fill"
+        case .marina: return "sailboat.fill"
         case .parking: return "parkingsign"
         case .police: return "shield.checkered"
-        case .postOffice: return "envelope"
-        case .publicTransport: return "bus"
+        case .postOffice: return "envelope.fill"
+        case .publicTransport: return "bus.fill"
         
         // Health
-        case .hospital: return "cross.case"
-        case .pharmacy: return "pills"
+        case .hospital: return "cross.case.fill"
+        case .pharmacy: return "pills.fill"
         
         // Shopping
-        case .foodMarket: return "basket"
-        case .shopping: return "bag"
+        case .foodMarket: return "basket.fill"
+        case .shopping: return "bag.fill"
         }
     }
     
