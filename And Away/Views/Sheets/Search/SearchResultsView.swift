@@ -121,49 +121,39 @@ private struct ResultsListView: View {
     let onPlaceTapped: (GooglePlace) -> Void
     
     var body: some View {
-        ForEach(places) { place in
-            ListItem.searchResult(
-                title: place.name,
-                distance: "0km", // TODO: Calculate with real location later
-                location: place.vicinity ?? "Unknown location",
-                icon: iconForPlaceType(place.types),
-                iconColor: colorForPlaceType(place.types),
-                onOpenPlaceDetails: {
-                    onPlaceTapped(place)
-                }
-            )
-        }
+                 ForEach(places) { place in
+             ListItem.searchResult(
+                 title: place.name,
+                 distance: "0km", // TODO: Calculate with real location later
+                 location: place.vicinity ?? "Unknown location",
+                 icon: iconForPlace(place),
+                 iconColor: colorForPlace(place),
+                 onOpenPlaceDetails: {
+                     onPlaceTapped(place)
+                 }
+             )
+         }
     }
     
-    // MARK: - Helper Methods
+    // MARK: - Helper Methods (Using PlaceCategories System)
     
-    private func iconForPlaceType(_ types: [String]) -> Image {
-        // Use your existing icon logic or integrate with PlaceCategories
-        if types.contains("restaurant") || types.contains("food") {
-            return Image(systemName: "fork.knife")
-        } else if types.contains("cafe") {
-            return Image(systemName: "cup.and.saucer")
-        } else if types.contains("tourist_attraction") {
-            return Image(systemName: "camera")
-        } else if types.contains("museum") {
-            return Image(systemName: "building.columns")
+    private func iconForPlace(_ place: GooglePlace) -> Image {
+        // Use PlaceCategories system for consistent icons
+        if let category = place.primarySubcategory {
+            return Image(systemName: category.icon)
         } else {
+            // Fallback for places without category match
             return Image(systemName: "mappin.circle")
         }
     }
     
-    private func colorForPlaceType(_ types: [String]) -> Color {
-        // Use your existing color logic or integrate with PlaceCategories
-        if types.contains("restaurant") || types.contains("food") {
-            return .orange100
-        } else if types.contains("cafe") {
-            return .teal100
-        } else if types.contains("tourist_attraction") {
-            return .azure100
-        } else if types.contains("museum") {
-            return .purple100
+    private func colorForPlace(_ place: GooglePlace) -> Color {
+        // Use colors defined in PlaceCategories.swift - ArtworkView will handle opacity conversion
+        if let category = place.primarySubcategory {
+            return category.color
         } else {
-            return .green100
+            // Fallback for places without category match
+            return .grey100
         }
     }
 }

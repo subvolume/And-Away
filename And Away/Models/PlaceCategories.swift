@@ -35,21 +35,32 @@ enum MainCategory: String, CaseIterable, Identifiable {
     
     var color: Color {
         switch self {
-        case .travel: return .blue
-        case .foodAndDrink: return .orange
-        case .artAndFun: return .purple
-        case .locations: return .red
-        case .workAndStudy: return .indigo
-        case .outdoor: return .green
-        case .sports: return .mint
-        case .services: return .gray
-        case .health: return .pink
-        case .shopping: return .teal
+        case .travel: return .blue100
+        case .foodAndDrink: return .orange100
+        case .artAndFun: return .purple100
+        case .locations: return .red100
+        case .workAndStudy: return .blue100
+        case .outdoor: return .green100
+        case .sports: return .teal100
+        case .services: return .grey100
+        case .health: return .red100
+        case .shopping: return .teal100
         }
     }
     
     var lightColor: Color {
-        return color.opacity(0.2)
+        switch self {
+        case .travel: return .blue15
+        case .foodAndDrink: return .orange15
+        case .artAndFun: return .purple15
+        case .locations: return .red15
+        case .workAndStudy: return .blue15
+        case .outdoor: return .green15
+        case .sports: return .teal15
+        case .services: return .grey15
+        case .health: return .red15
+        case .shopping: return .teal15
+        }
     }
 }
 
