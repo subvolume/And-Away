@@ -5,77 +5,79 @@
 ## Phase 1: Google Cloud Console Setup
 
 ### 1.1 Google Cloud Console Account Setup
-- [ ] Create or log into Google Cloud Console (console.cloud.google.com)
-- [ ] Create a new project or select existing project for "And Away" app
-- [ ] Set up billing account (required for Places API usage)
+- [x] Create or log into Google Cloud Console (console.cloud.google.com)
+- [x] Create a new project or select existing project for "And Away" app
+- [x] Set up billing account (required for Places API usage)
 
 ### 1.2 Enable Required APIs
-- [ ] Enable **Places API (New)** (this covers Text Search, Nearby Search, Place Photos when using the SDK)
-- [ ] Enable **Routes API** (for travel time calculations)
+- [x] Enable **Places API (New)** (this covers Text Search, Nearby Search, Place Photos when using the SDK)
+- [x] Enable **Routes API** (for travel time calculations)
 
 ### 1.3 API Key Configuration
-- [ ] Generate new API key in Google Cloud Console
-- [ ] Restrict API key to iOS bundle identifier (your app's bundle ID)
-- [ ] Restrict API key to Places API (New) and Routes API
-- [ ] Save API key securely (will add to app later)
+- [x] Generate new API key in Google Cloud Console
+- [x] Restrict API key to iOS bundle identifier (your app's bundle ID)
+- [x] Restrict API key to Places API (New) and Routes API
+- [x] Save API key securely (will add to app later)
 
 ### 1.4 Security & Billing Setup
-- [ ] Set up usage quotas and alerts to monitor API costs
-- [ ] Configure budget alerts for API spending
-- [ ] Document API key securely in team password manager
+- [x] Set up usage quotas and alerts to monitor API costs
+- [x] Configure budget alerts for API spending
+- [x] Document API key securely in team password manager
 
 ## Phase 2: SDK Installation & Project Setup
 
-### 2.1 Install Google Places Swift SDK
-- [ ] Open Xcode project
-- [ ] Add Swift Package Manager dependency: `https://github.com/googlemaps/ios-places-sdk`
-- [ ] Verify SDK installation compiles successfully
-- [ ] Add required import statements where needed
+### 2.1 Install Google SDKs
+- [x] Open Xcode project
+- [x] Add Swift Package Manager dependency: `https://github.com/googlemaps/ios-places-sdk`
+- [x] Add Swift Package Manager dependency: `https://github.com/googlemaps/ios-maps-sdk`
+- [x] Verify both SDK installations compile successfully
+- [x] Add required import statements where needed
 
 ### 2.2 Configure API Key in App
-- [ ] Add API key to Config.plist or secure configuration
-- [ ] Initialize Google Places SDK with API key in AppDelegate/App.swift
-- [ ] Test basic SDK initialization (no API calls yet)
+- [x] Add API key to Config.plist or secure configuration
+- [x] Initialize Google Places SDK with API key in AppDelegate/App.swift
+- [x] Initialize Google Maps SDK with API key in AppDelegate/App.swift
+- [x] Test basic SDK initialization (no API calls yet)
 
 ### 2.3 Update App Permissions
-- [ ] Verify CoreLocation permissions are properly configured
-- [ ] Test location permissions on device/simulator
-- [ ] Update privacy usage descriptions if needed
+- [x] Verify CoreLocation permissions are properly configured
+- [x] Test location permissions on device/simulator
+- [x] Update privacy usage descriptions if needed
 
 ## Phase 3: Study & Extract from Google Sample App
 
 ### 3.1 Download and Study Google's Sample
-- [ ] Clone sample repository: `https://github.com/googlemaps-samples/ios-places-sdk-samples`
-- [ ] Run the sample app and explore functionality
-- [ ] Identify relevant code patterns for Text Search
-- [ ] Identify relevant code patterns for Nearby Search
-- [ ] Identify relevant code patterns for Place Photos
+- [x] Clone sample repository: `https://github.com/googlemaps-samples/ios-places-sdk-samples`
+- [x] Run the sample app and explore functionality
+- [x] Identify relevant code patterns for Text Search
+- [x] Identify relevant code patterns for Nearby Search
+- [x] Identify relevant code patterns for Place Photos
 
 ### 3.2 Extract Service Layer Patterns
-- [ ] Study how Google structures their service classes
-- [ ] Note their error handling approaches
-- [ ] Document their async/await patterns
-- [ ] Review their API configuration methods
+- [x] Study how Google structures their service classes
+- [x] Note their error handling approaches
+- [x] Document their async/await patterns
+- [x] Review their API configuration methods
 
 ## Phase 4: Create Custom Models & Adapters
 
 ### 4.1 Create Unified Place Model
-- [ ] Create `Models/PlaceModels.swift`
-- [ ] Define unified `Place` struct with all needed properties
-- [ ] Add any custom properties specific to "And Away" app
-- [ ] Test model compilation
+- [x] Create `Models/PlaceModels.swift`
+- [x] Define unified `Place` struct with all needed properties
+- [x] Add any custom properties specific to "And Away" app
+- [x] Test model compilation
 
 ### 4.2 Create Google SDK Adapters  
-- [ ] Create `Models/PlaceAdapters.swift`
-- [ ] Build `GooglePlaceAdapter` to convert Google models to our `Place` model
-- [ ] Add mapping functions for all Google SDK response types
-- [ ] Test adapter functions with sample data
+- [x] Create `Models/PlaceAdapters.swift`
+- [x] Build `GooglePlaceAdapter` to convert Google models to our `Place` model
+- [x] Add mapping functions for all Google SDK response types
+- [x] Test adapter functions with sample data
 
 ### 4.3 Create Place Categorization System
-- [ ] Create `Models/PlaceCategorization.swift`
-- [ ] Define place type categories and color assignments
-- [ ] Create icon mappings for different place types
-- [ ] Implement category detection logic
+- [x] Create `Models/PlaceCategorization.swift`
+- [x] Define place type categories and color assignments
+- [x] Create icon mappings for different place types
+- [x] Implement category detection logic
 
 ### 4.4 Clean Up Old Models
 - [ ] Remove `GoogleAutocompleteModels.swift`
@@ -118,8 +120,9 @@
 - [ ] Update `SearchEmptyStateView` with new search capabilities
 - [ ] Test search functionality end-to-end
 
-### 6.2 Update Map Integration
-- [ ] Connect `MapKitView` to display Google Places results
+### 6.2 Replace MapKit with Google Maps
+- [ ] Replace `MapKitView.swift` with Google Maps implementation
+- [ ] Display Google Places results on Google Maps (required by Google TOS)
 - [ ] Add place markers with proper styling
 - [ ] Implement place selection from map
 - [ ] Test map interactions
