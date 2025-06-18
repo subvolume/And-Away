@@ -4,8 +4,12 @@ struct SearchResultsView: View {
     let searchText: String
     let onPlaceTapped: (PlaceSearchResult) -> Void
     
-    // Using mock data from MockData.swift
-    private let searchResults = MockData.sampleSearchResponse.results
+    @State private var searchResults: [GooglePlace] = []
+    @State private var isLoading = false
+    @State private var searchTimer: Timer?
+    
+    // Add your API key here
+    private let apiKey = "AIzaSyDuKI9Sn6gMj6yN8WUz4_TgeO1gjEo479E"
     
     var body: some View {
         VStack(spacing: 0) {
@@ -15,21 +19,86 @@ struct SearchResultsView: View {
                 showViewAllButton: false
             )
             
-            // Use the searchResult template from ListItem with mock data
-            ForEach(searchResults, id: \.placeId) { place in
-                ListItem.searchResult(
-                    title: place.name,
-                    distance: "\(Int.random(in: 1...20))km", // Mock distance for now
-                    location: place.vicinity ?? "Unknown location",
-                    icon: iconForPlaceType(place.types),
-                    iconColor: colorForPlaceType(place.types),
-                    onOpenPlaceDetails: {
-                        onPlaceTapped(place)
-                    }
-                )
+            if isLoading {
+                ProgressView("Searching...")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+            } else if searchResults.isEmpty && !searchText.isEmpty {
+                Text("No results found")
+                    .foregroundColor(.secondary)
+                    .padding()
+            } else if !searchResults.isEmpty {
+                // Use the searchResult template from ListItem with real data
+                ForEach(searchResults) { place in
+                    ListItem.searchResult(
+                        title: place.name,
+                        distance: "0km", // Will calculate with real location later
+                        location: place.vicinity ?? "Unknown location",
+                        icon: iconForPlaceType(place.types),
+                        iconColor: colorForPlaceType(place.types),
+                        onOpenPlaceDetails: {
+                            // Convert GooglePlace to PlaceSearchResult for callback
+                            let placeResult = PlaceSearchResult(
+                                placeId: place.placeId,
+                                name: place.name,
+                                vicinity: place.vicinity,
+                                types: place.types,
+                                geometry: PlaceGeometry(location: place.location ?? PlaceLocation(lat: 0, lng: 0)),
+                                photos: place.photos
+                            )
+                            onPlaceTapped(placeResult)
+                        }
+                    )
+                }
             }
             
             Spacer()
+        }
+        .onChange(of: searchText) { _ in
+            performSearch()
+        }
+        .onAppear {
+            if !searchText.isEmpty {
+                performSearch()
+            }
+        }
+    }
+    
+    private func performSearch() {
+        // Cancel previous search
+        searchTimer?.invalidate()
+        
+        // Clear results if text is empty
+        guard !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            searchResults = []
+            isLoading = false
+            return
+        }
+        
+        // Show loading immediately for better UX
+        isLoading = true
+        
+        // Debounce with 0.5 second delay
+        searchTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+            Task {
+                await executeSearch()
+            }
+        }
+    }
+    
+    @MainActor
+    private func executeSearch() async {
+        let service = GooglePlacesService(apiKey: apiKey)
+        
+        do {
+            // Use autocomplete for fast suggestions
+            let results = try await service.autocomplete(query: searchText)
+            searchResults = results
+            isLoading = false
+        } catch {
+            print("Search error: \(error)")
+            searchResults = []
+            isLoading = false
         }
     }
     
@@ -65,5 +134,5 @@ struct SearchResultsView: View {
 }
 
 #Preview {
-    SearchResultsView(searchText: "test search", onPlaceTapped: { _ in })
+    SearchResultsView(searchText: "coffee", onPlaceTapped: { _ in })
 } 
