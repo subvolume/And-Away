@@ -35,16 +35,16 @@
    - [x] **Verification:** App launches without crashing. No API key-related errors appear in the console.
 
 ### Phase 2: Search Integration
-- [ ] **Create Places Service Protocol**
+- [x] **Create Places Service Protocol**
    - Centralize all SDK calls in one thin wrapper
    - Easy to stub for testing, update if Google changes API
    ```swift
    protocol PlacesService {
        func searchPlaces(query: String) async -> Result<[Place], PlacesError>
-       func fetchPlace(placeID: String) async -> Result<[Place], PlacesError>
+       func fetchPlace(placeID: String) async -> Result<Place, PlacesError>
    }
    ```
-   - [ ] **Verification:** A new Swift file exists containing the `PlacesService` protocol definition.
+   - [x] **Verification:** ✅ **COMPLETED** - Places service builds successfully with correct GooglePlacesSwift SDK API usage including proper PlaceProperty enum values (.displayName, .coordinate, .numberOfUserRatings, .websiteURL).
 
 - [ ] **Wire Up Search Results**
    - Replace placeholder in `SearchResultsView.swift`
