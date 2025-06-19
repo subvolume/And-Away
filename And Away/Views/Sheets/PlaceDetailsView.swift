@@ -4,30 +4,31 @@ struct PlaceDetailsView: View {
     let placeId: String
     let onBackTapped: () -> Void
     
-    // Look up place details from MockData using the placeId, with fallback to sample data
-    private var placeDetails: PlaceDetails {
-        return MockData.allPlaceDetails[placeId] ?? MockData.samplePlaceDetails.result
-    }
-    
     var body: some View {
-        GeometryReader { geometry in
-            VStack {
-                // Use existing SheetHeader component with place name from selected place
-                SheetHeader(title: placeDetails.name, onClose: onBackTapped)
-                
-                ScrollView {
-                    VStack(spacing: Spacing.l) {
-                        ImageCarouselView()
-                    }
+        VStack(spacing: 0) {
+            SheetHeader(title: "Place Details", onClose: onBackTapped)
+            
+            ScrollView {
+                VStack(spacing: 16) {
+                    Text("Place ID: \(placeId)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .padding()
+                    
+                    Text("Place details will appear here")
+                        .foregroundColor(.secondary)
+                        .padding()
+                    
+                    Text("Data models will be set up in the next step")
+                        .font(.caption)
+                        .foregroundColor(.tertiary)
                 }
+                .padding(.top, 40)
             }
-            .frame(width: geometry.size.width)
         }
     }
 }
 
 #Preview {
-    PlaceDetailsView(placeId: "ChIJL-ROikVu5kcRzWBvNS3lnM0", onBackTapped: {
-        print("Back tapped")
-    })
+    PlaceDetailsView(placeId: "sample-place-id", onBackTapped: {})
 } 

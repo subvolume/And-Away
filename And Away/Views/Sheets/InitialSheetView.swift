@@ -4,7 +4,7 @@ struct InitialSheetView: View {
     @State private var searchText = ""
     @State private var isSearchActive = false
     @State private var showPlaceDetails = false
-    @State private var selectedPlace: PlaceSearchResult? = nil
+    @State private var selectedPlaceId: String? = nil
     
     @EnvironmentObject var sheetController: SheetController
     
@@ -14,8 +14,8 @@ struct InitialSheetView: View {
                 NavigationStack {
                     ZStack(alignment: .bottom) {
                         ScrollView {
-                            SearchStateView(searchText: $searchText, onPlaceTapped: { place in
-                                selectedPlace = place
+                            SearchStateView(searchText: $searchText, onPlaceTapped: { placeId in
+                                selectedPlaceId = placeId
                                 isSearchActive = false  // Dismiss search when viewing details
                                 showPlaceDetails = true
                                 // Present the details sheet level using SheetController
@@ -43,7 +43,7 @@ struct InitialSheetView: View {
         }
         .sheet(isPresented: $showPlaceDetails) {
             PlaceDetailsView(
-                placeId: selectedPlace?.placeId ?? "ChIJL-ROikVu5kcRzWBvNS3lnM0",
+                placeId: selectedPlaceId ?? "sample-place-id",
                 onBackTapped: {
                     showPlaceDetails = false
                     // Dismiss the details sheet level using SheetController
