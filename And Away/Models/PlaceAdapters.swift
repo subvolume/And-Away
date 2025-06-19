@@ -14,28 +14,94 @@ struct GooglePlaceAdapter {
     /// Convert Google Places SDK Place to our unified Place model
     /// TODO: Implement in Phase 5 with correct GooglePlacesSwift API
     static func convert(_ googlePlace: GooglePlacesSwift.Place) -> Place {
-        // Placeholder implementation - will be properly implemented in Phase 5
+        // Extract basic identifiers
+        let id = googlePlace.placeID ?? UUID().uuidString
+        let name = googlePlace.displayName ?? "Unnamed Place"
+        let location = googlePlace.location
+        
+        // --------------------
+        // Address conversion
+        // --------------------
+        let fullAddress = googlePlace.formattedAddress ?? ""
+        var city = ""
+        var state: String? = nil
+        var country: String? = nil
+        var postalCode: String? = nil
+        
+        if let components = googlePlace.addressComponents {
+            for component in components {
+                // Safely match on the raw value of each component type
+                let types = component.types.map { $0.rawValue }
+                if types.contains("locality") {
+                    city = component.name
+                } else if types.contains("administrative_area_level_1") {
+                    state = component.shortName ?? component.name
+                } else if types.contains("country") {
+                    country = component.name
+                } else if types.contains("postal_code") {
+                    postalCode = component.name
+                }
+            }
+        }
+        let address = PlaceAddress(
+            fullAddress: fullAddress,
+            city: city,
+            state: state,
+            country: country,
+            postalCode: postalCode
+        )
+        
+        // --------------------
+        // Category conversion
+        // --------------------
+        let primaryTypeRaw = googlePlace.types.first?.rawValue ?? "unknown"
+        let category = PlaceCategorization.category(for: primaryTypeRaw)
+        
+        // --------------------
+        // Business hours
+        // --------------------
+        var businessHours: BusinessHours? = nil
+        if let openingHours = googlePlace.regularOpeningHours {
+            businessHours = BusinessHours(
+                weekdayText: openingHours.weekdayText,
+                isOpen24Hours: openingHours.periods.isEmpty
+            )
+        }
+        
+        // --------------------
+        // Details conversion
+        // --------------------
+        let details = PlaceDetails(
+            phoneNumber: googlePlace.internationalPhoneNumber,
+            website: googlePlace.websiteURL?.absoluteString,
+            rating: googlePlace.rating.map { Double($0) },
+            priceLevel: googlePlace.priceLevel,
+            businessHours: businessHours,
+            isOpenNow: nil // Needs IsPlaceOpenRequest to be accurate
+        )
+        
+        // --------------------
+        // Photos conversion (lightweight – reference only)
+        // --------------------
+        let photos: [PlacePhoto] = googlePlace.photos?.enumerated().map { index, photo in
+            let size = photo.maxSize
+            return PlacePhoto(
+                id: "\(id)_photo_\(index)",
+                reference: "photo_\(index)",
+                width: Int(size.width),
+                height: Int(size.height),
+                attributions: photo.authorAttributions.map { String(describing: $0) }
+            )
+        } ?? []
+        
         return Place(
-            id: "placeholder_id",
-            name: "Placeholder Place",
-            location: CLLocationCoordinate2D(latitude: 0, longitude: 0),
-            address: PlaceAddress(
-                fullAddress: "Placeholder Address",
-                city: "Placeholder City",
-                state: nil,
-                country: nil,
-                postalCode: nil
-            ),
-            category: PlaceCategorization.category(for: "unknown"),
-            details: PlaceDetails(
-                phoneNumber: nil,
-                website: nil,
-                rating: nil,
-                priceLevel: nil,
-                businessHours: nil,
-                isOpenNow: nil
-            ),
-            photos: []
+            id: id,
+            name: name,
+            location: location,
+            address: address,
+            category: category,
+            details: details,
+            photos: photos
         )
     }
     
