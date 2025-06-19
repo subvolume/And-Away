@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import GooglePlaces
+import GooglePlacesSwift
 import GoogleMaps
 
 @main
@@ -20,7 +20,7 @@ struct And_AwayApp: App {
         }
         
         // Initialize Google Places and Maps SDKs
-        GMSPlacesClient.provideAPIKey(apiKey)
+        PlacesClient.provideAPIKey(apiKey)
         GMSServices.provideAPIKey(apiKey)
     }
     

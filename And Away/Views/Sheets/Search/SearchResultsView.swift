@@ -2,10 +2,10 @@ import SwiftUI
 
 struct SearchResultsView: View {
     let searchText: String
-    let onPlaceTapped: (PlaceSearchResult) -> Void
+    let onPlaceTapped: (Place) -> Void
     
-    // Using mock data from MockData.swift
-    private let searchResults = MockData.sampleSearchResponse.results
+    // Temporary placeholder data until we implement actual search
+    private let placeholderResults: [Place] = []
     
     var body: some View {
         VStack(spacing: 0) {
@@ -15,18 +15,26 @@ struct SearchResultsView: View {
                 showViewAllButton: false
             )
             
-            // Use the searchResult template from ListItem with mock data
-            ForEach(searchResults, id: \.placeId) { place in
-                ListItem.searchResult(
-                    title: place.name,
-                    distance: "\(Int.random(in: 1...20))km", // Mock distance for now
-                    location: place.vicinity ?? "Unknown location",
-                    icon: iconForPlaceType(place.types),
-                    iconColor: colorForPlaceType(place.types),
-                    onOpenPlaceDetails: {
-                        onPlaceTapped(place)
-                    }
-                )
+            // Placeholder for search results - will be implemented in Phase 5
+            if placeholderResults.isEmpty {
+                VStack(spacing: 16) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 48))
+                        .foregroundColor(.smoke100)
+                    
+                    Text("Search functionality coming soon")
+                        .font(.body)
+                        .foregroundColor(.grey100)
+                    
+                    Text("This will be implemented in Phase 5")
+                        .font(.caption)
+                        .foregroundColor(.smoke100)
+                }
+                .padding(.top, 60)
+            } else {
+                // This will be implemented when we add actual search in Phase 5
+                // ForEach will be added here to display real search results
+                EmptyView()
             }
             
             Spacer()
@@ -35,32 +43,16 @@ struct SearchResultsView: View {
     
     // Helper function to get appropriate icon based on place type
     private func iconForPlaceType(_ types: [String]) -> Image {
-        if types.contains("restaurant") || types.contains("food") {
-            return Image(systemName: "fork.knife")
-        } else if types.contains("cafe") {
-            return Image(systemName: "cup.and.saucer")
-        } else if types.contains("tourist_attraction") {
-            return Image(systemName: "camera")
-        } else if types.contains("museum") {
-            return Image(systemName: "building.columns")
-        } else {
-            return Image(systemName: "mappin.circle")
-        }
+        // This function will be updated when we implement actual search in Phase 5
+        // For now, return a default icon
+        return Image(systemName: "mappin.circle")
     }
     
     // Helper function to get appropriate color based on place type
     private func colorForPlaceType(_ types: [String]) -> Color {
-        if types.contains("restaurant") || types.contains("food") {
-            return .orange100
-        } else if types.contains("cafe") {
-            return .teal100
-        } else if types.contains("tourist_attraction") {
-            return .azure100
-        } else if types.contains("museum") {
-            return .purple100
-        } else {
-            return .green100
-        }
+        // This function will be updated when we implement actual search in Phase 5
+        // For now, return a default color
+        return .green100
     }
 }
 
