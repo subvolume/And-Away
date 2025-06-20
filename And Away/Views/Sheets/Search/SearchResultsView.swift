@@ -3,7 +3,7 @@ import GooglePlacesSwift
 
 struct SearchResultsView: View {
     let searchText: String
-    let onPlaceTapped: (String) -> Void
+    let onPlaceTapped: (String, String?) -> Void
     
     @State private var places: [Place] = []
     @State private var isLoading = false
@@ -65,7 +65,7 @@ struct SearchResultsView: View {
                                 iconColor: .red100,
                                 onOpenPlaceDetails: {
                                     if let placeID = place.placeID {
-                                        onPlaceTapped(placeID)
+                                        onPlaceTapped(placeID, place.displayName)
                                     }
                                 }
                             )
@@ -116,5 +116,5 @@ struct SearchResultsView: View {
 }
 
 #Preview {
-    SearchResultsView(searchText: "coffee shops", onPlaceTapped: { _ in })
+    SearchResultsView(searchText: "coffee shops", onPlaceTapped: { _, _ in })
 } 

@@ -3,6 +3,7 @@ import GooglePlacesSwift
 
 struct PlaceDetailsView: View {
     let placeId: String
+    let placeName: String?
     let onBackTapped: () -> Void
     
     @State private var place: Place?
@@ -13,7 +14,10 @@ struct PlaceDetailsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            SheetHeader(title: "Place Details", onClose: onBackTapped)
+            SheetHeader(
+                title: placeName ?? place?.displayName ?? "Place Details", 
+                onClose: onBackTapped
+            )
             
             ScrollView {
                 if isLoading {
@@ -38,14 +42,6 @@ struct PlaceDetailsView: View {
                 } else if let place = place {
                     // Display real place information
                     VStack(alignment: .leading, spacing: 20) {
-                        // Place name
-                        if let displayName = place.displayName {
-                            Text(displayName)
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                                .padding(.horizontal)
-                        }
-                        
                         // Address
                         if let formattedAddress = place.formattedAddress {
                             VStack(alignment: .leading, spacing: 4) {
@@ -156,5 +152,5 @@ struct PlaceDetailsView: View {
 }
 
 #Preview {
-    PlaceDetailsView(placeId: "sample-place-id", onBackTapped: {})
+    PlaceDetailsView(placeId: "sample-place-id", placeName: nil, onBackTapped: {})
 } 

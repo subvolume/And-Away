@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SearchStateView: View {
     @Binding var searchText: String
-    let onPlaceTapped: (String) -> Void
+    let onPlaceTapped: (String, String?) -> Void
     
     var body: some View {
         VStack {
@@ -16,5 +16,5 @@ struct SearchStateView: View {
 }
 
 #Preview {
-    SearchStateView(searchText: .constant(""), onPlaceTapped: { _ in })
+    SearchStateView(searchText: .constant(""), onPlaceTapped: { _, _ in })
 } 
