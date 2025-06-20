@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GooglePlacesSwift
+import GoogleMaps
 
 @main
 struct And_AwayApp: App {
@@ -15,7 +16,10 @@ struct And_AwayApp: App {
         if let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
            let plist = NSDictionary(contentsOfFile: path),
            let apiKey = plist["GooglePlacesAPIKey"] as? String {
+            // Initialize Google Places
             PlacesClient.provideAPIKey(apiKey)
+            // Initialize Google Maps with the same API key
+            GMSServices.provideAPIKey(apiKey)
         } else {
             fatalError("Could not load Google Places API key from Config.plist")
         }

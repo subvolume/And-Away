@@ -80,14 +80,10 @@
    - [x] **Verification:** ✅ **COMPLETED** - PlaceDetailsView now fetches and displays real place data including name, address, rating, phone, website, and coordinates with proper loading/error states. Swift SDK compatibility issues resolved (numberOfUserRatings and location are non-optional properties).
 
 ### Phase 4: Map Integration
-- [x] **Create Map Marker Component**
+- [x]**Create Map Marker Component**
     - Create new view where the marker is a 22x22 circular background containing a sf symbol icon.
-    - [x] **Verification:** ✅ **COMPLETED** - MapMarkerView created with 22x22 red circular background and white mappin SF Symbol icon.
 - [ ] **Add Places to Map**
-   - Update `MapKitView.swift` to show place markers
-   - Sync markers with search results
-   - Handle marker selection
-   - [ ] **Verification:** Place markers appear on the map corresponding to the search results.
+   
 
 ### Phase 5: Polish
 - [ ] **Add Loading States & Error Handling**
