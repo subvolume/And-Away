@@ -1,8 +1,15 @@
 import SwiftUI
 import GoogleMaps
+import CoreLocation
 
 struct GoogleMapView: UIViewRepresentable {
     @ObservedObject var sheetController: SheetController
+    let onLocationUpdate: ((CLLocationCoordinate2D) -> Void)?
+    
+    init(sheetController: SheetController, onLocationUpdate: ((CLLocationCoordinate2D) -> Void)? = nil) {
+        self.sheetController = sheetController
+        self.onLocationUpdate = onLocationUpdate
+    }
     
     func makeUIView(context: Context) -> GMSMapView {
         // Create the map view with a more generic initial camera position
@@ -134,6 +141,9 @@ struct GoogleMapView: UIViewRepresentable {
             // AND set up sheet-aware padding - but only once
             if !hasInitialLocationSet, let userLocation = mapView.myLocation {
                 hasInitialLocationSet = true
+                
+                // Notify parent about location update
+                parent.onLocationUpdate?(userLocation.coordinate)
                 
                 // Set initial map padding based on current sheet state
                 let bottomPadding = parent.calculateSheetHeight()

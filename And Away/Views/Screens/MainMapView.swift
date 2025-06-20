@@ -6,19 +6,26 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct MainMapView: View {
     @State private var showSheet = true
     @StateObject private var sheetController = SheetController()
+    @State private var userLocation: CLLocationCoordinate2D?
 
     var body: some View {
-        GoogleMapView(sheetController: sheetController)
-            .ignoresSafeArea()
-            .sheet(isPresented: $showSheet) {
-                InitialSheetView()
-                    .environmentObject(sheetController)
-                    .managedSheetDetents(controller: sheetController, level: .list)
+        GoogleMapView(
+            sheetController: sheetController,
+            onLocationUpdate: { location in
+                userLocation = location
             }
+        )
+        .ignoresSafeArea()
+        .sheet(isPresented: $showSheet) {
+            InitialSheetView(userLocation: userLocation)
+                .environmentObject(sheetController)
+                .managedSheetDetents(controller: sheetController, level: .list)
+        }
     }
 }
 

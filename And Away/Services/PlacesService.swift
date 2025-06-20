@@ -4,7 +4,7 @@ import CoreLocation
 
 // MARK: - Places Service Protocol
 protocol PlacesService {
-    func searchPlaces(query: String) async -> Result<[Place], PlacesError>
+    func searchPlaces(query: String, userLocation: CLLocationCoordinate2D?) async -> Result<[Place], PlacesError>
     func fetchPlace(placeID: String) async -> Result<Place, PlacesError>
 }
 
@@ -38,17 +38,28 @@ class GooglePlacesService: PlacesService {
     
     private let placesClient = PlacesClient.shared
     
-    func searchPlaces(query: String) async -> Result<[Place], PlacesError> {
-        // Create a default location bias (San Francisco area)
-        let defaultLocation = CircularCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
-            radius: 50000 // 50km radius
-        )
+    func searchPlaces(query: String, userLocation: CLLocationCoordinate2D?) async -> Result<[Place], PlacesError> {
+        // Use user location if available, otherwise fall back to a default
+        let locationBias: CircularCoordinateRegion
+        
+        if let userLocation = userLocation {
+            // Use user's actual location
+            locationBias = CircularCoordinateRegion(
+                center: userLocation,
+                radius: 50000 // 50km radius
+            )
+        } else {
+            // Fallback to San Francisco area if user location unavailable
+            locationBias = CircularCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+                radius: 50000 // 50km radius
+            )
+        }
         
         let searchByTextRequest = SearchByTextRequest(
             textQuery: query,
             placeProperties: [.displayName, .placeID, .formattedAddress, .coordinate, .rating, .numberOfUserRatings],
-            locationBias: defaultLocation
+            locationBias: locationBias
         )
         
         switch await placesClient.searchByText(with: searchByTextRequest) {

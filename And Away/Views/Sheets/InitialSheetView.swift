@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreLocation
 
 struct InitialSheetView: View {
     @State private var searchText = ""
@@ -6,6 +7,8 @@ struct InitialSheetView: View {
     @State private var showPlaceDetails = false
     @State private var selectedPlaceId: String? = nil
     @State private var selectedPlaceName: String? = nil
+    
+    let userLocation: CLLocationCoordinate2D?
     
     @EnvironmentObject var sheetController: SheetController
     
@@ -15,14 +18,18 @@ struct InitialSheetView: View {
                 NavigationStack {
                     ZStack(alignment: .bottom) {
                         ScrollView {
-                            SearchStateView(searchText: $searchText, onPlaceTapped: { placeId, placeName in
-                                selectedPlaceId = placeId
-                                selectedPlaceName = placeName
-                                isSearchActive = false  // Dismiss search when viewing details
-                                showPlaceDetails = true
-                                // Present the details sheet level using SheetController
-                                sheetController.presentSheet(.details)
-                            })
+                            SearchStateView(
+                                searchText: $searchText, 
+                                userLocation: userLocation,
+                                onPlaceTapped: { placeId, placeName in
+                                    selectedPlaceId = placeId
+                                    selectedPlaceName = placeName
+                                    isSearchActive = false  // Dismiss search when viewing details
+                                    showPlaceDetails = true
+                                    // Present the details sheet level using SheetController
+                                    sheetController.presentSheet(.details)
+                                }
+                            )
                         }
                         ActionBar(isSearchActive: $isSearchActive)
                             .frame(maxWidth: .infinity)
@@ -62,6 +69,8 @@ struct InitialSheetView: View {
 }
 
 #Preview {
-    InitialSheetView()
-        .environmentObject(SheetController())
+    InitialSheetView(
+        userLocation: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
+    )
+    .environmentObject(SheetController())
 } 

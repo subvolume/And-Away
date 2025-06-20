@@ -124,14 +124,14 @@ struct ListItem: View {
         ListItem.savedPlace(
             title: "Name of the place",
             type: "Park",
-            distance: "15km",
+            distance: "Sample distance",
             location: "Barcelona",
             image: loadImage("cat01"), // Now using the helper function
             onOpenPlaceDetails: {}
         )
         ListItem.searchResult(
             title: "Name of the place",
-            distance: "15km",
+            distance: "Sample distance",
             location: "Barcelona",
             icon: Image(systemName: "building.columns"),
             onOpenPlaceDetails: {}

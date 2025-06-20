@@ -1,8 +1,10 @@
 import SwiftUI
 import GooglePlacesSwift
+import CoreLocation
 
 struct SearchResultsView: View {
     let searchText: String
+    let userLocation: CLLocationCoordinate2D?
     let onPlaceTapped: (String, String?) -> Void
     
     @State private var places: [Place] = []
@@ -59,7 +61,7 @@ struct SearchResultsView: View {
                         ForEach(places, id: \.placeID) { place in
                             ListItem.searchResult(
                                 title: place.displayName ?? "Unknown Place",
-                                distance: formatDistance(place: place),
+                                distance: formatDistance(for: place),
                                 location: place.formattedAddress ?? "Unknown Address",
                                 icon: Image(systemName: "mappin.circle.fill"),
                                 iconColor: .red100,
@@ -92,7 +94,7 @@ struct SearchResultsView: View {
         errorMessage = nil
         
         Task {
-            let result = await placesService.searchPlaces(query: searchText)
+            let result = await placesService.searchPlaces(query: searchText, userLocation: userLocation)
             
             await MainActor.run {
                 isLoading = false
@@ -108,13 +110,41 @@ struct SearchResultsView: View {
         }
     }
     
-    private func formatDistance(place: Place) -> String {
-        // For now, return a placeholder distance
-        // This can be enhanced later with actual distance calculation
-        return "~1km"
+    private func formatDistance(for place: Place) -> String {
+        // Calculate real distance if user location is available
+        guard let userLocation = userLocation else {
+            return "Distance unknown"
+        }
+        
+        // Create CLLocation objects for distance calculation
+        let userCLLocation = CLLocation(latitude: userLocation.latitude, longitude: userLocation.longitude)
+        let placeCLLocation = CLLocation(latitude: place.location.latitude, longitude: place.location.longitude)
+        
+        // Calculate distance in meters
+        let distanceInMeters = userCLLocation.distance(from: placeCLLocation)
+        
+        // Format distance appropriately
+        if distanceInMeters < 1000 {
+            // Show in meters for distances under 1km
+            return "\(Int(distanceInMeters))m"
+        } else {
+            // Show in kilometers for distances 1km and above
+            let distanceInKm = distanceInMeters / 1000
+            if distanceInKm < 10 {
+                // Show one decimal place for distances under 10km
+                return String(format: "%.1fkm", distanceInKm)
+            } else {
+                // Show whole numbers for distances 10km and above
+                return "\(Int(distanceInKm))km"
+            }
+        }
     }
 }
 
 #Preview {
-    SearchResultsView(searchText: "coffee shops", onPlaceTapped: { _, _ in })
+    SearchResultsView(
+        searchText: "coffee shops", 
+        userLocation: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+        onPlaceTapped: { _, _ in }
+    )
 } 
