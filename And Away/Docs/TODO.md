@@ -1,0 +1,6 @@
+- Refine location bias
+    - Primary: Rectangle of visible map (top 70%)
+    - Secondary: 5km radius of Center of visible map
+- Category search
+- Category styling
+- Map markers
