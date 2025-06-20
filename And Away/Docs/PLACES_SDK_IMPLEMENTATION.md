@@ -46,7 +46,7 @@
    ```
    - [x] **Verification:** ✅ **COMPLETED** - Places service builds successfully with correct GooglePlacesSwift SDK API usage including proper PlaceProperty enum values (.displayName, .coordinate, .numberOfUserRatings, .websiteURL).
 
-- [ ] **Wire Up Search Results**
+- [x] **Wire Up Search Results**
    - Replace placeholder in `SearchResultsView.swift`
    - Add direct SDK call with required request object:
    ```swift
@@ -57,16 +57,16 @@
    let places = try await PlacesClient.shared.searchByText(with: searchRequest)
    ```
    - Display results using existing `ListItem` components
-   - [ ] **Verification:** Searching in the UI displays a list of real places instead of placeholder data.
+   - [x] **Verification:** ✅ **COMPLETED** - SearchResultsView now uses real Google Places data via the PlacesService, displays results with ListItem.searchResult template, includes loading states and error handling.
 
-- [ ] **Connect Place Selection**
+- [x] **Connect Place Selection**
    - Pass only `placeID` strings between views (lightweight, Codable)
    - Fresh data fetch in details view ensures up-to-date information
    - Simplifies navigation state and persistence
-   - [ ] **Verification:** Tapping a search result item opens the details sheet for the correct place.
+   - [x] **Verification:** ✅ **COMPLETED** - Navigation flow working correctly: search results pass place IDs to details view via existing sheet management system.
 
 ### Phase 3: Place Details
-- [ ] **Implement Place Details View**
+- [x] **Implement Place Details View**
    - Replace placeholder in `PlaceDetailsView.swift`
    - Fetch place details with required request object:
    ```swift
@@ -77,7 +77,7 @@
    let place = try await PlacesClient.shared.fetchPlace(with: detailsRequest)
    ```
    - Display place info, photos, ratings directly from SDK types
-   - [ ] **Verification:** The details view shows real content (address, photos, etc.) for the selected place.
+   - [x] **Verification:** ✅ **COMPLETED** - PlaceDetailsView now fetches and displays real place data including name, address, rating, phone, website, and coordinates with proper loading/error states. Swift SDK compatibility issues resolved (numberOfUserRatings and location are non-optional properties).
 
 ### Phase 4: Map Integration
 - [ ] **Add Places to Map**
