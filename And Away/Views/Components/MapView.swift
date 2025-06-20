@@ -18,6 +18,47 @@ struct GoogleMapView: UIViewRepresentable {
         mapView.settings.rotateGestures = true
         mapView.settings.tiltGestures = true
         
+        // Hide default POI markers for a clean map
+        mapView.settings.consumesGesturesInView = false
+        
+        // Create a minimal map style that hides POI markers
+        do {
+            // JSON style to hide points of interest
+            let styleJSON = """
+            [
+                {
+                    "featureType": "poi",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.business",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit.station",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                }
+            ]
+            """
+            
+            let style = try GMSMapStyle(jsonString: styleJSON)
+            mapView.mapStyle = style
+        } catch {
+            print("Failed to load map style: \(error)")
+        }
+        
         // Set up delegate for location updates
         mapView.delegate = context.coordinator
         
@@ -25,16 +66,24 @@ struct GoogleMapView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: GMSMapView, context: Context) {
-        // Update map padding based on current sheet state
-        updateMapPadding(for: uiView)
+        // No longer updating map padding here - only done once during initial setup
     }
     
-    private func updateMapPadding(for mapView: GMSMapView) {
-        // Calculate bottom padding based on sheet detent
-        let bottomPadding = calculateSheetHeight()
-        
-        // Set padding - this moves the logical center of the map up
-        mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: bottomPadding, right: 0)
+    // MARK: - Marker Management Methods
+    
+    /// Add a marker to the map at the specified coordinates
+    func addMarker(at coordinate: CLLocationCoordinate2D, title: String? = nil, snippet: String? = nil, context: Context) -> GMSMarker {
+        return context.coordinator.addMarker(at: coordinate, title: title, snippet: snippet)
+    }
+    
+    /// Remove all markers from the map
+    func clearAllMarkers(context: Context) {
+        context.coordinator.clearAllMarkers()
+    }
+    
+    /// Get all current markers
+    func getAllMarkers(context: Context) -> [GMSMarker] {
+        return context.coordinator.getAllMarkers()
     }
     
     private func calculateSheetHeight() -> CGFloat {
@@ -70,18 +119,72 @@ struct GoogleMapView: UIViewRepresentable {
     class Coordinator: NSObject, GMSMapViewDelegate {
         var parent: GoogleMapView
         private var hasInitialLocationSet = false
+        private var markers: [GMSMarker] = [] // Store all markers for management
+        private weak var mapView: GMSMapView? // Keep reference to map view
         
         init(_ parent: GoogleMapView) {
             self.parent = parent
         }
         
         func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
+            // Store reference to mapView for marker management
+            self.mapView = mapView
+            
             // Auto-center on user location when it first becomes available
+            // AND set up sheet-aware padding - but only once
             if !hasInitialLocationSet, let userLocation = mapView.myLocation {
                 hasInitialLocationSet = true
+                
+                // Set initial map padding based on current sheet state
+                let bottomPadding = parent.calculateSheetHeight()
+                mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: bottomPadding, right: 0)
+                
+                // Then center on user location with the padding applied
                 let camera = GMSCameraPosition.camera(withTarget: userLocation.coordinate, zoom: 15.0)
                 mapView.animate(to: camera)
             }
+        }
+        
+        // MARK: - Marker Management Methods
+        
+        /// Add a marker to the map at the specified coordinates
+        func addMarker(at coordinate: CLLocationCoordinate2D, title: String? = nil, snippet: String? = nil) -> GMSMarker {
+            guard let mapView = self.mapView else {
+                fatalError("MapView reference not available")
+            }
+            
+            let marker = GMSMarker(position: coordinate)
+            marker.title = title
+            marker.snippet = snippet
+            marker.map = mapView
+            
+            // Store marker for management
+            markers.append(marker)
+            
+            return marker
+        }
+        
+        /// Remove a specific marker from the map
+        func removeMarker(_ marker: GMSMarker) {
+            marker.map = nil
+            markers.removeAll { $0 === marker }
+        }
+        
+        /// Remove all markers from the map
+        func clearAllMarkers() {
+            markers.forEach { $0.map = nil }
+            markers.removeAll()
+        }
+        
+        /// Get all current markers
+        func getAllMarkers() -> [GMSMarker] {
+            return markers
+        }
+        
+        /// Remove markers by title (useful for removing specific types of markers)
+        func removeMarkers(withTitle title: String) {
+            let markersToRemove = markers.filter { $0.title == title }
+            markersToRemove.forEach { removeMarker($0) }
         }
     }
 }
