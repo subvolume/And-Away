@@ -21,4 +21,13 @@ class MockPlacesService: PlacesService {
         // Return error for mock
         return .failure(.placeNotFound)
     }
+    
+    func nearbySearch(
+        includedTypes: [String],
+        userLocation: CLLocationCoordinate2D,
+        radius: Double
+    ) async -> Result<[Place], PlacesError> {
+        // Return empty results for mock - Place type doesn't have public initializers
+        return .success([])
+    }
 } 

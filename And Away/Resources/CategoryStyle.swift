@@ -346,6 +346,212 @@ struct CategoryStyle {
         let categoryInfo = category(for: googleTypes)
         return categoryInfo.icon
     }
+    
+    /// Match search text to a subcategory
+    static func matchCategory(searchText: String) -> Subcategory? {
+        let normalizedSearch = searchText.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Define variations for each category
+        let categoryVariations: [Subcategory: [String]] = [
+            // Food & Drink
+            .bakery: ["bakery", "bakeries", "pastry", "pastries"],
+            .barParty: ["bar", "bars", "pub", "pubs", "nightlife", "club", "clubs"],
+            .brewery: ["brewery", "breweries", "beer"],
+            .cafe: ["cafe", "cafes", "coffee", "coffee shop", "coffee shops"],
+            .restaurant: ["restaurant", "restaurants", "dining", "food"],
+            .winery: ["winery", "wineries", "wine"],
+            
+            // Art & Fun
+            .amusementPark: ["amusement park", "theme park", "amusement", "theme parks"],
+            .concert: ["concert", "concerts", "music venue", "concert hall"],
+            .event: ["event", "events", "venue", "venues"],
+            .kids: ["kids", "children", "family", "zoo", "aquarium"],
+            .movieTheater: ["movie", "movies", "cinema", "theater", "movie theater"],
+            .museum: ["museum", "museums", "gallery", "galleries", "art"],
+            .nightlife: ["nightlife", "night life", "clubs"],
+            .theater: ["theater", "theatre", "theaters", "theatres", "play", "plays"],
+            .tour: ["tour", "tours", "tourist", "attraction", "attractions"],
+            
+            // Outdoor
+            .beach: ["beach", "beaches", "shore", "coast"],
+            .campground: ["campground", "camping", "camp", "campsite"],
+            .nationalPark: ["national park", "national parks"],
+            .park: ["park", "parks", "garden", "gardens"],
+            .relax: ["spa", "spas", "relax", "relaxation", "wellness"],
+            
+            // Sports
+            .fitness: ["gym", "gyms", "fitness", "workout", "exercise"],
+            .stadium: ["stadium", "stadiums", "sports", "arena"],
+            
+            // Services
+            .atm: ["atm", "atms", "cash", "cash machine"],
+            .bank: ["bank", "banks", "banking"],
+            .evCharger: ["ev charger", "electric vehicle", "charging station", "ev charging"],
+            .gasStation: ["gas", "gas station", "petrol", "fuel"],
+            .parking: ["parking", "car park", "parking lot"],
+            .publicTransport: ["bus", "train", "subway", "metro", "transit", "transport"],
+            
+            // Health
+            .hospital: ["hospital", "hospitals", "medical", "doctor", "clinic"],
+            .pharmacy: ["pharmacy", "pharmacies", "drugstore", "chemist"],
+            
+            // Shopping
+            .foodMarket: ["grocery", "groceries", "supermarket", "market", "food market"],
+            .shopping: ["shopping", "shop", "shops", "store", "stores", "mall"]
+        ]
+        
+        // Check each category's variations
+        for (category, variations) in categoryVariations {
+            for variation in variations {
+                if variation == normalizedSearch || 
+                   (variation.count > 3 && (variation.hasPrefix(normalizedSearch) || normalizedSearch.hasPrefix(variation))) {
+                    return category
+                }
+            }
+        }
+        
+        // Also check exact matches with raw values (for categories not in variations)
+        for subcategory in Subcategory.allCases {
+            let categoryName = subcategory.rawValue.lowercased()
+            if categoryName == normalizedSearch {
+                return subcategory
+            }
+        }
+        
+        return nil
+    }
+    
+    /// Check if search text matches a specific category
+    static func matchesSearch(searchText: String, category: Subcategory) -> Bool {
+        let normalizedSearch = searchText.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Define variations for each category
+        let categoryVariations: [Subcategory: [String]] = [
+            // Food & Drink
+            .bakery: ["bakery", "bakeries", "pastry", "pastries"],
+            .barParty: ["bar", "bars", "pub", "pubs", "nightlife", "club", "clubs"],
+            .brewery: ["brewery", "breweries", "beer"],
+            .cafe: ["cafe", "cafes", "coffee", "coffee shop", "coffee shops"],
+            .restaurant: ["restaurant", "restaurants", "dining", "food"],
+            .winery: ["winery", "wineries", "wine"],
+            
+            // Art & Fun
+            .amusementPark: ["amusement park", "theme park", "amusement", "theme parks"],
+            .concert: ["concert", "concerts", "music venue", "concert hall"],
+            .event: ["event", "events", "venue", "venues"],
+            .kids: ["kids", "children", "family", "zoo", "aquarium"],
+            .movieTheater: ["movie", "movies", "cinema", "theater", "movie theater"],
+            .museum: ["museum", "museums", "gallery", "galleries", "art"],
+            .nightlife: ["nightlife", "night life", "clubs"],
+            .theater: ["theater", "theatre", "theaters", "theatres", "play", "plays"],
+            .tour: ["tour", "tours", "tourist", "attraction", "attractions"],
+            
+            // Outdoor
+            .beach: ["beach", "beaches", "shore", "coast"],
+            .campground: ["campground", "camping", "camp", "campsite"],
+            .nationalPark: ["national park", "national parks"],
+            .park: ["park", "parks", "garden", "gardens"],
+            .relax: ["spa", "spas", "relax", "relaxation", "wellness"],
+            
+            // Sports
+            .fitness: ["gym", "gyms", "fitness", "workout", "exercise"],
+            .stadium: ["stadium", "stadiums", "sports", "arena"],
+            
+            // Services
+            .atm: ["atm", "atms", "cash", "cash machine"],
+            .bank: ["bank", "banks", "banking"],
+            .evCharger: ["ev charger", "electric vehicle", "charging station", "ev charging"],
+            .gasStation: ["gas", "gas station", "petrol", "fuel"],
+            .parking: ["parking", "car park", "parking lot"],
+            .publicTransport: ["bus", "train", "subway", "metro", "transit", "transport"],
+            
+            // Health
+            .hospital: ["hospital", "hospitals", "medical", "doctor", "clinic"],
+            .pharmacy: ["pharmacy", "pharmacies", "drugstore", "chemist"],
+            
+            // Shopping
+            .foodMarket: ["grocery", "groceries", "supermarket", "market", "food market"],
+            .shopping: ["shopping", "shop", "shops", "store", "stores", "mall"]
+        ]
+        
+        // Get variations for this specific category
+        if let variations = categoryVariations[category] {
+            for variation in variations {
+                if variation == normalizedSearch || 
+                   (variation.count > 3 && (variation.hasPrefix(normalizedSearch) || normalizedSearch.hasPrefix(variation))) {
+                    return true
+                }
+            }
+        }
+        
+        // Also check exact match with raw value
+        let categoryName = category.rawValue.lowercased()
+        if categoryName == normalizedSearch {
+            return true
+        }
+        
+        return false
+    }
+    
+    /// Get Google Place types for a subcategory
+    static func googleTypes(for subcategory: Subcategory) -> [String] {
+        // Return specific Google types that map to this subcategory
+        switch subcategory {
+        // Food & Drink
+        case .bakery: return ["bakery"]
+        case .barParty: return ["bar", "night_club"]
+        case .brewery: return ["bar"] // No specific brewery type in SDK
+        case .cafe: return ["cafe"]
+        case .restaurant: return ["restaurant"]
+        case .winery: return ["bar"] // No specific winery type in SDK
+        
+        // Art & Fun
+        case .amusementPark: return ["amusement_park"]
+        case .concert: return ["night_club"] // No specific concert hall type
+        case .event: return ["point_of_interest"] // No specific event venue type
+        case .kids: return ["zoo", "aquarium"]
+        case .movieTheater: return ["movie_theater"]
+        case .museum: return ["museum", "art_gallery"]
+        case .nightlife: return ["night_club", "bar"]
+        case .theater: return ["point_of_interest"] // No specific theater type
+        case .tour: return ["tourist_attraction"]
+        
+        // Outdoor
+        case .beach: return ["natural_feature"] // No specific beach type
+        case .campground: return ["campground"]
+        case .nationalPark: return ["park"] // No specific national park type
+        case .park: return ["park"]
+        case .relax: return ["spa"]
+        
+        // Sports
+        case .fitness: return ["gym"]
+        case .stadium: return ["stadium"]
+        
+        // Services
+        case .atm: return ["atm"]
+        case .bank: return ["bank"]
+        case .evCharger: return ["point_of_interest"] // No specific EV charger type
+        case .fireStation: return ["fire_station"]
+        case .gasStation: return ["gas_station"]
+        case .laundry: return ["laundry"]
+        case .marina: return ["point_of_interest"] // No specific marina type
+        case .parking: return ["parking"]
+        case .police: return ["police"]
+        case .postOffice: return ["post_office"]
+        case .publicTransport: return ["bus_station", "train_station", "subway_station", "transit_station"]
+        
+        // Health
+        case .hospital: return ["hospital", "doctor"]
+        case .pharmacy: return ["pharmacy", "drugstore"]
+        
+        // Shopping
+        case .foodMarket: return ["supermarket", "grocery_or_supermarket"]
+        case .shopping: return ["shopping_mall", "store", "department_store"]
+        
+        // Default
+        default: return ["point_of_interest"]
+        }
+    }
 }
 
 // MARK: - Preview

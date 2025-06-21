@@ -12,6 +12,11 @@ protocol PlacesService {
         mapZoom: Float
     ) async -> Result<[Place], PlacesError>
     func fetchPlace(placeID: String) async -> Result<Place, PlacesError>
+    func nearbySearch(
+        includedTypes: [String],
+        userLocation: CLLocationCoordinate2D,
+        radius: Double
+    ) async -> Result<[Place], PlacesError>
 }
 
 // MARK: - Places Error
@@ -101,6 +106,49 @@ class GooglePlacesService: PlacesService {
             return .success(place)
         case .failure(let placesError):
             return .failure(.unknown(placesError))
+        }
+    }
+    
+    func nearbySearch(
+        includedTypes: [String],
+        userLocation: CLLocationCoordinate2D,
+        radius: Double
+    ) async -> Result<[Place], PlacesError> {
+        // Create location restriction as a circle
+        let locationRestriction = CircularCoordinateRegion(
+            center: userLocation,
+            radius: radius
+        )
+        
+        // Convert string types to PlaceType enum values
+        let placeTypes = Set(includedTypes.compactMap { PlaceType(rawValue: $0) })
+        
+        // If no valid types were converted, try without type restrictions
+        let finalTypes = placeTypes.isEmpty ? [] : placeTypes
+        
+        // Create nearby search request
+        let nearbySearchRequest = SearchNearbyRequest(
+            locationRestriction: locationRestriction,
+            placeProperties: [.displayName, .placeID, .formattedAddress, .coordinate, .rating, .numberOfUserRatings, .types],
+            includedTypes: finalTypes,
+            maxResultCount: 20,
+            rankPreference: .distance
+        )
+        
+        // Perform the search
+        switch await placesClient.searchNearby(with: nearbySearchRequest) {
+        case .success(let places):
+            return .success(places)
+        case .failure(let placesError):
+            // Try to provide more specific error information
+            let errorMessage: String
+            if let nsError = placesError as NSError? {
+                errorMessage = "Error code: \(nsError.code), description: \(nsError.localizedDescription)"
+            } else {
+                errorMessage = placesError.localizedDescription
+            }
+            
+            return .failure(.searchFailed(errorMessage))
         }
     }
 } 

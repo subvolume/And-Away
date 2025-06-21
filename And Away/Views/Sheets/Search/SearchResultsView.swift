@@ -13,6 +13,9 @@ struct SearchResultsView: View {
     @State private var places: [Place] = []
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var matchedCategories: [Subcategory] = []
+    @State private var isSearchingCategory = false
+    @State private var searchingCategoryName: String?
     
     private let placesService = GooglePlacesService()
     
@@ -28,7 +31,7 @@ struct SearchResultsView: View {
                 VStack {
                     ProgressView()
                         .padding()
-                    Text("Searching places...")
+                    Text(isSearchingCategory ? "Searching \(searchingCategoryName ?? "places") near you..." : "Searching places...")
                         .foregroundColor(.secondary)
                 }
                 .padding(.top, 40)
@@ -45,7 +48,7 @@ struct SearchResultsView: View {
                 }
                 .padding(.top, 40)
                 Spacer()
-            } else if places.isEmpty {
+            } else if places.isEmpty && matchedCategories.isEmpty {
                 VStack(spacing: 16) {
                     Text("No places found")
                         .foregroundColor(.secondary)
@@ -61,6 +64,19 @@ struct SearchResultsView: View {
                 // Display search results using existing ListItem component
                 ScrollView {
                     LazyVStack(spacing: 0) {
+                        // Show category suggestions at the top (up to 3)
+                        if !matchedCategories.isEmpty && !isSearchingCategory {
+                            ForEach(matchedCategories.prefix(3), id: \.self) { category in
+                                ListItem.iconOnly(
+                                    title: "\(category.rawValue) near me",
+                                    icon: category.icon,
+                                    onTap: {
+                                        searchNearbyCategory(category)
+                                    }
+                                )
+                            }
+                        }
+                        
                         ForEach(places, id: \.placeID) { place in
                             let _ = print("Place: \(place.displayName ?? "Unknown") - Types: \(place.types.map { $0.rawValue })")
                             
@@ -87,10 +103,68 @@ struct SearchResultsView: View {
             }
         }
         .onAppear {
+            checkForCategoryMatches()
             searchPlaces()
         }
         .onChange(of: searchText) { _, _ in
+            checkForCategoryMatches()
             searchPlaces()
+        }
+    }
+    
+    private func checkForCategoryMatches() {
+        // Find all matching categories
+        var matches: [Subcategory] = []
+        
+        // Check each subcategory for matches
+        for subcategory in Subcategory.allCases {
+            if CategoryStyle.matchesSearch(searchText: searchText, category: subcategory) {
+                matches.append(subcategory)
+                // Stop after finding 3 matches
+                if matches.count >= 3 {
+                    break
+                }
+            }
+        }
+        
+        matchedCategories = matches
+    }
+    
+    private func searchNearbyCategory(_ category: Subcategory) {
+        guard let userLocation = userLocation else {
+            errorMessage = "Location not available. Please enable location services."
+            return
+        }
+        
+        isLoading = true
+        isSearchingCategory = true
+        searchingCategoryName = category.rawValue
+        errorMessage = nil
+        
+        Task {
+            // Use text search with category name instead of nearby search
+            let searchQuery = "\(category.rawValue) near me"
+            let result = await placesService.searchPlaces(
+                query: searchQuery,
+                userLocation: userLocation,
+                mapVisibleRegion: mapVisibleRegion,
+                mapZoom: mapZoom
+            )
+            
+            await MainActor.run {
+                isLoading = false
+                isSearchingCategory = false
+                searchingCategoryName = nil
+                
+                switch result {
+                case .success(let searchResults):
+                    places = searchResults
+                    matchedCategories = [] // Hide the category suggestions after search
+                case .failure(let error):
+                    places = []
+                    errorMessage = error.localizedDescription
+                }
+            }
         }
     }
     
