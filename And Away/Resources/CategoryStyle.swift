@@ -169,7 +169,7 @@ enum Subcategory: String, CaseIterable {
         case .tour: return "binoculars.fill"
         
         // Locations
-        case .location: return "mappin.circle.fill"
+        case .location: return "mappin"
         
         // Work & Study
         case .library: return "books.vertical.fill"
