@@ -4,3 +4,4 @@
 - Category styling
 - Category search <- mathicng category names should bring this up
 - Map markers
+- Fix Action bar so that it doesnt show up at search results

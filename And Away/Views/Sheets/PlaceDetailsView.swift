@@ -9,11 +9,13 @@ struct PlaceDetailsView: View {
     @State private var place: Place?
     @State private var isLoading = true
     @State private var errorMessage: String?
+    @State private var isSearchActive = false
     
     private let placesService = GooglePlacesService()
     
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack(alignment: .bottom) {
+            VStack(spacing: 0) {
             // Get category information if place is available
             let categoryInfo: (name: String, icon: Image, color: Color)? = {
                 if let place = place {
@@ -144,7 +146,7 @@ struct PlaceDetailsView: View {
                         }
                         .padding(.horizontal)
                         
-                        Spacer(minLength: 40)
+                        Spacer(minLength: 100) // Increased to account for ActionBar
                     }
                     .padding(.top, 20)
                 } else {
@@ -157,10 +159,14 @@ struct PlaceDetailsView: View {
                 }
             }
         }
-        .onAppear {
-            fetchPlaceDetails()
-        }
+        ActionBar(isSearchActive: $isSearchActive)
+            .frame(maxWidth: .infinity)
     }
+    .ignoresSafeArea(.container, edges: .bottom)
+    .onAppear {
+        fetchPlaceDetails()
+    }
+}
     
     private func fetchPlaceDetails() {
         isLoading = true

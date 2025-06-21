@@ -19,27 +19,22 @@ struct InitialSheetView: View {
         Group {
             if isSearchActive {
                 NavigationStack {
-                    ZStack(alignment: .bottom) {
-                        ScrollView {
-                            SearchStateView(
-                                searchText: $searchText, 
-                                userLocation: userLocation,
-                                mapVisibleRegion: mapVisibleRegion,
-                                mapZoom: mapZoom,
-                                onPlaceTapped: { placeId, placeName in
-                                    selectedPlaceId = placeId
-                                    selectedPlaceName = placeName
-                                    isSearchActive = false  // Dismiss search when viewing details
-                                    showPlaceDetails = true
-                                    // Present the details sheet level using SheetController
-                                    sheetController.presentSheet(.details)
-                                }
-                            )
-                        }
-                        ActionBar(isSearchActive: $isSearchActive)
-                            .frame(maxWidth: .infinity)
+                    ScrollView {
+                        SearchStateView(
+                            searchText: $searchText, 
+                            userLocation: userLocation,
+                            mapVisibleRegion: mapVisibleRegion,
+                            mapZoom: mapZoom,
+                            onPlaceTapped: { placeId, placeName in
+                                selectedPlaceId = placeId
+                                selectedPlaceName = placeName
+                                isSearchActive = false  // Dismiss search when viewing details
+                                showPlaceDetails = true
+                                // Present the details sheet level using SheetController
+                                sheetController.presentSheet(.details)
+                            }
+                        )
                     }
-                    .ignoresSafeArea(.container, edges: .bottom)
                 }
                 .searchable(text: $searchText, isPresented: $isSearchActive)
             } else {
