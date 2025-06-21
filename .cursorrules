@@ -1,33 +1,85 @@
-# Cursor Rules for And Away iOS Project
+# And Away · LLM Development Guide  
+*(Markdown edition — June 2025)*
 
-## Developer Expertise
-- **You are a super senior developer - follow instructions but always check against best practices**
-- **Tell me if I'm doing something that is not correct, or if there are better ways to achieve something**
-- **Provide constructive feedback and alternative approaches when appropriate**
+---
 
-## User Profile
-- User is a UI designer (not a developer) with basic technical understanding
-- Simplify language when explaining technical concepts
+## 0 · CONTEXT
+- **App** iOS client for searching, collecting and bookmarking places on a map.  
+- **Tech Stack**  
+  - SwiftUI  
+  - Google Places Swift SDK for iOS ≥ 10.0 (“new” SDK, *not* the legacy UIKit one)  
+  - CloudKit *private* database for per‑user bookmarks  
+- **Project Tree**
+  ```
+  And Away/
+  ├── Resources/          # Color, font & spacing constants
+  ├── Views/Components/   # Reusable SwiftUI components
+  └── Docs/               # Technical specs
+  ```
 
-## Working Style
-- **Always explain what you're planning to do BEFORE doing it**
-- **Ask for permission before making changes or adding files**
-- **Answer questions first, don't just execute immediately**
-- **Do ONE thing at a time, keep it very simple**
-- **Wait for user to specify the next requirement after each step**
-- **Be less aggressive with changes - collaborate, don't assume**
-- **If given a straightforward order, it's OK to just make the change requested**
-- **Check existing styles and components and reuse these unless instructed otherwise**
-- **Update this .cursorrules file as we discover new preferences**
+---
 
-## Communication Style
-- Explain technical concepts in simple terms
-- Break down complex tasks into small, manageable steps
-- Ask clarifying questions when requirements are unclear
-- Use analogies or simple explanations for technical concepts
+## 1 · PRIORITY
+1. **Follow explicit user instructions.**  
+2. **Apply iOS/Swift best practices.**  
+3. **Clarify conflicts before acting.**  
+4. **MUST NOT** introduce new design elements unless user says `ALLOW_NEW_UI`.
 
-## Code Changes
-- Only make the specific change requested
-- Don't add extra features or files unless explicitly asked
-- Keep implementations simple and focused
-- Use clear, descriptive comments in code 
+---
+
+## 2 · TRIGGERS → ACTIONS
+| WHEN (detected event) | THEN (atomic, imperative) |
+|-----------------------|---------------------------|
+| `URL_DETECTED` – user message contains a URL | 1. **Fetch** the URL.  2. **Store** full contents in context.  3. Proceed. |
+| `BUG_REPORT` – user states a bug | 1. Provide fix.  2. Output sentinel `⟪WAIT_FOR_TEST⟫` and halt. |
+| `BUG_OK` – user confirms fix | Resume normal flow. |
+| `CONTEXT_MISSING` – insufficient info to act | Ask a **specific** clarifying question; wait for response. |
+| `MULTIPLE_APPROACHES` – several viable solutions | List trade‑offs → recommend one → wait for user choice. |
+
+---
+
+## 3 · CONSTRAINTS
+* **MUST** consult official documentation **before** writing code.  
+* **MUST_NOT** run or test the app locally; rely on user for all runtime feedback.  
+* **SHOULD** reuse components in `Views/Components/`.  
+* **MUST** add descriptive comments to every code artifact.  
+* **MUST** use SDK‑built‑in features before rolling custom ones.  
+* Placeholder UI text = `"PLACEHOLDER"`; query user if styling needed.
+
+---
+
+## 4 · WORKFLOW CHECKLIST
+1. ❑ Identify required docs → cite exact section.  
+2. ❑ Produce solution or code patch.  
+3. ❑ If bug‑fixing, emit `⟪WAIT_FOR_TEST⟫`.  
+4. ❑ On `BUG_OK`, continue pending tasks.  
+5. ❑ Log clarifying questions using `CONTEXT_MISSING` rule.
+
+---
+
+## 5 · EXAMPLES
+
+### Bug‑fix loop
+```
+User → “The map crashes when I tap Save.”
+LLM  → // code patch…
+LLM  → “⟪WAIT_FOR_TEST⟫ Please test and confirm the bug is resolved.”
+```
+
+### New UI request
+```
+User → “Show saved places in a carousel.”
+LLM  → “I’ll create **SavedPlacesCarousel** using existing card styles. ALLOW_NEW_UI?”
+```
+
+---
+
+## 6 · TOKEN LEGEND
+| Token | Meaning |
+|-------|---------|
+| `⟪WAIT_FOR_TEST⟫` | Halt responses until user confirms fix. |
+| `ALLOW_NEW_UI`    | User grants permission for new design work. |
+
+---
+
+## END_OF_INSTRUCTIONS
