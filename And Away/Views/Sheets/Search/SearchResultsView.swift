@@ -1,10 +1,13 @@
 import SwiftUI
 import GooglePlacesSwift
 import CoreLocation
+import GoogleMaps
 
 struct SearchResultsView: View {
     let searchText: String
     let userLocation: CLLocationCoordinate2D?
+    let mapVisibleRegion: GMSVisibleRegion?
+    let mapZoom: Float
     let onPlaceTapped: (String, String?) -> Void
     
     @State private var places: [Place] = []
@@ -94,7 +97,12 @@ struct SearchResultsView: View {
         errorMessage = nil
         
         Task {
-            let result = await placesService.searchPlaces(query: searchText, userLocation: userLocation)
+            let result = await placesService.searchPlaces(
+                query: searchText, 
+                userLocation: userLocation,
+                mapVisibleRegion: mapVisibleRegion,
+                mapZoom: mapZoom
+            )
             
             await MainActor.run {
                 isLoading = false
@@ -145,6 +153,8 @@ struct SearchResultsView: View {
     SearchResultsView(
         searchText: "coffee shops", 
         userLocation: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+        mapVisibleRegion: nil,
+        mapZoom: 15.0,
         onPlaceTapped: { _, _ in }
     )
 } 

@@ -1,5 +1,6 @@
 import SwiftUI
 import CoreLocation
+import GoogleMaps
 
 struct InitialSheetView: View {
     @State private var searchText = ""
@@ -9,6 +10,8 @@ struct InitialSheetView: View {
     @State private var selectedPlaceName: String? = nil
     
     let userLocation: CLLocationCoordinate2D?
+    let mapVisibleRegion: GMSVisibleRegion?
+    let mapZoom: Float
     
     @EnvironmentObject var sheetController: SheetController
     
@@ -21,6 +24,8 @@ struct InitialSheetView: View {
                             SearchStateView(
                                 searchText: $searchText, 
                                 userLocation: userLocation,
+                                mapVisibleRegion: mapVisibleRegion,
+                                mapZoom: mapZoom,
                                 onPlaceTapped: { placeId, placeName in
                                     selectedPlaceId = placeId
                                     selectedPlaceName = placeName
@@ -70,7 +75,9 @@ struct InitialSheetView: View {
 
 #Preview {
     InitialSheetView(
-        userLocation: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
+        userLocation: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+        mapVisibleRegion: nil,
+        mapZoom: 0
     )
     .environmentObject(SheetController())
 } 

@@ -1,10 +1,16 @@
 import Foundation
 import GooglePlacesSwift
 import CoreLocation
+import GoogleMaps
 
 // MARK: - Places Service Protocol
 protocol PlacesService {
-    func searchPlaces(query: String, userLocation: CLLocationCoordinate2D?) async -> Result<[Place], PlacesError>
+    func searchPlaces(
+        query: String, 
+        userLocation: CLLocationCoordinate2D?,
+        mapVisibleRegion: GMSVisibleRegion?,
+        mapZoom: Float
+    ) async -> Result<[Place], PlacesError>
     func fetchPlace(placeID: String) async -> Result<Place, PlacesError>
 }
 
@@ -38,21 +44,35 @@ class GooglePlacesService: PlacesService {
     
     private let placesClient = PlacesClient.shared
     
-    func searchPlaces(query: String, userLocation: CLLocationCoordinate2D?) async -> Result<[Place], PlacesError> {
-        // Use user location if available, otherwise fall back to a default
+    func searchPlaces(
+        query: String, 
+        userLocation: CLLocationCoordinate2D?,
+        mapVisibleRegion: GMSVisibleRegion?,
+        mapZoom: Float
+    ) async -> Result<[Place], PlacesError> {
+        // Determine location bias based on map state
         let locationBias: CircularCoordinateRegion
         
-        if let userLocation = userLocation {
-            // Use user's actual location
+        if let visibleRegion = mapVisibleRegion {
+            // Use smart bias based on visible map and zoom level
+            locationBias = LocationBiasHelper.createSearchBias(
+                visibleRegion: visibleRegion,
+                zoom: mapZoom,
+                userLocation: userLocation
+            )
+        } else if let userLocation = userLocation {
+            // Fallback to user location with zoom-based radius
+            let radius = LocationBiasHelper.searchRadius(for: mapZoom)
             locationBias = CircularCoordinateRegion(
                 center: userLocation,
-                radius: 50000 // 50km radius
+                radius: radius
             )
         } else {
-            // Fallback to San Francisco area if user location unavailable
+            // Last resort: Use a default location (could be based on device locale)
+            // For now, using a wider radius around a neutral point
             locationBias = CircularCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
-                radius: 50000 // 50km radius
+                center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                radius: 100000 // 100km - very wide
             )
         }
         

@@ -5,16 +5,22 @@ import CoreLocation
 struct GoogleMapView: UIViewRepresentable {
     @ObservedObject var sheetController: SheetController
     let onLocationUpdate: ((CLLocationCoordinate2D) -> Void)?
+    let onMapStateUpdate: ((GMSVisibleRegion, Float) -> Void)?
     
-    init(sheetController: SheetController, onLocationUpdate: ((CLLocationCoordinate2D) -> Void)? = nil) {
+    init(
+        sheetController: SheetController,
+        onLocationUpdate: ((CLLocationCoordinate2D) -> Void)? = nil,
+        onMapStateUpdate: ((GMSVisibleRegion, Float) -> Void)? = nil
+    ) {
         self.sheetController = sheetController
         self.onLocationUpdate = onLocationUpdate
+        self.onMapStateUpdate = onMapStateUpdate
     }
     
     func makeUIView(context: Context) -> GMSMapView {
         // Create the map view with a more generic initial camera position
         let camera = GMSCameraPosition.camera(withLatitude: 0, longitude: 0, zoom: 2.0)
-        let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
+        let mapView = GMSMapView(frame: CGRect.zero, camera: camera)
         
         // Configure map settings following best practices
         mapView.isMyLocationEnabled = true
@@ -136,6 +142,10 @@ struct GoogleMapView: UIViewRepresentable {
         func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
             // Store reference to mapView for marker management
             self.mapView = mapView
+            
+            // Notify parent about map state changes (visible region and zoom)
+            let visibleRegion = mapView.projection.visibleRegion()
+            parent.onMapStateUpdate?(visibleRegion, position.zoom)
             
             // Auto-center on user location when it first becomes available
             // AND set up sheet-aware padding - but only once
