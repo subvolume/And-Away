@@ -78,7 +78,7 @@ class GooglePlacesService: PlacesService {
         
         let searchByTextRequest = SearchByTextRequest(
             textQuery: query,
-            placeProperties: [.displayName, .placeID, .formattedAddress, .coordinate, .rating, .numberOfUserRatings],
+            placeProperties: [.displayName, .placeID, .formattedAddress, .coordinate, .rating, .numberOfUserRatings, .types],
             locationBias: locationBias
         )
         
@@ -93,7 +93,7 @@ class GooglePlacesService: PlacesService {
     func fetchPlace(placeID: String) async -> Result<Place, PlacesError> {
         let fetchPlaceRequest = FetchPlaceRequest(
             placeID: placeID,
-            placeProperties: [.displayName, .formattedAddress, .rating, .numberOfUserRatings, .photos, .coordinate, .internationalPhoneNumber, .websiteURL]
+            placeProperties: [.displayName, .formattedAddress, .rating, .numberOfUserRatings, .photos, .coordinate, .internationalPhoneNumber, .websiteURL, .types]
         )
         
         switch await placesClient.fetchPlace(with: fetchPlaceRequest) {

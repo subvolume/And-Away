@@ -42,6 +42,34 @@ struct PlaceDetailsView: View {
                 } else if let place = place {
                     // Display real place information
                     VStack(alignment: .leading, spacing: 20) {
+                        // Types/Categories
+                        if !place.types.isEmpty {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Category")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                
+                                // Log types for debugging
+                                let _ = print("Place Details - Types: \(place.types.map { $0.rawValue })")
+                                
+                                // Display formatted types
+                                let formattedTypes = place.types
+                                    .map { $0.rawValue }
+                                    .filter { !["establishment", "point_of_interest"].contains($0) }
+                                    .map { $0.replacingOccurrences(of: "_", with: " ").capitalized }
+                                    .joined(separator: " • ")
+                                
+                                if !formattedTypes.isEmpty {
+                                    Text(formattedTypes)
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    Text("General Location")
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                        
                         // Address
                         if let formattedAddress = place.formattedAddress {
                             VStack(alignment: .leading, spacing: 4) {
