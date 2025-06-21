@@ -44,7 +44,7 @@ struct InitialSheetView: View {
                             DummyView()
                         }
                     }
-                    ActionBar(isSearchActive: $isSearchActive)
+                    ActionBar(isSearchActive: $isSearchActive, configuration: .initial)
                         .frame(maxWidth: .infinity)
                 }
                 .ignoresSafeArea(.container, edges: .bottom)

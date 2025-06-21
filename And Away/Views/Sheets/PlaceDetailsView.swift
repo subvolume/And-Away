@@ -30,8 +30,7 @@ struct PlaceDetailsView: View {
                 title: placeName ?? place?.displayName ?? "Place Details",
                 categoryName: categoryInfo?.name,
                 categoryIcon: categoryInfo?.icon,
-                categoryColor: categoryInfo?.color,
-                onClose: onBackTapped
+                categoryColor: categoryInfo?.color
             )
             
             ScrollView {
@@ -159,7 +158,7 @@ struct PlaceDetailsView: View {
                 }
             }
         }
-        ActionBar(isSearchActive: $isSearchActive)
+        ActionBar(isSearchActive: $isSearchActive, configuration: .placeDetails, onClose: onBackTapped)
             .frame(maxWidth: .infinity)
     }
     .ignoresSafeArea(.container, edges: .bottom)
