@@ -63,12 +63,18 @@ struct SearchResultsView: View {
                     LazyVStack(spacing: 0) {
                         ForEach(places, id: \.placeID) { place in
                             let _ = print("Place: \(place.displayName ?? "Unknown") - Types: \(place.types.map { $0.rawValue })")
+                            
+                            // Get category styling based on place types
+                            let googleTypes = place.types.map { $0.rawValue }
+                            let categoryIcon = CategoryStyle.categoryIcon(for: googleTypes)
+                            let categoryColor = CategoryStyle.categoryColor(for: googleTypes)
+                            
                             ListItem.searchResult(
                                 title: place.displayName ?? "Unknown Place",
                                 distance: formatDistance(for: place),
                                 location: formatLocationWithType(for: place),
-                                icon: Image(systemName: "mappin.circle.fill"),
-                                iconColor: .red100,
+                                icon: categoryIcon,
+                                iconColor: categoryColor,
                                 onOpenPlaceDetails: {
                                     if let placeID = place.placeID {
                                         onPlaceTapped(placeID, place.displayName)
@@ -150,27 +156,14 @@ struct SearchResultsView: View {
     }
     
     private func formatLocationWithType(for place: Place) -> String {
-        // Get the first meaningful type (not generic ones like 'establishment' or 'point_of_interest')
-        let genericTypes = ["establishment", "point_of_interest", "food", "store"]
-        let meaningfulType = place.types
-            .map { $0.rawValue }
-            .first { type in
-                !genericTypes.contains(type)
-            }
-        
-        // Format the type for display (replace underscores with spaces and capitalize)
-        let formattedType = meaningfulType?
-            .replacingOccurrences(of: "_", with: " ")
-            .capitalized
+        // Get category name from CategoryStyle
+        let googleTypes = place.types.map { $0.rawValue }
+        let categoryName = CategoryStyle.formattedCategoryName(for: googleTypes)
         
         let address = place.formattedAddress ?? "Unknown Address"
         
-        // Combine type and address
-        if let type = formattedType {
-            return "\(type) • \(address)"
-        } else {
-            return address
-        }
+        // Combine category and address
+        return "\(categoryName) • \(address)"
     }
 }
 

@@ -14,8 +14,21 @@ struct PlaceDetailsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            // Get category information if place is available
+            let categoryInfo: (name: String, icon: Image, color: Color)? = {
+                if let place = place {
+                    let googleTypes = place.types.map { $0.rawValue }
+                    let info = CategoryStyle.category(for: googleTypes)
+                    return (info.subcategory.rawValue, info.icon, info.color)
+                }
+                return nil
+            }()
+            
             SheetHeader(
-                title: placeName ?? place?.displayName ?? "Place Details", 
+                title: placeName ?? place?.displayName ?? "Place Details",
+                categoryName: categoryInfo?.name,
+                categoryIcon: categoryInfo?.icon,
+                categoryColor: categoryInfo?.color,
                 onClose: onBackTapped
             )
             
@@ -52,20 +65,12 @@ struct PlaceDetailsView: View {
                                 // Log types for debugging
                                 let _ = print("Place Details - Types: \(place.types.map { $0.rawValue })")
                                 
-                                // Display formatted types
-                                let formattedTypes = place.types
-                                    .map { $0.rawValue }
-                                    .filter { !["establishment", "point_of_interest"].contains($0) }
-                                    .map { $0.replacingOccurrences(of: "_", with: " ").capitalized }
-                                    .joined(separator: " • ")
+                                // Use CategoryStyle to get formatted category name
+                                let googleTypes = place.types.map { $0.rawValue }
+                                let categoryName = CategoryStyle.formattedCategoryName(for: googleTypes)
                                 
-                                if !formattedTypes.isEmpty {
-                                    Text(formattedTypes)
-                                        .foregroundColor(.secondary)
-                                } else {
-                                    Text("General Location")
-                                        .foregroundColor(.secondary)
-                                }
+                                Text(categoryName)
+                                    .foregroundColor(.secondary)
                             }
                             .padding(.horizontal)
                         }

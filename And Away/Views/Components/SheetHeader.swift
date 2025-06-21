@@ -2,7 +2,18 @@ import SwiftUI
 
 struct SheetHeader: View {
     let title: String
+    let categoryName: String?
+    let categoryIcon: Image?
+    let categoryColor: Color?
     let onClose: () -> Void
+    
+    init(title: String, categoryName: String? = nil, categoryIcon: Image? = nil, categoryColor: Color? = nil, onClose: @escaping () -> Void) {
+        self.title = title
+        self.categoryName = categoryName
+        self.categoryIcon = categoryIcon
+        self.categoryColor = categoryColor
+        self.onClose = onClose
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xs) {
@@ -23,18 +34,20 @@ struct SheetHeader: View {
             
             // Bottom row with type and status
             HStack(spacing: Spacing.m) {
-                // Type indicator (Restaurant)
-                HStack(spacing: Spacing.xxs) {
-                    Image(systemName: "fork.knife")
-                        .font(.caption)
-                        .foregroundColor(.tertiary)
-                    
-                    Text("Restaurant")
-                        .pageSubtitle()
-                        .foregroundColor(.tertiary)
+                // Type indicator (if category info is provided)
+                if let categoryName = categoryName, let categoryIcon = categoryIcon {
+                    HStack(spacing: Spacing.xxs) {
+                        categoryIcon
+                            .font(.caption)
+                            .foregroundColor(categoryColor ?? .tertiary)
+                        
+                        Text(categoryName)
+                            .pageSubtitle()
+                            .foregroundColor(.tertiary)
+                    }
                 }
                 
-                // Status indicator (Open)
+                // Status indicator (Open) - keeping this as is for now
                 HStack(spacing: Spacing.xxs) {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.caption)
