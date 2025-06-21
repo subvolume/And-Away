@@ -5,7 +5,7 @@ struct ListItem: View {
     let color: Color?
     let artwork: ArtworkType?
     let title: String
-    let subtitle: String
+    let subtitle: String?
     let thirdText: String?
     let onTap: (() -> Void)?
     
@@ -23,7 +23,7 @@ struct ListItem: View {
         }
     }
     
-    init(color: Color = .primary, title: String = "Text1", subtitle: String = "Text2", thirdText: String? = "Text3", onTap: (() -> Void)? = nil) {
+    init(color: Color = .primary, title: String = "Text1", subtitle: String? = "Text2", thirdText: String? = "Text3", onTap: (() -> Void)? = nil) {
         self.color = color
         self.artwork = nil
         self.title = title
@@ -32,7 +32,7 @@ struct ListItem: View {
         self.onTap = onTap
     }
     
-    init(artwork: ArtworkType, title: String, subtitle: String, thirdText: String? = nil, onTap: (() -> Void)? = nil) {
+    init(artwork: ArtworkType, title: String, subtitle: String? = nil, thirdText: String? = nil, onTap: (() -> Void)? = nil) {
         self.color = nil
         self.artwork = artwork
         self.title = title
@@ -60,17 +60,19 @@ struct ListItem: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
                         .listTitle()
-                    HStack(spacing: 4) {
-                        Text(subtitle)
-                            .listSubtitle()
-                        if let thirdText = thirdText {
-                            Text("•")
+                    if let subtitle = subtitle {
+                        HStack(spacing: 4) {
+                            Text(subtitle)
                                 .listSubtitle()
-                            Text(thirdText)
-                                .listSubtitle()
+                            if let thirdText = thirdText {
+                                Text("•")
+                                    .listSubtitle()
+                                Text(thirdText)
+                                    .listSubtitle()
+                            }
                         }
+                        .foregroundColor(.secondary)
                     }
-                    .foregroundColor(.secondary)
                 }
                 Spacer()
             }
@@ -106,6 +108,16 @@ struct ListItem: View {
             onTap: onOpenPlaceDetails
         )
     }
+    
+    /// Icon-only template with just icon and title - no subtitle
+    static func iconOnly(title: String, icon: Image, onTap: (() -> Void)? = nil) -> ListItem {
+        return ListItem(
+            artwork: .icon(icon),
+            title: title,
+            subtitle: nil,
+            onTap: onTap
+        )
+    }
 }
 
 #Preview {
@@ -135,6 +147,11 @@ struct ListItem: View {
             location: "Barcelona",
             icon: Image(systemName: "building.columns"),
             onOpenPlaceDetails: {}
+        )
+        ListItem.iconOnly(
+            title: "Settings",
+            icon: Image(systemName: "gear"),
+            onTap: {}
         )
         ListItem(color: .azure100, title: "Azure", subtitle: "#128DFF", thirdText: nil, onTap: nil)
     }
