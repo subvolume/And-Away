@@ -1,85 +1,126 @@
-# And Away · LLM Development Guide  
-*(Markdown edition — June 2025)*
+# Claude's Guide to And Away Development
 
----
+## Project Context
+And Away is an iOS app for searching, collecting, and bookmarking places on a map.
 
-## 0 · CONTEXT
-- **App** iOS client for searching, collecting and bookmarking places on a map.  
-- **Tech Stack**  
-  - SwiftUI  
-  - Google Places Swift SDK for iOS ≥ 10.0 (“new” SDK, *not* the legacy UIKit one)  
-  - CloudKit *private* database for per‑user bookmarks  
-- **Project Tree**
-  ```
-  And Away/
-  ├── Resources/          # Color, font & spacing constants
-  ├── Views/Components/   # Reusable SwiftUI components
-  └── Docs/               # Technical specs
-  ```
+**Technology Stack:**
+- SwiftUI (latest version)
+- Google Places Swift SDK for iOS (v10.0+) - NOT the legacy SDK
+- iCloud for bookmark storage
 
----
+## Operational Rules
 
-## 1 · PRIORITY
-1. **Follow explicit user instructions.**  
-2. **Apply iOS/Swift best practices.**  
-3. **Clarify conflicts before acting.**  
-4. **MUST NOT** introduce new design elements unless user says `ALLOW_NEW_UI`.
+### Priority Hierarchy
+1. Follow user instructions exactly
+2. Apply iOS/Swift best practices
+3. Ask for clarification when conflicts arise
+4. Never make unsolicited design changes
 
----
+### Required Actions
 
-## 2 · TRIGGERS → ACTIONS
-| WHEN (detected event) | THEN (atomic, imperative) |
-|-----------------------|---------------------------|
-| `URL_DETECTED` – user message contains a URL | 1. **Fetch** the URL.  2. **Store** full contents in context.  3. Proceed. |
-| `BUG_REPORT` – user states a bug | 1. Provide fix.  2. Output sentinel `⟪WAIT_FOR_TEST⟫` and halt. |
-| `BUG_OK` – user confirms fix | Resume normal flow. |
-| `CONTEXT_MISSING` – insufficient info to act | Ask a **specific** clarifying question; wait for response. |
-| `MULTIPLE_APPROACHES` – several viable solutions | List trade‑offs → recommend one → wait for user choice. |
+**URL Processing:**
+- When message contains URL → fetch contents FIRST before any other response
+- Read fetched content completely before proceeding
 
----
+**Bug Resolution Process:**
+1. Fix reported bug
+2. STOP and ask: "Please test and confirm the bug is resolved"
+3. Wait for confirmation before continuing
 
-## 3 · CONSTRAINTS
-* **MUST** consult official documentation **before** writing code.  
-* **MUST_NOT** run or test the app locally; rely on user for all runtime feedback.  
-* **SHOULD** reuse components in `Views/Components/`.  
-* **MUST** add descriptive comments to every code artifact.  
-* **MUST** use SDK‑built‑in features before rolling custom ones.  
-* Placeholder UI text = `"PLACEHOLDER"`; query user if styling needed.
+**Code Implementation:**
+- Present all code in artifacts for review
+- Use existing styles/components from project structure
+- Add descriptive comments to all code
+- No extra features unless explicitly requested
 
----
+### Decision Points
 
-## 4 · WORKFLOW CHECKLIST
-1. ❑ Identify required docs → cite exact section.  
-2. ❑ Produce solution or code patch.  
-3. ❑ If bug‑fixing, emit `⟪WAIT_FOR_TEST⟫`.  
-4. ❑ On `BUG_OK`, continue pending tasks.  
-5. ❑ Log clarifying questions using `CONTEXT_MISSING` rule.
+**When lacking context:**
+- Ask specific questions about missing information
+- Do not make assumptions
+- Do not proceed without clarification
 
----
+**When multiple approaches exist:**
+- Explain trade-offs for each option
+- Recommend preferred approach with reasoning
+- Wait for user decision
 
-## 5 · EXAMPLES
+**For architectural changes:**
+- Explain reasoning and impact
+- Request explicit approval before implementation
 
-### Bug‑fix loop
+### Communication Protocol
+
+**Before coding:**
+- State what you plan to do
+- Explain your approach
+- Wait for approval if uncertain
+
+**Code explanations:**
+- Use simple language
+- Include visual design analogies when helpful
+- Focus on learning outcomes
+
+**Questions format:**
+- Be specific about what information you need
+- Provide context for why you need it
+- Suggest options when possible
+
+## Project Structure Reference
+
 ```
-User → “The map crashes when I tap Save.”
-LLM  → // code patch…
-LLM  → “⟪WAIT_FOR_TEST⟫ Please test and confirm the bug is resolved.”
+And Away/
+├── Resources/          # Color schemes, fonts, spacing constants
+├── Views/Components/   # Reusable UI components  
+└── Docs/              # Technical specifications
 ```
 
-### New UI request
-```
-User → “Show saved places in a carousel.”
-LLM  → “I’ll create **SavedPlacesCarousel** using existing card styles. ALLOW_NEW_UI?”
-```
+## Critical Constraints
 
----
+- **No app access** - Cannot test code, must rely on user testing
+- **Documentation first** - Check official docs over memory for current features
+- **Design boundaries** - User handles ALL visual design decisions
+- **Placeholder content** - Use plain text or ask for styling guidance
+- **SDK-first approach** - Use built-in SDK features before creating custom solutions
 
-## 6 · TOKEN LEGEND
-| Token | Meaning |
-|-------|---------|
-| `⟪WAIT_FOR_TEST⟫` | Halt responses until user confirms fix. |
-| `ALLOW_NEW_UI`    | User grants permission for new design work. |
+### Documentation-First Mandate
+**NEVER rely on memory for implementation details. Always check documentation first.**
 
----
+**Required process for ANY coding task:**
+1. State what documentation you need to check
+2. Actually search/reference the relevant docs
+3. Quote or reference the specific documentation section
+4. Only then propose the solution
 
-## END_OF_INSTRUCTIONS
+**Documentation priority order:**
+1. Official platform documentation (Apple Developer, etc.)
+2. SDK/library official documentation  
+3. Current API references
+4. Standard implementation examples
+
+**Mandatory documentation check triggers:**
+- Before writing any code
+- When suggesting API usage
+- When recommending architectural patterns
+- When claiming "this is the standard way"
+
+**Communication pattern:**
+- Start with: "Let me check the [specific documentation] for this..."
+- Reference: "According to [doc source], the recommended approach is..."
+- Never: "I remember this can be done with..." or "Typically you would..."
+
+**Memory vs Documentation:**
+- Memory: General concepts, principles, patterns
+- Documentation: Specific syntax, current APIs, exact implementations
+- When in doubt: Documentation always wins over memory
+
+## Response Patterns
+
+**For new UI elements:**
+"I'll create [component]. Should I use existing styles from Components/ or do you want to specify styling?"
+
+**For unclear requirements:**
+"I need clarification on [specific aspect] to proceed correctly. Options are: [A], [B], or [C]."
+
+**For architectural decisions:**
+"This change affects [impact area]. I recommend [approach] because [reasoning]. Approve to proceed?"
